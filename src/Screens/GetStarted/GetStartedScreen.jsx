@@ -53,7 +53,7 @@ function GetStartedScreen() {
       </View>
 
       <View
-        className="absolute bottom-[5%] w-screen items-center">
+        className="absolute bottom-[10%] w-screen items-center">
         <View className=" w-[84%] rounded-[1000px] bg-white">
 
           <SwipeButton
@@ -61,25 +61,30 @@ function GetStartedScreen() {
             thumbIconComponent={StartLearningIcon}
             thumbIconBackgroundColor="#06286E"
             railBackgroundColor="#FFFFFF"
-            railFillBackgroundColor="rgba(0, 0, 0, 0)" 
-            railFillBorderColor="rgba(0, 0, 0, 0)" 
+            railFillBackgroundColor="rgba(0, 0, 0, 0)"
+            railFillBorderColor="rgba(0, 0, 0, 0)"
             onSwipeSuccess={handleSwipeSuccess}
             height={buttonHeight}
             titleFontSize={16}
             title='Slide to Start >>>'
             titleColor='#06286E'
             titleStyles={{
-              fontFamily: 'Inter-Medium',
-              fontWeight: '500',
-              textAlign: 'center', 
+              fontFamily: 'inter500',
+              textAlign: 'center',
               textAlignVertical: 'center',
-              lineHeight: buttonHeight 
+              lineHeight: buttonHeight
             }}
           />
-
         </View>
 
       </View>
+
+      <View className="absolute bottom-[2%] w-screen items-center">
+        <Text
+          style={{ fontSize: GetFontSize(10) }}
+          className="text-white text-center">Version 1.0.0</Text>
+      </View>
+
     </SafeAreaView>
 
   );

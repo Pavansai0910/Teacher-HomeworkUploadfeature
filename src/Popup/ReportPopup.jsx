@@ -11,6 +11,8 @@ import { useNavigation } from "@react-navigation/native";
 // import { X } from "lucide-react-native"; // alternative for RxCross2
 import { testReport } from "../Services/StudentAPIV1";
 import Toast from 'react-native-toast-message';
+import GetFontSize from "../Commons/GetFontSize";
+import CloseBlack from "../Images/svg/CloseBlack";
 
 const FLAG_OPTIONS = [
   "Unable to Submit Test",
@@ -23,7 +25,7 @@ export default function ReportPopup({
   onClose,
   studentId,
   examId,
-  showGiveTestButton,
+  // showGiveTestButton,
 }) {
   const [selectedReason, setSelectedReason] = useState("");
   const [otherText, setOtherText] = useState("");
@@ -56,8 +58,6 @@ export default function ReportPopup({
         studentId,
         examId,
       });
-      console.log("Report submitted successfully!");
-
       Toast.show({
         type:'success',
         text1: 'Report Submitted Successfully!',
@@ -82,10 +82,11 @@ export default function ReportPopup({
           {/* Header */}
           <View className="flex-row justify-between items-center mb-4">
             <Text className="text-lg font-bold">Report this test</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Text>X</Text>
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity 
+            onPress={() => onClose()}>
+              <CloseBlack />
+            </TouchableOpacity>          
+            </View>
 
           {/* Radio Options */}
           <View className="mb-4">
@@ -118,9 +119,10 @@ export default function ReportPopup({
 
           {/* Footer Buttons */}
           <View className="flex-row justify-end gap-3">
-            {!showGiveTestButton && (
+            {/* {showGiveTestButton === false && (
               <TouchableOpacity
                 onPress={() => {
+                        onClose();
                     navigation.navigate('LGATestScreen', {
                       examId: examId,
                     })
@@ -130,12 +132,12 @@ export default function ReportPopup({
               >
                 <Text className="text-white">Give Test</Text>
               </TouchableOpacity>
-            )}
+            )} */}
 
             <TouchableOpacity
               onPress={handleSubmit}
               disabled={submitting}
-              className="px-4 py-2 bg-blue-700 rounded"
+              className="px-4 py-2 bg-[#33569F] rounded"
             >
               {submitting ? (
                 <ActivityIndicator color="#fff" />

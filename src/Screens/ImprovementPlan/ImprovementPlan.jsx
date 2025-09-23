@@ -56,7 +56,7 @@ export default function ImprovementPlan() {
   }
 
   return (
-    <SafeAreaView className="w-full h-full bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       <View className="mt-[20px]">
         <View className="flex flex-row justify-start items-center">
           <TouchableOpacity
@@ -80,44 +80,47 @@ export default function ImprovementPlan() {
         className="mt-[18px] ml-[25px] font-poppins400">To do - tasks</Text>
 
       {studentTasks && studentTasks?.length > 0 ? (
-        <ScrollView className="mt-[5%] px-[6%] w-full">
-          {studentTasks &&
-            studentTasks.map((task, index) => (
-              // Corrected View component for each task
-              <View key={index} className="overflow-hidden bg-[#4473D3] rounded-[14px] pb-4 mb-4">
-                <View className="mt-5 ml-5 mr-7">
-                  <View className="flex flex-row items-center justify-between">
-                    <View>
+        <View className="mt-[5%] px-[6%] w-full h-[70vh]">
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {studentTasks &&
+              studentTasks.map((task, index) => (
+                // Corrected View component for each task
+                <View key={index} className="overflow-hidden bg-[#4473D3] rounded-[14px] pb-4 mb-4">
+                  <View className="mt-5 ml-5 mr-7">
+                    <View className="flex flex-row items-center justify-between">
+                      <View>
+                        <Text
+                          style={{ fontSize: GetFontSize(13) }}
+                          className="font-inter600 line-clamp-1 text-white">
+                          {task.title}
+                        </Text>
+                      </View>
+                    </View>
+
+                    <Text
+                      style={{ fontSize: GetFontSize(11) }}
+                      className="mt-2 font-inter400 text-[#ACCFFF]">
+                      {task.description}
+                    </Text>
+
+                    <View className="mt-1 flex flex-row justify-between border border-[#4473D3]">
                       <Text
-                        style={{ fontSize: GetFontSize(13) }}
-                        className="font-inter600 line-clamp-1 text-white">
-                        {task.title}
+                        style={{ fontSize: GetFontSize(9) }}
+                        className="font-poppins400 text-white">
+                        Deadline
+                      </Text>
+                      <Text
+                        style={{ fontSize: GetFontSize(9) }}
+                        className="font-inter400 text-white">
+                        {formatDate(task.dueDate)}
                       </Text>
                     </View>
                   </View>
-
-                  <Text
-                    style={{ fontSize: GetFontSize(11) }}
-                    className="mt-2 font-inter400 text-[#ACCFFF]">
-                    {task.description}
-                  </Text>
-
-                  <View className="mt-1 flex flex-row justify-between border border-[#4473D3]">
-                    <Text
-                      style={{ fontSize: GetFontSize(9) }}
-                      className="font-poppins400 text-white">
-                      Deadline
-                    </Text>
-                    <Text
-                      style={{ fontSize: GetFontSize(9) }}
-                      className="font-inter400 text-white">
-                      {formatDate(task.dueDate)}
-                    </Text>
-                  </View>
                 </View>
-              </View>
-            ))}
-        </ScrollView>
+
+              ))}
+          </ScrollView>
+        </View>
       ) : (
         <View>
           <Text

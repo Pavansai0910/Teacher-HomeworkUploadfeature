@@ -5,6 +5,7 @@ import AppNavigator from "./Navigation/AppNavigator";
 import NetworkInfo from "./Network/NetworkInfo";
 import * as Clarity from '@microsoft/react-native-clarity';
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { versionChecker } from "./Services/StudentAPIV1";
 function App() {
 
     const ClarityProjectId = process.env.PROJECT_ID

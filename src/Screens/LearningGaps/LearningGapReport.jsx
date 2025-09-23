@@ -8,8 +8,8 @@ function LearningGapReport() {
   const {studentProfile} = useContext(AuthContext);
 
   return (
-    <SafeAreaView className="w-full h-full bg-white">
-      <ScrollView className="w-full h-full">
+    <SafeAreaView className="flex-1 bg-white">
+      <ScrollView className="flex-1">
         <View className="mx-[20px] mb-[90px]">
           <View className="mt-[20px]">
             <Text

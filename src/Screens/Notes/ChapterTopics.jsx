@@ -102,7 +102,7 @@ function ChapterTopics({route}) {
   }
 
   return (
-    <SafeAreaView className="w-full h-full bg-[#FFFFFF]">
+    <SafeAreaView className="flex-1 bg-[#FFFFFF]">
       <View className="mt-[30px]">
         <View className="flex flex-row justify-start items-center">
           <TouchableOpacity

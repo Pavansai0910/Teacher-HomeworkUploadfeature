@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 function LearningGap({route}) {
   return (
-    <SafeAreaView className="relative w-full h-full bg-white">
+    <SafeAreaView className="relative flex-1 bg-white">
       <View className="mx-[24px]">
 
         <View className="mt-[40px] w-[94px] h-[32px] rounded-full bg-[#EDF5FF] flex flex-row justify-center items-center ">

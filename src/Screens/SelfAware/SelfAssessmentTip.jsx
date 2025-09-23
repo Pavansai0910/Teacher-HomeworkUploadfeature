@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import GreenClock from '../../Images/svg/GreenClock';
 import BlueFileIcon from '../../Images/svg/BlueFileIcon';
 import YellowBulb from '../../Images/svg/YellowBulb';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 function SelfAssessmentTip({ route }) {
   const navigation = useNavigation()
 
@@ -25,7 +25,7 @@ function SelfAssessmentTip({ route }) {
 
   const buttonText = ['Fast', 'Seamless', 'Efficient'];
   return (
-    <SafeAreaView className="w-full h-full bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       <View className="mx-[20px]">
 
         <TouchableOpacity
@@ -37,7 +37,7 @@ function SelfAssessmentTip({ route }) {
 
         <View>
           <Text
-            style={{ fontSize: GetFontSize(24) }}
+            style={{ fontSize: GetFontSize(23) }}
             className="font-inter700 text-[#33569F] mt-[10%]">
             Boost your Self-Awareness with our quick assessment
           </Text>
@@ -47,23 +47,25 @@ function SelfAssessmentTip({ route }) {
           {titles.map((eachTitle, index) => (
             <View
               key={index}
-              className="mb-5 h-[100px] border-[1px] border-[#33569F21] rounded-lg">
+              className="mb-5 pb-7 border-[1px] border-[#33569F21] rounded-lg">
 
               <View className='flex flex-row items-end '>
-                <View className='ml-[12px]'>
+                <View className='ml-[3%]'>
                   {icons[index]}
                 </View>
 
-                <View className="flex flex-row">
+                <View className="flex flex-row flex-wrap ">
                   <Text
-                    style={{ fontSize: GetFontSize(13)}}
-                    className=" font-inter700 ml-[10px] mt-[22px] text-[#000000]">
+                  ellipsizeMode='tail'
+                  numberOfLines={2}
+                    style={{ fontSize: GetFontSize(12) }}
+                    className=" font-inter700 ml-[8px] mt-[22px] text-[#000000]">
                     {eachTitle}
                   </Text>
 
-                  <View className="mt-[22px] ml-[8px] bg-[#33569F21] border-[2px] border-[#33569F21] py-[1px] px-[6px] rounded-full ">
+                  <View className="mt-[22px] ml-[6px] bg-[#33569F21] border-[2px] border-[#33569F21] py-[1px] px-[6px] rounded-full ">
                     <Text
-                      style={{ fontSize: GetFontSize(10)}}
+                      style={{ fontSize: GetFontSize(9) }}
                       className="font-inter500 tracking-[-0.6]">
                       {buttonText[index]}
                     </Text>
@@ -73,8 +75,10 @@ function SelfAssessmentTip({ route }) {
               </View>
 
               <Text
-                style={{ fontSize: GetFontSize(11)}}
-                className="mt-2 ml-[42px] font-inter500 text-[#00000047] mr-[20px]">
+                  ellipsizeMode='tail'
+                numberOfLines={3}
+                style={{ fontSize: GetFontSize(10) }}
+                className="mt-2 ml-[12%] font-inter500 text-[#00000047] mr-[20px]">
                 {description[index]}
               </Text>
             </View>
@@ -89,7 +93,7 @@ function SelfAssessmentTip({ route }) {
             )}
             className="mt-2 h-[70px] bg-[#1D5AD5] border-[1px] border-[#33569F] rounded-[18px] flex justify-center">
             <Text
-              style={{ fontSize: GetFontSize(18) }}
+              style={{ fontSize: GetFontSize(17) }}
               className='font-poppins500 text-[#FFFFFF] text-center'
             >Start Assessment </Text>
           </TouchableOpacity>

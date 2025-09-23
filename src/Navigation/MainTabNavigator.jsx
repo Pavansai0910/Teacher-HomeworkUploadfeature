@@ -1,4 +1,4 @@
-import { StyleSheet, View, Pressable, useWindowDimensions } from 'react-native';
+import { StyleSheet, View, Pressable, useWindowDimensions, Text, Modal, TouchableOpacity, Linking } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Subject from '../Screens/AllSubject/Subject';
@@ -16,7 +16,8 @@ import Loader from '../Commons/Loader';
 import ImprovementPlan from '../Screens/ImprovementPlan/ImprovementPlan';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../Context/AuthContext';
-import { studentLoginEvent } from '../Services/StudentAPIV1';
+import { studentLoginEvent, versionChecker } from '../Services/StudentAPIV1';
+import GetFontSize from '../Commons/GetFontSize';
 // import Calendar from '../Screens/Calendar/Calendar';
 // import PracticeTest from '../Screens/Practice/PracticeTest';
 // import AllTests from '../Screens/LGA/AllTests';
@@ -75,6 +76,7 @@ function MainTabNavigator() {
   const { width } = useWindowDimensions(); // Get the screen width
   const { studentProfile } = useContext(AuthContext)
   const navigation = useNavigation();
+  const [showUpdatePopup, setShowUpdatePopup] = useState(false);
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -94,52 +96,106 @@ function MainTabNavigator() {
     fetchCount();
   }, []);
 
-    async function loginEvent() {
-      try {
-        const response = await studentLoginEvent({
-          studentId: studentProfile?._id,
-        });
-  
-        // Store the current date (YYYY-MM-DD format) when API was called
-        const today = new Date().toISOString().split('T')[0];
+  async function loginEvent() {
+    try {
+      const response = await studentLoginEvent({
+        studentId: studentProfile?._id,
+      });
+
+      // Store the current date (YYYY-MM-DD format) when API was called
+      const today = new Date().toISOString().split('T')[0];
       await AsyncStorage.setItem('studentlastLoginEventDate', today);
-      } catch (error) {
-        // console.error(error);
-      }
+    } catch (error) {
+      // console.error(error);
     }
-  
-    const shouldCallApi = async() => {
-      const lastCallDate = await AsyncStorage.getItem('studentlastLoginEventDate');
-      const today = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
-  
-      if (!lastCallDate) {
-        return true; // First time calling
+  }
+
+  const shouldCallApi = async () => {
+    const lastCallDate = await AsyncStorage.getItem('studentlastLoginEventDate');
+    const today = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+
+    if (!lastCallDate) {
+      return true; // First time calling
+    }
+
+    // Check if the current date is different from the last call date
+    return lastCallDate !== today;
+  };
+
+  useEffect(() => {
+
+    const checkVersion = async () => {
+      try {
+        const version = await versionChecker({
+          studentId: studentProfile?._id,
+          newdownloaded: true,
+          versionNumber: process.env.APP_VERSION,
+          // versionNumber: "1.24.0",
+        })
+        if (version.data?.updateRequired === true) {
+          setShowUpdatePopup(true)
+        } else {
+          setShowUpdatePopup(false)
+        }
+      } catch (error) {
+        setShowUpdatePopup(true)
       }
-  
-      // Check if the current date is different from the last call date
-      return lastCallDate !== today;
     };
 
+    checkVersion()
+  }, []);
 
-    useEffect(() => {
-      // Set timeout to call API after 2 minutes (120000 ms)
-      const timer = setTimeout(() => {
-        if (shouldCallApi()) {
-          loginEvent();
-        }
-      }, 120000); // 2 minutes
-  
-      // Cleanup timeout on component unmount
-      return () => clearTimeout(timer);
-    }, []); // Empty dependency array ensures this runs only once on mount
-  
+  useEffect(() => {
+    // Set timeout to call API after 2 minutes (120000 ms)
+    const timer = setTimeout(() => {
+      if (shouldCallApi()) {
+        loginEvent();
+      }
+    }, 120000); // 2 minutes
+
+    // Cleanup timeout on component unmount
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array ensures this runs only once on mount
+
 
   if (loading) {
     return (
-        <Loader />
+      <Loader />
     );
   }
-    
+
+  if (showUpdatePopup) {
+    return (
+      <Modal
+        visible={showUpdatePopup}
+        animationType="fade"
+        transparent={true}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>You are using old version of App </Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.yesButton]}
+                onPress={() => {
+                  const externalUrl = "https://adaptmate.in/download"; // 🔗 replace with your link
+                  Linking.openURL(externalUrl).catch(err =>
+                    console.error("Failed to open link", err)
+                  );
+                }}
+              >
+                <Text style={styles.buttonText}>Please Update App</Text>
+              </TouchableOpacity>
+
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+    );
+  }
+
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -147,7 +203,7 @@ function MainTabNavigator() {
           height: '10%',
           paddingTop: 15,
           backgroundColor: '#FFFFFF',
-        
+
         },
         headerShown: false,
         tabBarShowLabel: false,
@@ -245,4 +301,48 @@ const styles = StyleSheet.create({
   activeBackground: {
     backgroundColor: '#E2E8F5', // Active tab background color
   },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: GetFontSize(18),
+    fontFamily: 'inter600',
+    color: 'black',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  yesButton: {
+    backgroundColor: '#33569F',
+  },
+  noButton: {
+    backgroundColor: '#4682B4',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontFamily: 'inter600',
+    fontSize: GetFontSize(16),
+  },
+
 });

@@ -128,7 +128,7 @@ function SelfAwareTest({ route }) {
   }
 
   return (
-    <SafeAreaView className="w-full h-full bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       {/* Loading overlay */}
       <Modal
         transparent={true}

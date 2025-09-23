@@ -130,7 +130,7 @@ function PracticeTest({route}) {
   }
 
   return (
-    <SafeAreaView className="w-full h-full bg-[#FFFFFF]">
+    <SafeAreaView className="flex-1 bg-[#FFFFFF]">
       {showResult && (
         <View className="mx-[20px] mb-[90px] h-full">
           <View className="mt-[28px] ">

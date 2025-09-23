@@ -4,10 +4,11 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Modal,
+  ActivityIndicator
 } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import GetFontSize from '../../Commons/GetFontSize';
-import BlueCrossIcon from '../../Images/svg/BlueCrossIcon';
 import { useNavigation } from '@react-navigation/native';
 import Loader from '../../Commons/Loader';
 import Toast from 'react-native-toast-message';
@@ -16,6 +17,7 @@ import { submitExam } from '../../Services/StudentAPIV1';
 import { AuthContext } from '../../Context/AuthContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FlagPopup from '../../Popup/FlagPopup';
+import ReportIcon from '../../Images/svg/ReportIcon';
 function LGATestScreen({ route }) {
   const examId = route.params.examId;
   const navigation = useNavigation();
@@ -45,24 +47,24 @@ function LGATestScreen({ route }) {
     getData();
   }, [examId]);
 
-      useEffect(() => {
-       const lgaLogEntries = async () => {
-            try {
-                const response = await lgaLog({
-                    studentId: studentProfile._id,
-                    examId,
-                    schoolId: studentProfile.schoolId._id,
-                    questionpaperId: examData.QuestionPaper[0]._id
-                });
-            } catch (error) {
-            } 
-        };
-        
-        if(examData != null) {
-            lgaLogEntries();
-        }
+  useEffect(() => {
+    const lgaLogEntries = async () => {
+      try {
+        const response = await lgaLog({
+          studentId: studentProfile._id,
+          examId,
+          schoolId: studentProfile.schoolId._id,
+          questionpaperId: examData.QuestionPaper[0]._id
+        });
+      } catch (error) {
+      }
+    };
 
-    }, [examData]);
+    if (examData != null) {
+      lgaLogEntries();
+    }
+
+  }, [examData]);
 
   const onAnswerSelect = updatedAnswers => {
     recordTimeSpent(currentQuestion);
@@ -159,6 +161,22 @@ function LGATestScreen({ route }) {
 
   return (
     <SafeAreaView className="w-full h-full bg-white">
+
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={submitting}
+        onRequestClose={() => { }}>
+        <View className="flex-1 justify-center items-center bg-black/50">
+          <View className="bg-white p-6 rounded-lg items-center">
+            <ActivityIndicator size="large" color="#5189FC" />
+            <Text className="mt-4 text-lg font-inter700 text-[#33569F]">
+              Submitting your answers...
+            </Text>
+          </View>
+        </View>
+      </Modal>
+
       {/* Test section */}
       <View className="relative">
         {questions.length > 0 && (
@@ -183,14 +201,17 @@ function LGATestScreen({ route }) {
                   </Text>
                 </View>
 
-                 <TouchableOpacity
+                <TouchableOpacity
                   onPress={() => setFlagOpen(true)}>
-                  <Text>FLAG</Text>
-                  </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                  <BlueCrossIcon width={30} height={30} />
+                  <View className="flex flex-row items-center gap-1">
+                    <Text
+                      style={{ fontSize: GetFontSize(14) }}
+                      className="text-[#E34F57] font-inter600">Report</Text>
+                    <ReportIcon />
+                  </View>
                 </TouchableOpacity>
+
+
               </View>
 
               <ScrollView className="h-[75vh]">
@@ -227,19 +248,19 @@ function LGATestScreen({ route }) {
                       </View>
                     );
                   })}
-                 
+
                 </View>
 
                 <View>
 
                   <FlagPopup
-          open={flagOpen}
-          onClose={() => setFlagOpen(false)}
-          questionId={questions[currentQuestion].questionid}
-          questionPaperId={examData.QuestionPaper[0]._id}
-          studentId={studentProfile._id}
-        />
-          </View>
+                    open={flagOpen}
+                    onClose={() => setFlagOpen(false)}
+                    questionId={questions[currentQuestion].questionid}
+                    questionPaperId={examData.QuestionPaper[0]._id}
+                    studentId={studentProfile._id}
+                  />
+                </View>
 
                 <View className="mt-[6%]">
                   <View className="flex justify-center ">
@@ -289,13 +310,13 @@ function LGATestScreen({ route }) {
                 <View className="flex flex-row justify-between items-center mx-[3%] h-full ">
                   <TouchableOpacity
                     className={`w-[30%] h-[60%] rounded-[14px] border-2 border-[#B4C6ED] flex justify-center items-center ${currentQuestion !== 0 ? 'bg-[#EDF3FF]' : 'bg-[#EDF3FF]'
-                    }
+                      }
                     ${currentQuestion === 0 && "invisible"}  
                     `}
                     onPress={handlePrevious}
                     disabled={currentQuestion === 0}>
                     <Text
-                      style={{ fontSize: GetFontSize(17)}}
+                      style={{ fontSize: GetFontSize(17) }}
                       className="text-center font-inter700 text-[#33569F]">
                       Previous
                     </Text>
@@ -307,7 +328,7 @@ function LGATestScreen({ route }) {
                       onPress={handleSubmitExam}
                       disabled={submitting}>
                       <Text
-                        style={{ fontSize: GetFontSize(17)}}
+                        style={{ fontSize: GetFontSize(17) }}
                         className="text-center font-inter700 text-[#33569F]">
                         {submitting ? 'Submitting' : 'Submit'}
                       </Text>
@@ -317,7 +338,7 @@ function LGATestScreen({ route }) {
                       className="w-[30%] h-[60%] rounded-[14px] border-2 border-[#B4C6ED] bg-[#EDF3FF] flex justify-center items-center"
                       onPress={handleNext}>
                       <Text
-                        style={{ fontSize: GetFontSize(17)}}
+                        style={{ fontSize: GetFontSize(17) }}
                         className="text-center font-inter700 text-[#33569F]">
                         Next
                       </Text>

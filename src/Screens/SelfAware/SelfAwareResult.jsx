@@ -62,11 +62,11 @@ function SelfAwareResult({ route }) {
   }
 
   return (
-    <SafeAreaView className="w-full h-full bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       <ScrollView>
         <View className="mt-[10%]">
-          <View className="flex flex-row justify-between ">
-            <View className="">
+          <View className="flex flex-row justify-between">
+            <View>
               <Text
                 style={{ fontSize: GetFontSize(24) }}
                 className="ml-[12%] font-poppins700 text-[#33569F] leading-tight">
@@ -96,8 +96,8 @@ function SelfAwareResult({ route }) {
             className="bg-[#33569F] mt-[14%] rounded-md py-2 px-4 absolute right-[27px] ">
             <Text className="text-[#FFFFFF]">Re-attempt</Text>
           </TouchableOpacity>
-          <View className="mt-[5%] mx-[27px] flex flex-row justify-between">
-            <View>
+          <View className="mt-[5%] mx-[27px] flex flex-row justify-between flex-wrap">
+            <View className="w-[63%]">
               <Text
                 style={{ fontSize: GetFontSize(14) }}
                 className="font-poppins600 text-[#000000]">
@@ -162,7 +162,7 @@ function SelfAwareResult({ route }) {
           </View>
 
           {/* Bubble Views */}
-          <View className=" h-[250px] sticky">
+          <View className="w-[99%] h-[250px] sticky">
             {result?.summary?.keywords?.strong?.map((bubble, index) => {
               return (
                 <View

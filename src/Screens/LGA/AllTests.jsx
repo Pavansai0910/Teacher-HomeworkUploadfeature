@@ -22,6 +22,7 @@ import DropDownArrow from '../../Images/svg/DropdownArrow';
 import LeftArrow from '../../Images/svg/LeftArrow';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ReportPopup from '../../Popup/ReportPopup';
+import CloseBlack from '../../Images/svg/CloseBlack';
 
 function AllTests({ route }) {
   const navigation = useNavigation();
@@ -39,6 +40,7 @@ function AllTests({ route }) {
   const [testGivenStatus, setTestGivenStatus] = useState(false);
   const [selectedExamId, setSelectedExamId] = useState(null)
   const [showReport, setShowReport] = useState(false)
+  const [selectedAssessment, setSelectedAssessment] = useState(null)
 
   const STATUS_OPTIONS = [
     { label: 'All Status', value: 'All Status' },
@@ -54,7 +56,7 @@ function AllTests({ route }) {
       return examData.filter(e => !e.isCompleted && !e.isExpired);
     if (selectedStatus === 'Completed')
       return examData.filter(e => e.isCompleted);
-    if (selectedStatus === 'Expired') return examData.filter(e => e.isExpired);
+    if (selectedStatus === 'Expired') return examData.filter(e => e.isExpired && !e.isCompleted);
     return examData;
   };
 
@@ -108,7 +110,7 @@ function AllTests({ route }) {
   };
 
   return (
-    <SafeAreaView className="w-full h-full bg-[#FFFFFF] ">
+    <SafeAreaView className="flex-1 bg-[#FFFFFF] ">
       <View className="mt-[20px]">
         <View className="flex flex-row justify-start items-center">
           <TouchableOpacity
@@ -177,65 +179,66 @@ function AllTests({ route }) {
         </View>
       </View>
 
+      <Modal
+        visible={showPopup}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setShowPopup(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              onPress={() => setShowPopup(false)}
+              className="absolute top-3 right-3">
+              <CloseBlack />
+            </TouchableOpacity>
+
+            <Text style={styles.modalText}>Do you want to {selectedAssessment?.isCompleted ? 'Report' : 'give LGA'}</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.noButton]}
+                onPress={() => {
+                  setTestGivenStatus(selectedAssessment.isCompleted);
+                  setShowReport(true);
+                  setSelectedExamId(selectedAssessment.examId);
+                }}
+              >
+                <Text style={styles.buttonText}>Report</Text>
+              </TouchableOpacity>
+
+              {!selectedAssessment?.isExpired && (
+
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.yesButton]}
+                  onPress={() => {
+                    if (!selectedAssessment.isCompleted && !selectedAssessment.isExpired) {
+                      navigation.navigate('LGATestScreen', {
+                        examId: selectedAssessment.examId,
+                      })
+                    } else {
+                      Toast.show({
+                        type: 'error',
+                        text1: 'Due date has passed',
+                      });
+                    }
+                  }}
+                >
+                  <Text style={styles.buttonText}>{selectedAssessment?.isProcessing ? 'Re-attempt' : 'Give LGA'}</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+
       <ReportPopup
         open={showReport}
         onClose={() => setShowReport(false)}
         studentId={studentProfile?._id}
         examId={selectedExamId}
-        showGiveTestButton={testGivenStatus}
+      // showGiveTestButton={testGivenStatus}
       />
-
-      {/* <Modal
-        animationType="fade"
-        transparent={true}
-        visible={showPopup}
-        onRequestClose={!showPopup}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity onPress={() => setShowPopup(false)} className="absolute top-1 right-3 z-10">
-              <Text className="text-gray-500 text-4xl font-normal">&times;</Text>
-            </TouchableOpacity>
-
-            <View className="flex flex-col space-y-4 mt-2">
-              <Text className="text-base xl:text-lg font-semibold text-gray-800 text-center">Submit Report and Retake Test</Text>
-
-              <TextInput
-                className=" h-32 p-3 border border-gray-300 rounded-md resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Write your report message here..."
-                placeholderTextColor="#999"
-                multiline={true}
-                numberOfLines={4}
-                value={description}
-                onChangeText={setDescription}
-              />
-
-              <View className="w-full grid grid-cols-2 gap-3 mt-[18px]">
-                <TouchableOpacity
-                  className={`py-2 bg-[#33569F] text-white rounded-md transition-colors duration-200 text-[12px] xl:text-base cursor-pointer ${!description.trim() ? 'opacity-50' : 'hover:bg-[#1E428C]'
-                    }`}
-                  onPress={sendReport}
-                >
-                  <Text className="text-white text-center">Submit Report</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  className="py-2 bg-gray-200 text-gray-800 rounded-md transition-colors duration-200 text-[12px] xl:text-base cursor-pointer hover:bg-gray-300"
-                  onPress={() => {
-                    setShowPopup(false);
-                    navigation.navigate('LGATestScreen', {
-                      examId: selectedExamId,
-                    })
-                  }}
-                >
-                  <Text className="text-gray-800 text-center">Give Test Again</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal> */}
-
 
       <View>
         <ScrollView
@@ -252,27 +255,42 @@ function AllTests({ route }) {
               ) : (
                 getFilteredExamData().map((assessment, index) => (
                   <TouchableOpacity
+                    // onPress={() => {
+                    //   if (!assessment.isCompleted && assessment.isProcessing && assessment.completionStatus === "Processing") {
+                    //     setShowPopup(true);
+                    //     setSelectedExamId(assessment.examId);
+                    //     return
+                    //   } else if (assessment.isCompleted || assessment.isExpired || assessment.isProcessing) {
+                    //     Toast.show({
+                    //       type: 'error',
+                    //       text1: 'Test already completed or expired',
+                    //     });
+                    //     return;
+                    //   }
+                    //   navigation.navigate('LGATestScreen', {
+                    //     examId: assessment.examId,
+                    //   })
+                    // }}
+
                     onPress={() => {
-                      if (!assessment.isCompleted && assessment.isProcessing && assessment.completionStatus === "Processing") {
-                        setShowPopup(true);
-                        setSelectedExamId(assessment.examId);
-                        return
-                      } else if (assessment.isCompleted || assessment.isExpired || assessment.isProcessing) {
-                        Toast.show({
+                      if(assessment.isCompleted || assessment.isExpired) {
+                        return Toast.show({
                           type: 'error',
-                          text1: 'Test already completed or expired',
-                        });
-                        return;
+                          text1: `${assessment.isCompleted ? 'Test already completed' : 'Due date has passed'}`,
+                        })
+                      } else {
+                        setSelectedAssessment(assessment);
+                        setShowPopup(true);
                       }
-                      navigation.navigate('LGATestScreen', {
-                        examId: assessment.examId,
-                      })
+                      // setTestGivenStatus(assessment.isCompleted);
+                      // setShowReport(true);
+                      // setSelectedExamId(assessment.examId);
+
                     }}
                     key={index} className="overflow-hidden"
                   >
                     <View
                       style={{ height: height * 0.14 }}
-
                       className={`relative ${assessment.isCompleted || assessment.isExpired || assessment.isProcessing
                         ? 'bg-[#E5E7EB]'
                         : 'bg-[#4473D3]'
@@ -324,32 +342,33 @@ function AllTests({ route }) {
                           </View>
                           <View className="mr-2">
                             {
-                              !assessment.isCompleted && assessment.isProcessing && assessment.completionStatus === "Processing" ? (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    setTestGivenStatus(assessment.isCompleted);
-                                    setShowReport(true);
-                                    setSelectedExamId(assessment.examId);
-                                  }
-                                  }
-                                  className="bg-[#FADCDC] px-2 py-1 rounded-full"
-                                ><Text style={{ fontSize: GetFontSize(10) }}
-                                  className="text-[#DD2222]"
-                                >
-                                    Report
+                              // !assessment.isCompleted && assessment.isProcessing && assessment.completionStatus === "Processing" ? (
+                              //   <TouchableOpacity
+                              //     onPress={() => {
+                              //       setTestGivenStatus(assessment.isCompleted);
+                              //       setShowReport(true);
+                              //       setSelectedExamId(assessment.examId);
+                              //     }
+                              //     }
+                              //     className="bg-[#FADCDC] px-2 py-1 rounded-full"
+                              //   ><Text style={{ fontSize: GetFontSize(10) }}
+                              //     className="text-[#DD2222]"
+                              //   >
+                              //       Report
+                              //     </Text>
+                              //   </TouchableOpacity>
+                              // )
+                              //   :
+                              assessment.isCompleted ? (
+                                <TouchableOpacity className="bg-[#EFFBF2] px-2 py-1 rounded-full">
+                                  <Text
+                                    style={{ fontSize: GetFontSize(10) }}
+                                    className="text-[#34C759]">
+                                    Completed
                                   </Text>
                                 </TouchableOpacity>
                               )
-                                :
-                                assessment.isCompleted ? (
-                                  <TouchableOpacity className="bg-[#EFFBF2] px-2 py-1 rounded-full">
-                                    <Text
-                                      style={{ fontSize: GetFontSize(10) }}
-                                      className="text-[#34C759]">
-                                      Completed
-                                    </Text>
-                                  </TouchableOpacity>
-                                ) : assessment.isExpired ? (
+                                : assessment.isExpired ? (
                                   <TouchableOpacity className="bg-[#FADCDC] px-2 py-1 rounded-full">
                                     <Text
                                       style={{ fontSize: GetFontSize(10) }}
@@ -357,41 +376,27 @@ function AllTests({ route }) {
                                       Due date expired
                                     </Text>
                                   </TouchableOpacity>
-                                ) : assessment.isProcessing ? (
-                                  <TouchableOpacity className="bg-[#FADCDC] px-2 py-1 rounded-full">
-                                    <Text
-                                      style={{ fontSize: GetFontSize(10) }}
-                                      className="text-[#33569F]">
-                                      Analyzing your test
-                                    </Text>
-                                  </TouchableOpacity>
-                                ) : (
-                                  <TouchableOpacity
-                                    onPress={() =>
-                                      navigation.navigate('LGATestScreen', {
-                                        examId: assessment.examId,
-                                      })
-                                    }
-                                    className="bg-[#FFEACC] px-2 py-1 rounded-full">
-                                    <Text
-                                      style={{ fontSize: GetFontSize(10) }}
-                                      className="text-[#FF9500]">
-                                      Assigned
-                                    </Text>
-                                  </TouchableOpacity>
-                                )}
+                                )
+                                  : assessment.isProcessing ? (
+                                    <TouchableOpacity className="bg-[#FADCDC] px-2 py-1 rounded-full">
+                                      <Text
+                                        style={{ fontSize: GetFontSize(10) }}
+                                        className="text-[#33569F]">
+                                        Analyzing your test
+                                      </Text>
+                                    </TouchableOpacity>
+                                  ) : (
+                                    <TouchableOpacity
+                                      className="bg-[#FFEACC] px-2 py-1 rounded-full">
+                                      <Text
+                                        style={{ fontSize: GetFontSize(10) }}
+                                        className="text-[#FF9500]">
+                                        Assigned
+                                      </Text>
+                                    </TouchableOpacity>
+                                  )}
                           </View>
-                          <View
-                            // name='Report test'
-                            className='cursor-pointer'
-                            onPress={() => {
-                              setShowReport(true);
-                              setTestGivenStatus(assessment.isCompleted);
-                              setSelectedExamId(assessment.examId);
-                            }}>
-                            {/* <EllipsisVertical color='#06286E' /> */}
-                            <Text>RRR</Text>
-                          </View>
+
                         </View>
                       </View>
                     </View>
@@ -456,7 +461,66 @@ const styles = StyleSheet.create({
     width: '80%',
     alignItems: 'center',
   },
+  modalText: {
+    marginTop: 5,
+    fontSize: GetFontSize(18),
+    fontFamily: 'inter600',
+    color: 'black',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalButton: {
+    flex: 1,
+    paddingVertical: 10,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    alignItems: 'center',
+  },
+  yesButton: {
+    backgroundColor: '#33569F',
+  },
+  noButton: {
+    backgroundColor: '#979797',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontFamily: 'inter600',
+    fontSize: GetFontSize(16),
+  },
+  modalOptionButton: {
+    width: '100%',
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  modalOptionText: {
+    fontSize: GetFontSize(18),
+    fontFamily: 'inter600',
+    color: '#33569F',
+  },
+  cancelButton: {
+    borderBottomWidth: 0,
+    marginTop: 10,
+  },
+  textInput: {
+    width: '100%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    fontFamily: 'inter400',
+    fontSize: GetFontSize(16),
+    color: 'black',
+  },
 });
-
 export default AllTests;
 

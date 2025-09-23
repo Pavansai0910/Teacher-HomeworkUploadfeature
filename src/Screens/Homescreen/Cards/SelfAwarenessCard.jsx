@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, useWindowDimensions, TouchableOpacity } from 'react-native';
+import { View, Text, useWindowDimensions, TouchableOpacity, Touchable } from 'react-native';
 import SemiCircleProgress from '../../ProgressBars/SemiCircularProgressBar';
 import GetFontSize from '../../../Commons/GetFontSize';
 import SquareArrow from '../../../Images/svg/SquareArrow';
@@ -87,11 +87,15 @@ function SelfAwarenessCard() {
           className="text-[#ACCFFF] font-inter400  tracking-[-0.55] ">
           Featured for you
         </Text>
+        <TouchableOpacity
+        onPress={() => navigation.navigate("SelfAware")}
+        >
         <Text
           style={{ fontSize: GetFontSize(10) }}
           className="text-[#ACCFFF] font-inter400  tracking-[-0.55] ">
           See all
         </Text>
+            </TouchableOpacity>
       </View>
 
       <TouchableOpacity

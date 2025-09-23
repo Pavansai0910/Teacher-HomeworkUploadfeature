@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback, useContext, useEffect } from 'react';
+import React, { useRef, useState, useCallback, useContext } from 'react';
 import {
   View,
   useWindowDimensions,
@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Text,
   Image,
-  Modal
+  Modal,
+  TextInput,
 } from 'react-native';
 import SyllabusCard from './Cards/SyllabusCard';
 import FoucsStatsCard from './Cards/FoucsStatsCard';
@@ -16,15 +17,24 @@ import LessonScheduleCard from './Cards/LessonScheduleCard';
 import HelloCard from './Cards/HelloCard';
 import GetFontSize from '../../Commons/GetFontSize';
 import { AuthContext } from '../../Context/AuthContext';
-import LogoutIcon from '../../Images/svg/LogoutIcon';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import BlueSettingIcon from '../../Images/svg/BlueSettingIcon';
+import { changeStudentPassword } from '../../Services/StudentAPIV1';
+import Toast from 'react-native-toast-message';
+import AvatarIcon from '../../Images/svg/AvatarIcon';
+
 const HomeScreen = () => {
   const { studentProfile, logout } = useContext(AuthContext);
 
   const { width, height } = useWindowDimensions();
   const flatListRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isSettingsModalVisible, setIsSettingsModalVisible] = useState(false);
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+  const [isChangePasswordModalVisible, setIsChangePasswordModalVisible] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
   const cardWidth = width * 0.78;
   const cardSpacing = width * 0.08;
 
@@ -35,6 +45,35 @@ const HomeScreen = () => {
     { key: 'selfAwareness', component: SelfAwarenessCard },
     { key: 'lessonSchedule', component: LessonScheduleCard },
   ];
+
+  const handlePasswordChange = async () => {
+    if (newPassword === confirmPassword) {
+
+      try {
+        const response = await changeStudentPassword({
+          studentId: studentProfile?._id,
+          newPassword: newPassword
+        })
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: `Error: ${error.message || 'Something went wrong'}`,
+        })
+      }
+      setIsChangePasswordModalVisible(false);
+      setNewPassword('');
+      setConfirmPassword('');
+      Toast.show({
+        type: 'success',
+        text1: 'Password change successfully',
+      })
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: `Password doesn't match`,
+      })
+    }
+  };
 
   const renderCard = useCallback(
     ({ item }) => {
@@ -70,17 +109,16 @@ const HomeScreen = () => {
     (_, index) => index * (cardWidth + cardSpacing),
   );
 
-  
+
   return (
     <SafeAreaView style={styles.container} className='relative'>
-
-
       <View className="mx-[21px] py-[10px] h-[10%]">
-        <View className=" flex-row justify-start items-center ">
+        <View className=" flex-row justify-start items-center">
           <Image
             source={require(`../../Images/png/avatar.png`)}
             className="w-[18%]"
           />
+          {/* <AvatarIcon width={44} height={44} /> */}
           <View className="ml-[6px] w-[65%]">
             <Text
               style={{ fontSize: GetFontSize(20) }}
@@ -90,24 +128,20 @@ const HomeScreen = () => {
               {studentProfile?.name
                 .split(' ')
                 .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ')}            
-                </Text>
+                .join(' ')}
+            </Text>
             <Text
               style={{ fontSize: GetFontSize(12) }}
               className="font-inter400 text-[#979797] tracking-[-0.45] leading-tight">
               Class {studentProfile?.classId?.className} Section {studentProfile?.sectionId?.sectionName}
             </Text>
           </View>
-     
-          <TouchableOpacity
-            // onPress={async () => {
-            //   await logout()
-            // }}
-            onPress={() => setIsModalVisible(true)}
-            className='absolute right-0 '>
-            <LogoutIcon />
-          </TouchableOpacity>
 
+          <TouchableOpacity
+            onPress={() => setIsSettingsModalVisible(true)}
+            className='absolute right-0 '>
+            <BlueSettingIcon width={30} height={30} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -131,36 +165,118 @@ const HomeScreen = () => {
         ]}
         ItemSeparatorComponent={() => <View style={{ width: cardSpacing }} />}
       />
-            <Modal
-        visible={isModalVisible}
+
+      {/* Main Settings Modal */}
+      <Modal
+        visible={isSettingsModalVisible}
         animationType="fade"
         transparent={true}
-        onRequestClose={() => setIsModalVisible(false)}
+        onRequestClose={() => setIsSettingsModalVisible(false)}
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalText}>Are you sure you want to log out?</Text>
+            <TouchableOpacity
+              style={styles.modalOptionButton}
+              onPress={() => {
+                setIsSettingsModalVisible(false);
+                setIsLogoutModalVisible(true);
+              }}
+            >
+              <Text style={styles.modalOptionText}>Logout</Text>
+            </TouchableOpacity>
+            {/* <TouchableOpacity
+              style={styles.modalOptionButton}
+              onPress={() => {
+                setIsSettingsModalVisible(false);
+                setIsChangePasswordModalVisible(true);
+              }}
+            >
+              <Text style={styles.modalOptionText}>Change Password</Text>
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              style={[styles.modalOptionButton, styles.cancelButton]}
+              onPress={() => setIsSettingsModalVisible(false)}
+            >
+              <Text style={styles.modalOptionText}>Cancel</Text>
+            </TouchableOpacity>
+            <Text className="mt-2 text-[#333333]">Version 1.0.0</Text>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Logout Confirmation Modal */}
+        <Modal
+          visible={isLogoutModalVisible}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setIsLogoutModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>Are you sure you want to log out?</Text>
+              <View style={styles.modalButtons}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.noButton]}
+                  onPress={() => setIsLogoutModalVisible(false)}
+                >
+                  <Text style={styles.buttonText}>No</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.yesButton]}
+                  onPress={async () => {
+                    await logout();
+                    setIsLogoutModalVisible(false);
+                  }}
+                >
+                  <Text style={styles.buttonText}>Yes</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+      {/* Change Password Modal */}
+      <Modal
+        visible={isChangePasswordModalVisible}
+        animationType="fade"
+        transparent={true}
+        onRequestClose={() => setIsChangePasswordModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Change Password</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder="New Password"
+              value={newPassword}
+              onChangeText={setNewPassword}
+              placeholderTextColor={'#979797'}
+
+            />
+            <TextInput
+              style={styles.textInput}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              placeholderTextColor={'#979797'}
+            />
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.yesButton]}
-                onPress={async () => {
-                  await logout();
-                  setIsModalVisible(false);
-                }}
+                onPress={handlePasswordChange}
               >
-                <Text style={styles.buttonText}>Yes</Text>
+                <Text style={styles.buttonText}>Change</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalButton, styles.noButton]}
-                onPress={() => setIsModalVisible(false)}
+                onPress={() => setIsChangePasswordModalVisible(false)}
               >
-                <Text style={styles.buttonText}>No</Text>
+                <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
-
     </SafeAreaView>
   );
 };
@@ -177,7 +293,8 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     flexGrow: 1,
-  },  modalContainer: {
+  },
+  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -210,17 +327,45 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   yesButton: {
-    backgroundColor: '#FF6347',
+    backgroundColor: '#33569F',
   },
   noButton: {
-    backgroundColor: '#4682B4',
+    backgroundColor: '#979797',
   },
   buttonText: {
     color: '#FFFFFF',
     fontFamily: 'inter600',
     fontSize: GetFontSize(16),
   },
-});
+  modalOptionButton: {
+    width: '100%',
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+  },
+  modalOptionText: {
+    fontSize: GetFontSize(18),
+    fontFamily: 'inter600',
+    color: '#33569F',
+  },
+  cancelButton: {
+    borderBottomWidth: 0,
+    marginTop: 10,
+  },
+  textInput: {
+    width: '100%',
+    height: 40,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    marginBottom: 15,
+    fontFamily: 'inter400',
+    fontSize: GetFontSize(16),
+    color: 'black',
 
+  },
+});
 
 export default HomeScreen;

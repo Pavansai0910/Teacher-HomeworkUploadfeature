@@ -124,13 +124,12 @@ function SelfAware() {
         </Text>
       </View>
 
-
+      <View className="h-[72vh]">
       <ScrollView
-      style={{height: '100%'}}
         showsVerticalScrollIndicator={false}
         className="mx-[28px] overflow-x-hidden">
         {categories.map(category => (
-          <View key={category}>
+          <View key={category} className="pb-4 mb-4">
             <View className="flex flex-row justify-between items-center ">
               <Text
                 style={{fontSize: GetFontSize(18)}}
@@ -180,6 +179,7 @@ function SelfAware() {
           </View>
         ))}
       </ScrollView>
+        </View>
     </SafeAreaView>
   );
 }

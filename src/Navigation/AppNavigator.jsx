@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from 'react';
-import { View } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { View,Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import {AuthProvider, useNewAuth} from './Context/AuthContext';
@@ -28,6 +28,9 @@ import ReferralCode from '../Screens/Settings/ReferralCode';
 import NewEnglishUI from '../Screens/LearningSubjects/EnglishNotes';
 import AllTests from '../Screens/LGA/AllTests';
 import SubjectWiseProgress from '../Screens/SubjectwiseProgess/SubjectwiseProgress';
+import { versionChecker } from '../Services/StudentAPIV1';
+import GetFontSize from '../Commons/GetFontSize';
+import checkAuthentication from '../Utils/logout';
 
 const Stack = createNativeStackNavigator();
 
@@ -73,6 +76,7 @@ const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
   const { studentProfile, isAuthLoading, logout } = useContext(AuthContext);
+  // const [showUpdatePopup, setShowUpdatePopup] = useState(false);
 
     useEffect(() => {
     const checkSessionValidity = async () => {
@@ -84,8 +88,31 @@ function AppNavigator() {
       }
     };
     checkSessionValidity();
-  }, [logout]); // The `logout` function is a dependency
+  }, [logout]);
 
+  // useEffect(() => {
+    
+  //   const checkVersion = async () => {
+  //     try {
+  //         const version = await versionChecker({
+  //           studentId: studentProfile?._id,
+  //           // versionNumber:process.env.APP_VERSION
+  //           versionNumber:"1.24.0"
+  //         })
+  //         console.log("response",version.data);
+  //         if(version.data.updateRequired === true) {
+  //           setShowUpdatePopup(true)
+  //         }else {
+  //           setShowUpdatePopup(false)
+  //         }
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //     };
+  
+  //     checkVersion()
+  //   }, []); 
+  
   if (isAuthLoading) {
     return (
       <View
@@ -102,6 +129,21 @@ function AppNavigator() {
 
   const isAuthenticated = !!studentProfile;
 
+  // if(showUpdatePopup) {
+  //   return (
+  //     <View
+  //       style={{
+  //         flex: 1,
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //         backgroundColor: '#000000',
+  //       }}>
+  //       <Text className="text-white"
+  //       style={{fontSize:GetFontSize(16)}}
+  //       >Update App</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <NavigationContainer>

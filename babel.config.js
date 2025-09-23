@@ -1,7 +1,19 @@
-
 module.exports = {
-  presets: ['module:@react-native/babel-preset','nativewind/babel',],
+  presets: [
+    'module:@react-native/babel-preset',
+    'nativewind/babel',
+  ],
   plugins: [
-    ['module:react-native-dotenv']
+    [
+      "module:react-native-dotenv",
+      {
+        moduleName: "@env",
+        path: ".env",
+        blacklist: null,
+        whitelist: null,
+        safe: false,
+        allowUndefined: true
+      }
+    ]
   ]
 };

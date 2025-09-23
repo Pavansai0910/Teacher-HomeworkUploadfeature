@@ -156,7 +156,7 @@ function Flashcard({route}) {
 
   if (!flashcardData.length && !quizData.length) {
     return (
-      <View className="w-full h-full bg-[#FFFFFF] flex justify-center">
+      <View className="flex-1 bg-[#FFFFFF] flex justify-center">
         <Text
           style={{fontSize: GetFontSize(24)}}
           className="text-center font-inter600 mx-[30px] text-[#33569F]">
@@ -168,7 +168,7 @@ function Flashcard({route}) {
 
   if (showFirstScreen) {
     return (
-      <SafeAreaView className="w-full h-full bg-[#FFFFFF] flex justify-center items-center  ">
+      <SafeAreaView className="flex-1 bg-[#FFFFFF] flex justify-center items-center  ">
         <TouchableWithoutFeedback onPress={changeScreen}>
           <View className="h-[80%] w-[93%] bg-[#33569F] rounded-xl shadow-xl flex justify-center ">
             <Text
@@ -199,8 +199,8 @@ function Flashcard({route}) {
   }
 
   return (
-    <SafeAreaView className="w-full h-full bg-[#FFFFFF]">
-      <View className="w-full h-full flex justify-center items-center">
+    <SafeAreaView className="flex-1 bg-[#FFFFFF]">
+      <View className="flex-1 flex justify-center items-center">
         <View className="w-full h-[90%]">
           //Top Level ScrollView
           <ScrollView pagingEnabled horizontal>

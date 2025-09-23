@@ -102,6 +102,7 @@ export const getSubtopicMilestones = async ({ studentId }) => {
 
 export const changeStudentPassword = async({ studentId, newPassword }) => {
     const headers = await getAuthHeader()
+    console.log({studentId, newPassword})
   const body = { newPassword };
   return apiConnector('POST', `/v1/auth/change-password/${studentId}/student`, body, headers);
 };
@@ -125,7 +126,7 @@ export const studentLoginEvent = async ({studentId}) => {
 
 export const testReport = async ({ description, studentId, examId }) => {
   const headers = await getAuthHeader();
-  const requestBody = description;
+  const requestBody = {description};
   return apiConnector("POST",`/v1/student/lga-report/${studentId}/${examId}`,requestBody,headers);
 };
 
@@ -133,4 +134,11 @@ export const lgaLog = async ({ studentId, examId, schoolId, questionpaperId}) =>
   const headers = await getAuthHeader();
   const requestBody = { studentId, examId, schoolId, questionpaperId };
   return apiConnector("POST", `/v1/student/lga-log-entries`, requestBody, headers);
+};
+
+export const versionChecker = async ({ studentId, versionNumber,newdownloaded}) => {
+  const headers = await getAuthHeader();
+  const requestBody = { versionNumber,newdownloaded };
+  console.log(requestBody);
+  return apiConnector("POST", `/v1/student/student-app-version-update/${studentId}`, requestBody, headers);
 };

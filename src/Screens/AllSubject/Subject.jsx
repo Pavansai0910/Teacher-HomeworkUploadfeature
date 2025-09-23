@@ -99,7 +99,7 @@ function Subject() {
   }
 
   return (
-    <SafeAreaView className="w-full h-full bg-white">
+    <SafeAreaView className="flex-1 bg-white">
       <View className="mt-[5%]">
         <Text
           style={{ fontSize: GetFontSize(30) }}

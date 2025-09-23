@@ -224,32 +224,31 @@ function MathsEdumetric() {
 }
 
   return (
-    <SafeAreaView className="w-full h-full bg-[#FFFFFF]">
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <KeyboardAvoidingView
-      
-        >
-          <ScrollView
-            contentContainerStyle={{flexGrow: 1}}
-            keyboardShouldPersistTaps="handled" // Allows taps to bypass the keyboard
-          >
-            {messages.length == 0 && (
+    <SafeAreaView className="flex-1 bg-[#FFFFFF]">
+         <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}
+      keyboardVerticalOffset={0}>
+
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          {messages.length === 0 ? (
+            <ScrollView
+              contentContainerStyle={{ flexGrow: 1 }}
+              keyboardShouldPersistTaps="handled">
               <View>
                 <View className="mt-[86%] flex flex-row items-center">
                   <View className="ml-6">
                     <EdumetricIcon size={38} bg={'#33569F'} star={'#B4C6ED'} />
                   </View>
-
                   <View className="ml-3">
                     <Text
-                      style={{fontSize: GetFontSize(20)}}
-                      className="mt-3  font-poppins500  text-[#000000] leading-snug">
+                      style={{ fontSize: GetFontSize(20) }}
+                      className="mt-3 font-poppins500 text-[#000000] leading-snug">
                       Ask away—let's solve it
                     </Text>
-
                     <Text
-                      style={{fontSize: GetFontSize(20)}}
-                      className=" font-poppins500  text-[#000000] leading-snug">
+                      style={{ fontSize: GetFontSize(20) }}
+                      className="font-poppins500 text-[#000000] leading-snug">
                       together.
                     </Text>
                   </View>
@@ -263,102 +262,84 @@ function MathsEdumetric() {
                   className="mt-3 pb-[40px] mx-[18px] h-[160px] border-[2px] border-[#4D83F0] rounded-[10px] text-[#000000]"></TextInput>
 
                 <View className="absolute bottom-2 w-screen px-[24px] flex flex-row justify-between items-center">
-                  <TouchableOpacity onPress={() => handleDoubtUpload()}>
-                    {/* <PaperClipIcon size={36} /> */}
-                  </TouchableOpacity>
-
                   <TouchableOpacity
                     onPress={() => HandleSend()}
-                    className="mr-1 w-[32px] h-[32px] bg-[#EDF3FF] rounded-full flex flex-row justify-center items-center ">
-                    <LeftArrow width={20} height={20} flip={true}/>
+                    className="absolute bottom-2 right-7  w-[32px] h-[32px] bg-[#EDF3FF] rounded-full flex flex-row justify-center items-center ">
+                    <LeftArrow width={20} height={20} flip={true} />
                   </TouchableOpacity>
                 </View>
               </View>
-            )}
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </TouchableWithoutFeedback>
+            </ScrollView>
+          ) : (
+                        <View className="flex-1 flex-col"> {/* Add flex-1 and flex-col to parent View */}
 
-      {messages.length !== 0 && (
-        <KeyboardAvoidingView
-          behavior="padding"
-          className="flex-1"
-          keyboardVerticalOffset={20}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            className="flex justify-center items-center w-[50px] h-[50px] bg-[#dddddd33] rounded-full ml-4 mt-[16px] mb-[12px]">
-            <LeftArrow width={25} height={25} />
-          </TouchableOpacity>
-
-          <ScrollView
-            ref={messagesEndRef} // Attach the ref here
-            className="h-[80%]">
-            {messages.map((msg, index) =>
-              msg.user ? (
-                <View
-                  key={index}
-                  className="mt-5 flex flex-row justify-end mr-5">
+              <TouchableOpacity
+                onPress={() => navigation.goBack()}
+                className="flex justify-center items-center w-[50px] h-[50px] bg-[#dddddd33] rounded-full ml-4 mt-[16px] mb-[12px]">
+                <LeftArrow width={25} height={25} />
+              </TouchableOpacity>
+              <ScrollView
+                ref={messagesEndRef}
+                style={{ flex: 1 }}>
+                {messages.map((msg, index) =>
+                  msg.user ? (
+                    <View key={index} className="mt-5 flex flex-row justify-end mr-5">
+                      <Text
+                        style={{ fontSize: GetFontSize(16) }}
+                        className="font-poppins700 text-[#06286E] ml-[50px]">
+                        {msg.text}
+                      </Text>
+                    </View>
+                  ) : (
+                    <View className="mt-2 flex flex-row">
+                      <View className="ml-5">
+                        <EdumetricIcon size={25} bg={'#33569F'} star={'#B4C6ED'} />
+                      </View>
+                      <View className="ml-3 w-[70%] ">
+                        <RenderHTML
+                          contentWidth={width}
+                          baseStyle={edumetric}
+                          source={{ html: cleanLatex(msg.text) }}
+                        />
+                      </View>
+                    </View>
+                  ),
+                )}
+                {loading && (
+                  <View className="h-[50px] inline-flex bg-white justify-start px-4 self-start rounded-2xl">
+                    <EdumetricLoading value={value} />
+                  </View>
+                )}
+              </ScrollView>
+              <View className="flex flex-row items-center">
+                <View className="ml-3 w-[75%] bg-white h-[50px] border-[2px] border-[#4D83F0] rounded-[10px]">
+                  <TextInput
+                    value={sendMessage}
+                    onChangeText={text => setSendMessage(text)}
+                    multiline={true}
+                    className="text-[#06286E]"
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={() => HandleSend()}
+                  className="mx-2 w-[20%] h-[38px] bg-[#EDF3FF] rounded-[14px] flex justify-center ">
                   <Text
-                    style={{fontSize: GetFontSize(16)}}
-                    className="font-poppins700 text-[#06286E] ml-[50px]">
-                    {msg.text}
+                    style={{ fontSize: GetFontSize(13) }}
+                    className="font-inter700 text-[#33569F] text-center">
+                    Ask
                   </Text>
-                </View>
-              ) : (
-                <View className="mt-2 flex flex-row">
-                  <View className="ml-5">
-                    <EdumetricIcon size={25} bg={'#33569F'} star={'#B4C6ED'} />
-                  </View>
-
-                  <View className="ml-3 w-[70%] ">
-                    <RenderHTML
-                      contentWidth={width}
-                      baseStyle={edumetric}
-                      source={{html: cleanLatex(msg.text)}}
-                    />
-                  </View>
-                </View>
-              ),
-            )}
-
-            {/* Loading Indicator */}
-            {loading && (
-              <View className="h-[50px] inline-flex bg-white justify-start px-4 self-start rounded-2xl">
-                <EdumetricLoading value={value} />
+                </TouchableOpacity>
               </View>
-            )}
-          </ScrollView>
-
-          <View className=" flex flex-row items-center">
-          
-
-            <View className="ml-3 w-[75%] bg-white h-[50px] border-[2px] border-[#4D83F0] rounded-[10px]">
-              <TextInput
-                value={sendMessage}
-                onChangeText={text => setSendMessage(text)}
-                multiline={true}
-                className="text-[#06286E]"
-              />
             </View>
-
-            <TouchableOpacity
-              onPress={() => HandleSend()}
-              className="mx-2 w-[20%] h-[38px] bg-[#EDF3FF] rounded-[14px] flex justify-center ">
-              <Text
-                style={{fontSize: GetFontSize(13)}}
-                className="font-inter700  text-[#33569F] text-center">
-                Ask
-              </Text>
-            </TouchableOpacity> 
-          </View>
-        </KeyboardAvoidingView>
-      )}
+          )}  
+        </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 const edumetric = {
   color: '#06286E',
-  fontSize: GetFontSize(14),
+  fontSize: GetFontSize(12),
   fontFamily: 'Poppins-Regular',
   fontWeight: 400,
 };

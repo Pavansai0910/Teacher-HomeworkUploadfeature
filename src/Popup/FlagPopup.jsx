@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { flagQuestion } from "../Services/StudentAPIV2";
 import Toast from "react-native-toast-message";
+import GetFontSize from "../Commons/GetFontSize";
+import CloseBlack from "../Images/svg/CloseBlack";
 
 const FLAG_OPTIONS = [
   "Question is unclear",
@@ -97,9 +99,10 @@ export default function FlagPopup({
         <View className="bg-white rounded-2xl p-6 w-11/12 max-w-md shadow">
           {/* Header */}
           <View className="flex-row justify-between items-center mb-4">
-            <Text className="text-lg font-bold">Report this test</Text>
-            <TouchableOpacity onPress={onClose}>
-              <Text>X</Text>
+            <Text className="text-lg font-bold">Report this question</Text>
+            <TouchableOpacity
+              onPress={() => onClose()}>
+              <CloseBlack />
             </TouchableOpacity>
           </View>
 
@@ -112,11 +115,10 @@ export default function FlagPopup({
                 className="flex-row items-center mb-3"
               >
                 <View
-                  className={`w-5 h-5 mr-2 rounded border-2 ${
-                    selectedReasons.includes(reason)
+                  className={`w-5 h-5 mr-2 rounded border-2 ${selectedReasons.includes(reason)
                       ? "border-blue-600 bg-blue-600"
                       : "border-gray-400"
-                  }`}
+                    }`}
                 />
                 <Text className="text-base">{reason}</Text>
               </TouchableOpacity>
@@ -137,7 +139,7 @@ export default function FlagPopup({
             <TouchableOpacity
               onPress={handleSubmit}
               disabled={submitting}
-              className="px-4 py-2 bg-blue-700 rounded"
+              className="px-4 py-2 bg-[#33569F] rounded"
             >
               {submitting ? (
                 <ActivityIndicator color="#fff" />

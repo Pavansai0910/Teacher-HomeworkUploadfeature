@@ -1,8 +1,8 @@
 import { View, Text, Image } from "react-native"
 import { useContext } from "react"
 import { AuthContext } from "../../../Context/AuthContext"
-import LogoutIcon from "../../../Images/svg/LogoutIcon"
 import GetFontSize from "../../../Commons/GetFontSize"
+import BlueSettingIcon from "../../../Images/svg/BlueSettingIcon"
 export default function FirstBg() {
   const { studentProfile } = useContext(AuthContext) 
   return (
@@ -31,7 +31,7 @@ export default function FirstBg() {
      
           <View 
             className='absolute right-0 '>
-            <LogoutIcon />
+            <BlueSettingIcon />
           </View>
 
         </View>

@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -14,12 +14,12 @@ import {
 } from '../../Services/StudentAPIV1';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {formatDateTimestamp} from '../../Utils/formatDate';
-import {AuthContext} from '../../Context/AuthContext';
+import { formatDateTimestamp } from '../../Utils/formatDate';
+import { AuthContext } from '../../Context/AuthContext';
 import LeftArrowIconBlue from '../../Images/svg/LeftArrowIconBlue';
 import GetFontSize from '../../Commons/GetFontSize';
 import DropDownArrow from '../../Images/svg/DropdownArrow';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 function SubjectWiseProgress() {
@@ -32,13 +32,14 @@ function SubjectWiseProgress() {
   const [loadingSubjects, setLoadingSubjects] = useState(true);
   const [loadingTopics, setLoadingTopics] = useState(false);
   const [lastUpdated, setLastUpdated] = useState('');
-  const [selectedChapter, setSelectedChapter] = useState({id: '', name: ''});
+  const [selectedChapter, setSelectedChapter] = useState({ id: '', name: '' });
   const [allChapters, setAllChapters] = useState([]);
 
-  const {studentProfile} = useContext(AuthContext);
+  const { studentProfile } = useContext(AuthContext);
 
   const [chapterClicked, setChapterClicked] = useState(false);
   const [subjectClicked, setSubjectClicked] = useState(false);
+
   const navigation = useNavigation();
   useEffect(() => {
     const fetchSubjects = async () => {
@@ -137,7 +138,7 @@ function SubjectWiseProgress() {
           'timetableLastGenerated',
         );
         if (lastGenerated !== today) {
-          await createTimetable({studentId: studentProfile?._id});
+          await createTimetable({ studentId: studentProfile?._id });
           await AsyncStorage.setItem('timetableLastGenerated', today);
         }
       } catch (err) {
@@ -160,7 +161,7 @@ function SubjectWiseProgress() {
             }}>
             <LeftArrowIconBlue />
             <Text
-              style={{fontSize: GetFontSize(18)}}
+              style={{ fontSize: GetFontSize(18) }}
               className="ml-3 font-poppins600 text-[#33569F]">
               Details
             </Text>
@@ -173,7 +174,7 @@ function SubjectWiseProgress() {
       {!loadingSubjects && (
         <View>
           <Text
-            style={{fontSize: GetFontSize(16)}}
+            style={{ fontSize: GetFontSize(16) }}
             className="mt-5 ml-5 text-black font-poppins500 text-left">
             Chapter wise progress in
           </Text>
@@ -184,8 +185,8 @@ function SubjectWiseProgress() {
                 onPress={() => setSubjectClicked(!subjectClicked)}
                 className="h-[32px] px-2 flex flex-row items-center border border-[#E6F0FF] bg-[#E6F0FF] rounded-md">
                 <Text
-                  style={{fontSize: GetFontSize(12)}}
-                  className="text-[#5B77B0] font-inter700 line-clamp-1">
+                  style={{ fontSize: GetFontSize(12) }}
+                  className="text-[#5B77B0] font-inter700 line-clamp-1 w-[93%]">
                   {selectedSubject.subjectName
                     .split(' ')
                     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
@@ -206,11 +207,11 @@ function SubjectWiseProgress() {
                       key={index}
                       className="w-full h-[30px] flex justify-center"
                       onPress={() => {
-                        setSelectedChapter(item);
-                        setChapterClicked(false);
+                        setSelectedSubject(item);
+                        setSubjectClicked(false);
                       }}>
                       <Text
-                        style={{fontSize: GetFontSize(12)}}
+                        style={{ fontSize: GetFontSize(12) }}
                         className="py-1 px-2 text-[#5B77B0] font-inter700 line-clamp-1">
                         {item.subjectName
                           .split(' ')
@@ -231,8 +232,9 @@ function SubjectWiseProgress() {
                 onPress={() => setChapterClicked(!chapterClicked)}
                 className="h-[32px] px-2 flex flex-row items-center bg-[#E6F0FF] border border-[#E6F0FF] rounded-md">
                 <Text
-                  style={{fontSize: GetFontSize(12)}}
-                  className="text-[#5B77B0] font-inter700 line-clamp-1">
+                  ellipsizeMode='tail'
+                  style={{ fontSize: GetFontSize(12) }}
+                  className="text-[#5B77B0] font-inter700 line-clamp-1 w-[93%]">
                   {selectedChapter.name || 'Select Chapter'}
                 </Text>
                 {chapterClicked ? (
@@ -254,7 +256,8 @@ function SubjectWiseProgress() {
                         setChapterClicked(false);
                       }}>
                       <Text
-                        style={{fontSize: GetFontSize(12)}}
+                        ellipsizeMode='tail'
+                        style={{ fontSize: GetFontSize(12) }}
                         className="py-1 px-2 text-[#5B77B0] font-inter700 line-clamp-1">
                         {item.name}
                       </Text>
@@ -284,14 +287,14 @@ function SubjectWiseProgress() {
               topics.map((topic, index) => (
                 <View key={index} className="px-3 pt-3">
                   <View className="flex justify-between mb-4">
-                    <Text 
-                    style={{fontSize: GetFontSize(14)}}
-                    className="font-poppins500 text-[#000]">
+                    <Text
+                      style={{ fontSize: GetFontSize(14) }}
+                      className="font-poppins500 text-[#000]">
                       {topic.topicName}
                     </Text>
                     <Text
-                    style={{fontSize: GetFontSize(10)}}
-                    className="font-poppins400 text-[#000]">
+                      style={{ fontSize: GetFontSize(10) }}
+                      className="font-poppins400 text-[#000]">
                       Last updated:{formatDateTimestamp(lastUpdated) || ''}{' '}
                     </Text>
                   </View>
@@ -299,16 +302,16 @@ function SubjectWiseProgress() {
                   <View className="flex flex-row">
                     <View className="w-1/3 border border-black p-2 min-h-[120px] rounded-l-md">
                       <Text
-                        style={{fontSize: GetFontSize(12)}}
+                        style={{ fontSize: GetFontSize(12) }}
                         className="text-[#059669] font-poppins600 mb-2">
                         Strength Zone
                       </Text>
                       {topic.learningObjectives.strong.length > 0 ? (
                         <Text
-                          style={{listStyleType: 'disc', paddingLeft: '4px'}}>
+                          style={{ listStyleType: 'disc', paddingLeft: '4px' }}>
                           {topic.learningObjectives.strong.map((sub, i) => (
                             <Text
-                              style={{fontSize: GetFontSize(10)}}
+                              style={{ fontSize: GetFontSize(10) }}
                               key={i}
                               className="font-inter500 text-[#000] text-ellipses hyphens-auto">
                               {sub}
@@ -317,7 +320,7 @@ function SubjectWiseProgress() {
                         </Text>
                       ) : (
                         <Text
-                          style={{fontSize: GetFontSize(10)}}
+                          style={{ fontSize: GetFontSize(10) }}
                           className="text-[#000] font-inter500 text-center">
                           No Strong Objectives
                         </Text>
@@ -325,16 +328,16 @@ function SubjectWiseProgress() {
                     </View>
                     <View className="w-1/3 border-t border-b border-black p-2 min-h-[120px]">
                       <Text
-                        style={{fontSize: GetFontSize(12)}}
+                        style={{ fontSize: GetFontSize(12) }}
                         className="text-[#d97706] font-poppins600 mb-2">
                         Learning Zone
                       </Text>
                       {topic.learningObjectives.medium.length > 0 ? (
                         <Text
-                          style={{listStyleType: 'disc', paddingLeft: '4px'}}>
+                          style={{ listStyleType: 'disc', paddingLeft: '4px' }}>
                           {topic.learningObjectives.medium.map((sub, i) => (
                             <Text
-                              style={{fontSize: GetFontSize(10)}}
+                              style={{ fontSize: GetFontSize(10) }}
                               key={i}
                               className="font-inter500 text-[#000] text-ellipses hyphens-auto">
                               {sub}
@@ -343,24 +346,24 @@ function SubjectWiseProgress() {
                         </Text>
                       ) : (
                         <Text
-                        style={{fontSize: GetFontSize(10)}}
-                        className="text-[#000] font-inter500 text-center">
+                          style={{ fontSize: GetFontSize(10) }}
+                          className="text-[#000] font-inter500 text-center">
                           No Learning Objectives
                         </Text>
                       )}
                     </View>
                     <View className="w-1/3 border border-black p-2 min-h-[120px] rounded-r-md">
                       <Text
-                        style={{fontSize: GetFontSize(12)}}
+                        style={{ fontSize: GetFontSize(12) }}
                         className="text-[#dc2626] text-[14px] font-poppins600 mb-2">
                         Focus Area
                       </Text>
                       {topic.learningObjectives.weak.length > 0 ? (
                         <Text
-                          style={{listStyleType: 'disc', paddingLeft: '4px'}}>
+                          style={{ listStyleType: 'disc', paddingLeft: '4px' }}>
                           {topic.learningObjectives.weak.map((sub, i) => (
                             <Text
-                              style={{fontSize: GetFontSize(10)}}
+                              style={{ fontSize: GetFontSize(10) }}
                               key={i}
                               className="font-inter500 text-[#000] text-ellipses hyphens-auto ">
                               {sub}
@@ -369,8 +372,8 @@ function SubjectWiseProgress() {
                         </Text>
                       ) : (
                         <Text
-                        style={{fontSize: GetFontSize(10)}}
-                        className="text-[#000] font-inter500 text-center"> 
+                          style={{ fontSize: GetFontSize(10) }}
+                          className="text-[#000] font-inter500 text-center">
                           No weak Objectives
                         </Text>
                       )}
