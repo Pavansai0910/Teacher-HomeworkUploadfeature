@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { View,Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AuthContext } from '../Context/AuthContext';
@@ -8,13 +8,16 @@ import GetStartedScreen from '../Screens/GetStartedScreen';
 import Loader from '../Commons/Loader';
 import checkAuthentication from '../Utils/logout';
 import Demo from '../Screens/demo';
+import Home from '../Screens/Home/Home';
+import AssignTest from '../Screens/Home/AssignTest';
+import LessonPlanner from '../Screens/Home/LessonPlanner';
 
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
   const { teacherProfile, isAuthLoading, logout } = useContext(AuthContext);
 
-    useEffect(() => {
+  useEffect(() => {
     const checkSessionValidity = async () => {
       // Use your checkAuthentication function
       const isValid = await checkAuthentication();
@@ -26,7 +29,6 @@ function AppNavigator() {
     checkSessionValidity();
   }, [logout]);
 
-  
   if (isAuthLoading) {
     return (
       <View
@@ -35,7 +37,8 @@ function AppNavigator() {
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: 'white',
-        }}>
+        }}
+      >
         <Loader />
       </View>
     );
@@ -43,18 +46,19 @@ function AppNavigator() {
 
   const isAuthenticated = !!teacherProfile;
 
-
-
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
           animation: 'slide_from_right',
-        }}>
+        }}
+      >
         {isAuthenticated ? (
           <>
-            <Stack.Screen name="Demo" component={Demo} /> 
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="LessonPlanner" component={LessonPlanner} />
+            <Stack.Screen name="AssignTest" component={AssignTest} />
           </>
         ) : (
           <>
