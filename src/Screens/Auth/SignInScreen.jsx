@@ -33,7 +33,6 @@ const SignInScreen = () => {
       setLoading(true);
       const result = await loginTeacher({
         identifier: email,
-        
         password,
         role: 'teacher',
       });
