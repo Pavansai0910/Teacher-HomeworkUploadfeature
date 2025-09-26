@@ -7,7 +7,6 @@ import SignInScreen from '../Screens/Auth/SignInScreen';
 import GetStartedScreen from '../Screens/GetStartedScreen';
 import Loader from '../Commons/Loader';
 import checkAuthentication from '../Utils/logout';
-import Demo from '../Screens/demo';
 import Home from '../Screens/Home/Home';
 import AssignTest from '../Screens/Home/AssignTest';
 import LessonPlanner from '../Screens/Home/LessonPlanner';
