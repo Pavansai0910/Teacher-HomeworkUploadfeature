@@ -9,15 +9,14 @@ import Svg, {
   LinearGradient,
   Stop,
 } from "react-native-svg";
-/* SVGR has dropped some elements not supported by react-native-svg: filter */
-const Document = (props) => (
+
+const Document = () => (
   <Svg
     width={36}
     height={49}
     viewBox="0 0 36 49"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
   >
     <G filter="url(#filter0_dii_1190_15580)">
       <Rect

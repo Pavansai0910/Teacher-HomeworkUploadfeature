@@ -1,10 +1,10 @@
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import Bluepage from '../../Images/LessonPlanner';
-import Document from '../../Images/Document';
-import LeftArrow from '../../Images/LeftArrow';
-import RightArrow from '../../Images/RightArrow';
+import Bluepage from '../../Images/LessonPlan/LessonPlanner';
+import Document from '../../Images/LessonPlan/Document';
+import LeftArrow from '../../Images/LessonPlan/LeftArrow';
+import RightArrow from '../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../Commons/LessonPlanDropdown';
 
 const LessonPlanner = () => {

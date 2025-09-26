@@ -10,6 +10,8 @@ import checkAuthentication from '../Utils/logout';
 import Home from '../Screens/Home/Home';
 import AssignTest from '../Screens/Home/AssignTest';
 import LessonPlanner from '../Screens/Home/LessonPlanner';
+import MainTabNavigator from './MainTabNavigator';
+import StudentsInsights from '../Screens/Home/StudentsInsights';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,9 +57,14 @@ function AppNavigator() {
       >
         {isAuthenticated ? (
           <>
+            <Stack.Screen
+              name="MainTabNavigator"
+              component={MainTabNavigator}
+            />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="LessonPlanner" component={LessonPlanner} />
             <Stack.Screen name="AssignTest" component={AssignTest} />
+            <Stack.Screen name="StudentsInsights" component={StudentsInsights} />
           </>
         ) : (
           <>
