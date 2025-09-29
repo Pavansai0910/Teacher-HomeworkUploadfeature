@@ -12,32 +12,32 @@ const LessonPlanner = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      <ScrollView className="flex-1">
-        {/* Header */}
-        <View className="bg-[#E0F5FF] px-6 py-6">
-          <View className="flex-row items-center">
-            <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-              <Bluepage />
-            </View>
-            <View className="flex-1">
-              <View className="flex-row justify-between items-start">
-                <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
-                  Create Lesson Plan
-                </Text>
-                <TouchableOpacity
-                  className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                  onPress={() => navigation.goBack()}
-                >
-                  <Text className="text-white text-[14px]">✕</Text>
-                </TouchableOpacity>
-              </View>
-              <Text className="text-[#454F5B] text-[14px]">
-                Generate a comprehensive lesson{'\n'} plan in seconds
+      {/* Header (fixed at the top) */}
+      <View className="bg-[#E0F5FF] px-6 py-6">
+        <View className="flex-row items-center">
+          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
+            <Bluepage />
+          </View>
+          <View className="flex-1">
+            <View className="flex-row justify-between items-start">
+              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
+                Create Lesson Plan
               </Text>
+              <TouchableOpacity
+                className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
+                onPress={() => navigation.goBack()}
+              >
+                <Text className="text-white text-[14px]">✕</Text>
+              </TouchableOpacity>
             </View>
+            <Text className="text-[#454F5B] text-[14px]">
+              Generate a comprehensive lesson{'\n'} plan in seconds
+            </Text>
           </View>
         </View>
+      </View>
 
+      <ScrollView className="flex-1">
         {/* Class and Subject Selection */}
         <View className="mt-6 px-6 bg-white">
           <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
@@ -66,11 +66,11 @@ const LessonPlanner = () => {
 
         {/* Progress Steps */}
         <View className="px-6 mt-6">
-          <View className="bg-[#1CB0F6] rounded-2xl p-6">
+          <View className="bg-[#1CB0F6] rounded-2xl px-3 py-6">
             {/* Progress Steps */}
             <View className="flex-row items-center justify-between mb-5">
               <View className="items-center">
-                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center ">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
                     <Text className="text-[#212B36] font-semibold text-[12px]">
                       1
@@ -82,7 +82,7 @@ const LessonPlanner = () => {
                 </View>
               </View>
 
-              <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
+              <View className="flex-1 h-[2px] bg-[#F7F7F5] " />
 
               <View className="items-center">
                 <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
@@ -106,12 +106,10 @@ const LessonPlanner = () => {
                 </View>
               </View>
             </View>
-
             <View
               className="flex-1 h-0 border-t-2 border-[#F7F7F5]"
               style={{ borderStyle: 'dashed' }}
             />
-
             {/* Content Box */}
             <View className="rounded-xl mt-3">
               <View className="items-center mb-6">
@@ -129,20 +127,23 @@ const LessonPlanner = () => {
                 </Text>
               </View>
             </View>
-
             {/* Choose Chapter Button */}
-            <LessonPlanDropdown
-              placeholder="Choose a chapter to get started..."
-              options={[
-                'Number Systems',
-                'Polynomials',
-                'Coordinate Geometry',
-                'Linear Equations in Two Variables',
-                "Euclid's Geometry",
-                'Lines and Angles',
-                'Triangles',
-              ]}
-            />
+            <View className="w-full">
+              {/* Wrapping View to ensure full width for dropdown */}
+              <LessonPlanDropdown
+                placeholder="Choose a chapter to get started..."
+                options={[
+                  'Number Systems',
+                  'Polynomials',
+                  'Coordinate Geometry',
+                  'Linear Equations in Two Variables',
+                  "Euclid's Geometry",
+                  'Lines and Angles',
+                  'Triangles',
+                ]}
+                style={{ width: '100%' }}
+              />
+            </View>
           </View>
         </View>
         {/* Pro Tip */}

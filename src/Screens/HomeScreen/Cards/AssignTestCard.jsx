@@ -33,12 +33,12 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
         </View>
       </View>
 
-      <View className="bg-white flex-1 px-6 py-6 justify-between rounded-b-3xl">
-        <View>
-          <Text className="text-gray-800 text-xl font-bold text-center mb-3">
+      <View className="bg-white flex-1 px-6 py-6 rounded-b-3xl">
+        <View className="flex-1 justify-center">
+          <Text className="text-[#212B36] text-[19px] font-bold text-center mb-3">
             Assign Test
           </Text>
-          <Text className="text-gray-600 text-sm text-center leading-5">
+          <Text className="text-[#454F5B] text-[13px] text-center leading-6">
             Generate comprehensive lesson plans with objectives and activities
           </Text>
         </View>
@@ -53,7 +53,7 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
           }}
           className="bg-white rounded-xl border-[#E4E4E2] shadow-sm self-center mt-4"
         >
-          <Text className="text-[#FDCA0C] text-sm font-semibold py-3 px-20 text-center">
+          <Text className="text-[#FEC434] text-sm font-semibold py-3 px-16 text-center">
             Assign Test
           </Text>
         </TouchableOpacity>

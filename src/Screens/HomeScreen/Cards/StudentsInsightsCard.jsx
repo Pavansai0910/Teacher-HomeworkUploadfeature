@@ -46,8 +46,8 @@ const StudentsInsightsCard = ({
         </View>
       </View>
 
-      <View className="bg-white flex-1 px-6 py-6 justify-between rounded-b-3xl">
-        <View>
+      <View className="bg-white flex-1 px-6 py-6 rounded-b-3xl">
+        <View className="flex-1 justify-center">
           <Text className="text-[#212B36] text-[19px] font-bold text-center mb-3">
             Test insights
           </Text>
