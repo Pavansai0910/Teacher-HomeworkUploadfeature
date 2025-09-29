@@ -1,13 +1,12 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
-const NotificationIcon = (props) => (
+const NotificationIcon = ({width, height}) => (
   <Svg
-    width={24}
-    height={25}
+    width={width || 24} 
+    height={height || 25}
     viewBox="0 0 24 25"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    {...props}
   >
     <Path
       d="M12 14.25C9.37665 14.25 7.25 16.3767 7.25 19C7.25 21.6234 9.37665 23.75 12 23.75C14.6233 23.75 16.75 21.6234 16.75 19C16.75 16.3767 14.6233 14.25 12 14.25Z"

@@ -10,10 +10,10 @@ import Svg, {
   Stop,
 } from "react-native-svg";
 
-const Document = () => (
+const Document = ({width, height}) => (
   <Svg
-    width={36}
-    height={49}
+    width={width || 36} 
+    height={height || 49}
     viewBox="0 0 36 49"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

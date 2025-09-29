@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [teacherProfile, setTeacherProfile] = useState(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
 
-  // Load profile once on app start
   useEffect(() => {
     (async () => {
       try {
@@ -21,7 +20,6 @@ export const AuthProvider = ({ children }) => {
     })();
   }, []);
 
-  // Method to update the context and AsyncStorage
   const updateProfile = async (profile) => {
     setIsAuthLoading(true);
         await AsyncStorage.setItem("loginDate", new Date().toISOString());
@@ -31,7 +29,6 @@ export const AuthProvider = ({ children }) => {
     setIsAuthLoading(false);
   };
 
-  // On logout, clear context and storage
   const logout = async () => {
     await AsyncStorage.removeItem("teacherProfile");
     await AsyncStorage.removeItem("teacherCount");

@@ -1,8 +1,8 @@
 import Svg, { Path } from "react-native-svg";
-const BarGraphIcon = () => (
+const BarGraphIcon = ({width, height}) => (
   <Svg
-    width={37}
-    height={36}
+    width={width || 37} 
+    height={height || 36}
     viewBox="0 0 37 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

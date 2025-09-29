@@ -10,171 +10,173 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import NotificationIcon from '../../Images/Home/NotificationIcon';
+import StudentsInsightsCard from '../HomeScreen/Cards/StudentsInsightsCard';
+import LessonPlannerCard from '../HomeScreen/Cards/LessonPlannerCard';
+import AssignTestCard from '../HomeScreen/Cards/AssignTestCard';
+import { useContext } from 'react';
+import { AuthContext } from '../../Context/AuthContext';
 
 const { width } = Dimensions.get('window');
 
+// Function to get initials from name
+const getInitials = name => {
+  if (!name) return 'AS'; // Default fallback
+
+  const names = name.trim().split(' ');
+  if (names.length === 1) {
+    return names[0].charAt(0).toUpperCase();
+  }
+  return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
+};
+
 const Home = () => {
+  const { teacherProfile } = useContext(AuthContext);
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const cards = [
-    {
-      id: 1,
-      title: 'Students insights',
-      subtitle:
-        'Generate comprehensive lesson plans with objectives and activities',
-      buttonText: 'Student Insights',
-      solidColor: '#FFD700',
-      gradientColors: ['#FFF4A3', '#FFE066', '#FFD700'],
-      onPress: () => navigation.navigate('StudentsInsights'),
-    },
-    {
-      id: 2,
-      title: 'Create Lesson Plan',
-      subtitle: 'Save 2+ hours Daily planning',
-      buttonText: 'Create Lesson Plan',
-      solidColor: '#4A90E2',
-      gradientColors: ['#87CEEB', '#5BA3E0', '#4A90E2'],
-      onPress: () => navigation.navigate('LessonPlanner'),
-    },
-    {
-      id: 3,
-      title: 'Assign Test',
-      subtitle:
-        'Generate comprehensive lesson plans with objectives and activities',
-      buttonText: 'Assign Test',
-      solidColor: '#7ED321',
-      gradientColors: ['#B8E994', '#90E05A', '#7ED321'],
-      onPress: () => navigation.navigate('AssignTest'),
-    },
+  const gradientBackgrounds = [
+    ['#FFFFFF', '#BBF192'],
+    ['#FFFFFF', '#93D8FB'],
+    ['#FFFFFF', '#FEDB85'],
   ];
+
+  const cardWidth = width * 0.7;
+  const cardSpacing = 1;
 
   const handleScroll = event => {
     const contentOffset = event.nativeEvent.contentOffset;
-    const index = Math.round(contentOffset.x / (width * 0.85));
+    const index = Math.round(contentOffset.x / cardWidth);
     setCurrentIndex(index);
   };
 
-  const renderCard = card => (
-    <View
-      key={card.id}
-      className="mx-2 rounded-3xl overflow-hidden shadow-lg mt-32"
-      style={{ width: width * 0.85, height: 320 }}
-    >
-      <LinearGradient
-        colors={card.gradientColors}
-        style={{ flex: 1 }}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0, y: 1 }}
-      >
-        <View className="flex-1 p-5">
-          <View className="items-center mb-6">
-            <View className="w-16 h-16 bg-white rounded-full items-center justify-center shadow-md mb-4">
-              <View className="w-8 h-8 bg-gray-300 rounded-full" />
-            </View>
-
-            <View className="flex-row">
-              <View className="w-8 h-8 bg-white rounded-full items-center justify-center mx-1 shadow-sm">
-                <View className="w-4 h-4 bg-blue-400 rounded-full" />
-              </View>
-              <View className="w-8 h-8 bg-white rounded-full items-center justify-center mx-1 shadow-sm">
-                <View className="w-4 h-4 bg-orange-400 rounded-full" />
-              </View>
-            </View>
-          </View>
-
-          <View className="flex-1 justify-end">
-            <View
-              className="rounded-2xl p-4 items-center shadow-lg"
-              style={{ backgroundColor: card.solidColor, minHeight: 120 }}
-            >
-              <Text className="text-white text-lg font-bold text-center mb-2">
-                {card.title}
-              </Text>
-              <Text className="text-white text-xs text-center opacity-90 leading-4 mb-4">
-                {card.subtitle}
-              </Text>
-
-              <TouchableOpacity
-                className="bg-white py-2 px-6 rounded-full"
-                onPress={card.onPress}
-              >
-                <Text className="text-gray-800 text-sm font-semibold">
-                  {card.buttonText}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </LinearGradient>
-    </View>
-  );
+  const userInitials = getInitials(teacherProfile?.name);
 
   return (
     <SafeAreaView className="flex-1 mt-6">
-      {/* Header */}
-      <View className="flex-row justify-between items-center px-5 pt-2 pb-5">
-        <View className="flex-row items-center">
-          <View className="w-11 h-11 rounded-full bg-orange-500 items-center justify-center mr-3">
-            <Text className="text-white font-bold text-base">AS</Text>
+      <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white">
+        <TouchableOpacity
+          className="flex-row items-center"
+          onPress={() => navigation.navigate('Settings')}
+        >
+          <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
+            <Text className="text-white font-bold text-base">
+              {userInitials}
+            </Text>
           </View>
           <View>
             <Text className="text-[#454F5B] text-[16px] font-bold">
-              Aditi Sharma
+              {teacherProfile?.name}
             </Text>
             <Text className="text-[#637381] text-[14px] font-regular">
               Welcome to Adaptmate
             </Text>
           </View>
-        </View>
+        </TouchableOpacity>
+
         <TouchableOpacity className="w-9 h-9 rounded-full bg-blue-50 items-center justify-center">
           <NotificationIcon />
         </TouchableOpacity>
       </View>
 
-      {/* Dropdowns */}
-      <View className="flex-row px-5 mb-8">
-        <TouchableOpacity className="flex-1 flex-row justify-between items-center py-3 px-4 mx-1 bg-white rounded-full border-2 border-orange-500">
-          <Text className="text-sm text-orange-500 font-medium">Class</Text>
-          <Text className="text-xs text-orange-500">▼</Text>
-        </TouchableOpacity>
+      <LinearGradient
+        colors={gradientBackgrounds[currentIndex]}
+        style={{ flex: 1 }}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
+        <View className="flex-row justify-between px-6 pt-4 pb-6">
+          <TouchableOpacity
+            className="flex-1 mr-2 rounded-[16px] py-3 px-4 flex-row justify-between items-center shadow-sm"
+            style={{
+              backgroundColor: '#FFF',
+              borderTopWidth: 3,
+              borderRightWidth: 3,
+              borderBottomWidth: 6,
+              borderLeftWidth: 3,
+              borderColor: '#A17F5E',
+            }}
+          >
+            <Text className="text-[#DC9047] font-semibold text-sm">Class</Text>
+            <Text className="text-[#DC9047] text-lg">▼</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity className="flex-1 flex-row justify-between items-center py-3 px-4 mx-1 bg-white rounded-full border-2 border-orange-500">
-          <Text className="text-sm text-orange-500 font-medium">Subject</Text>
-          <Text className="text-xs text-orange-500">▼</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Sliding Cards - Manual scroll only */}
-      <View className="flex-1 justify-center">
-        <ScrollView
-          ref={scrollViewRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-          contentContainerStyle={{ paddingHorizontal: 15 }}
-        >
-          {cards.map(renderCard)}
-        </ScrollView>
-
-        {/* Dots Indicator */}
-        <View className="flex-row justify-center items-center mt-5">
-          {cards.map((_, index) => (
-            <View
-              key={index}
-              className={`h-2 rounded-full mx-1 ${
-                currentIndex === index ? 'bg-orange-500 w-6' : 'bg-gray-300 w-2'
-              }`}
-            />
-          ))}
+          <TouchableOpacity
+            className="flex-1 mr-2 rounded-[16px] py-3 px-4 flex-row justify-between items-center shadow-sm"
+            style={{
+              backgroundColor: '#FFF',
+              borderTopWidth: 3,
+              borderRightWidth: 3,
+              borderBottomWidth: 6,
+              borderLeftWidth: 3,
+              borderColor: '#A17F5E',
+            }}
+          >
+            <Text className="text-[#DC9047] font-semibold text-sm">
+              Subject
+            </Text>
+            <Text className="text-[#DC9047] text-lg">▼</Text>
+          </TouchableOpacity>
         </View>
-      </View>
 
-      {/* Bottom spacing */}
-      <View className="h-5" />
+        <View className="flex-1 justify-center">
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            pagingEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            snapToInterval={cardWidth + cardSpacing}
+            decelerationRate="fast"
+            contentContainerStyle={{
+              paddingHorizontal: width * 0.15,
+              alignItems: 'center',
+            }}
+          >
+            <StudentsInsightsCard
+              onPress={() => navigation.navigate('StudentsInsights')}
+              isActive={currentIndex === 0}
+              cardWidth={cardWidth}
+              cardSpacing={cardSpacing}
+            />
+            <LessonPlannerCard
+              onPress={() => navigation.navigate('LessonPlanner')}
+              isActive={currentIndex === 1}
+              cardWidth={cardWidth}
+              cardSpacing={cardSpacing}
+            />
+            <AssignTestCard
+              onPress={() => navigation.navigate('AssignTest')}
+              isActive={currentIndex === 2}
+              cardWidth={cardWidth}
+              cardSpacing={cardSpacing}
+            />
+          </ScrollView>
+
+          <View className="flex-row justify-center items-center mt-5 mb-8">
+            {gradientBackgrounds.map((_, index) => {
+              let dotColor = '#FFFFFF'; // default inactive color
+              if (currentIndex === index) {
+                if (index === 0) dotColor = '#A5ED6F';
+                else if (index === 1) dotColor = '#1EAFF7';
+                else if (index === 2) dotColor = '#FED570';
+              }
+              return (
+                <View
+                  key={index}
+                  className="rounded-full mx-1"
+                  style={{
+                    width: 10,
+                    height: 10,
+                    backgroundColor: dotColor,
+                  }}
+                />
+              );
+            })}
+          </View>
+        </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };

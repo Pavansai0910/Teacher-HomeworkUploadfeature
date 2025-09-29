@@ -1,9 +1,9 @@
 import * as React from "react";
 import Svg, { Path, Defs, LinearGradient, Stop } from "react-native-svg";
-const ScanIcon = () => (
+const ScanIcon = ({width, height}) => (
   <Svg
-    width={37}
-    height={37}
+    width={width || 37} 
+    height={height || 37}
     viewBox="0 0 37 37"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
