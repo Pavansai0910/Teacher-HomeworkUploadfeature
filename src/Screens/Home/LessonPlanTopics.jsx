@@ -17,11 +17,11 @@ import { getAllTopics } from '../../Services/teacherAPIV1';
 import TopicDropdown from '../../Commons/TopicDropdown';
 import { AuthContext } from '../../Context/AuthContext';
 
-const LessonPlanTopics = ({route}) => {
+const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
   console.log('Chapter ID:', chapterId);
-  const { teacherProfile } = useContext(AuthContext)
+  const { teacherProfile } = useContext(AuthContext);
 
   const selectedAssignment = useSelector(
     state => state.assignment.selectedAssignment,
@@ -39,7 +39,6 @@ const LessonPlanTopics = ({route}) => {
   const subjectDisplay =
     selectedAssignment?.subjectId?.subjectName || 'Not selected';
 
-
   useEffect(() => {
     const fetchTopics = async () => {
       if (!chapterId) {
@@ -53,7 +52,6 @@ const LessonPlanTopics = ({route}) => {
           subjectId: selectedAssignment?.subjectId?._id,
           boardId: teacherProfile?.schoolId?.boardId,
           chapterId,
-
         });
 
         const topicData =
@@ -156,19 +154,15 @@ const LessonPlanTopics = ({route}) => {
             <View className="flex-row items-center justify-between mb-5">
               {/* Step 1 - Completed */}
               <View className="items-center">
-                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
-                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                    <Text className="text-[#5FCC3D] font-semibold text-[12px]">
-                      ✓
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                    <Text className="text-white font-semibold text-[12px]">
+                      2
                     </Text>
                   </View>
-                  <Text className="text-white text-[12px] font-semibold">
-                    Choose Chapter
-                  </Text>
                 </View>
               </View>
-              <View className="flex-1 h-[2px] bg-[#5FCC3D]" />
-
+              <View className="flex-1 h-[3px] bg-[#F7F7F5]" />
               {/* Step 2 - Active */}
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">

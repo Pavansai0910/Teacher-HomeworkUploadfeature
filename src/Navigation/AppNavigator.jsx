@@ -14,6 +14,7 @@ import MainTabNavigator from './MainTabNavigator';
 import StudentsInsights from '../Screens/Home/StudentsInsights';
 import Settings from '../Screens/Settings/Settings';
 import LessonPlanTopics from '../Screens/Home/LessonPlanTopics';
+import AssignTestTopics from '../Screens/Home/AssignTestTopics';
 
 const Stack = createNativeStackNavigator();
 
@@ -69,6 +70,7 @@ function AppNavigator() {
             <Stack.Screen name="AssignTest" component={AssignTest} />
             <Stack.Screen name="StudentsInsights" component={StudentsInsights} />
             <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="AssignTestTopics" component={AssignTestTopics} />
           </>
         ) : (
           <>

@@ -17,23 +17,19 @@ const LessonPlanner = () => {
   const [selectedChapterName, setSelectedChapterName] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
 
-  // 1. New: Use a useEffect hook to find the ID whenever the name changes.
-  // This is safer than doing the lookup inside the handle function.
   useEffect(() => {
     if (selectedChapterName && chapters && chapters.length > 0) {
       // Find the full chapter object using the selected name
       const chapterObject = chapters.find(c => c.name === selectedChapterName);
-      
-      // Set the ID, using 'id' (as per your example data) or '_id'
-      // Check for chapterObject before accessing its id
       if (chapterObject) {
-        setSelectedChapterId(chapterObject.id); // Assuming 'id' is the field name
-        console.log("Selected Chapter ID:", chapterObject.id); // Check here
+        setSelectedChapterId(chapterObject.id); 
+        console.log("Selected Chapter ID:", chapterObject.id); 
       } else {
         setSelectedChapterId(null);
       }
     }
-  }, [selectedChapterName, chapters]); // Depend on selectedChapterName and chapters
+  }, [selectedChapterName, chapters]); 
+
 
   // 2. Updated: The handler only sets the name (the immediate action)
   const handleChapterSelect = (chapterName) => {
