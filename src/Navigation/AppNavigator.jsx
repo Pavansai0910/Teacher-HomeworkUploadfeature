@@ -16,6 +16,8 @@ import Settings from '../Screens/Settings/Settings';
 import LessonPlanTopics from '../Screens/Home/LessonPlanTopics';
 import LessonPlanGeneration from '../Screens/Home/Lessonplanner/LessonPlanGeneration ';
 import GeneratedLessonPlan from '../Screens/Home/Lessonplanner/GeneratedLessonPlan';
+import AssignTestTopics from '../Screens/Home/AssignTestTopics';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -77,6 +79,7 @@ function AppNavigator() {
               component={StudentsInsights}
             />
             <Stack.Screen name="Settings" component={Settings} />
+
             <Stack.Screen
               name="LessonPlanGeneration"
               component={LessonPlanGeneration}
@@ -85,6 +88,10 @@ function AppNavigator() {
               name="GeneratedLessonPlan"
               component={GeneratedLessonPlan}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AssignTestTopics"
+              component={AssignTestTopics}
             />
           </>
         ) : (

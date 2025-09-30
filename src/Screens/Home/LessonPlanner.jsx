@@ -8,6 +8,7 @@ import Document from '../../Images/LessonPlan/Document';
 import LeftArrow from '../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../Commons/LessonPlanDropdown';
+import Loader from './Loader'; // Adjust path as needed
 
 const LessonPlanner = () => {
   const navigation = useNavigation();
@@ -30,6 +31,7 @@ const LessonPlanner = () => {
   }, [selectedChapterName, chapters]); 
 
 
+  // 2. Updated: The handler only sets the name (the immediate action)
   const handleChapterSelect = (chapterName) => {
     setSelectedChapterName(chapterName);
   };
@@ -165,7 +167,7 @@ const LessonPlanner = () => {
           </Text>
         </View>
 
-        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-14" />
+            <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-14" />
 
         {/* Navigation Buttons */}
         <View className="px-6 mt-2">
