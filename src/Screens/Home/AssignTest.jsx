@@ -8,11 +8,31 @@ import Document from '../../Images/LessonPlan/Document';
 import LeftArrow from '../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../Commons/LessonPlanDropdown';
+import React, { useState, useEffect } from 'react';
 
 const AssignTest = () => {
   const navigation = useNavigation();
+  const [selectedChapterName, setSelectedChapterName] = useState(null);
+  const [selectedChapterId, setSelectedChapterId] = useState(null);
+
   const { chapters, loading } = useSelector(state => state.chapters);
   const chapterOptions = chapters?.map(chapter => chapter.name) || [];
+
+  useEffect(() => {
+    if (selectedChapterName && chapters && chapters.length > 0) {
+      const chapterObject = chapters.find(c => c.name === selectedChapterName);
+      if (chapterObject) {
+        setSelectedChapterId(chapterObject.id);
+        console.log('Selected Chapter ID:', chapterObject.id);
+      } else {
+        setSelectedChapterId(null);
+      }
+    }
+  }, [selectedChapterName, chapters]);
+
+  const handleChapterSelect = chapterName => {
+    setSelectedChapterName(chapterName);
+  };
 
   const renderHeader = () => (
     <View>
@@ -115,7 +135,8 @@ const AssignTest = () => {
               <LessonPlanDropdown
                 placeholder="Choose a chapter to get started..."
                 options={chapterOptions}
-                style={{ width: '100%' }}
+                onSelect={handleChapterSelect}
+                selectedValue={selectedChapterName}
               />
             )}
           </View>
