@@ -14,6 +14,8 @@ import MainTabNavigator from './MainTabNavigator';
 import StudentsInsights from '../Screens/Home/StudentsInsights';
 import Settings from '../Screens/Settings/Settings';
 import LessonPlanTopics from '../Screens/Home/LessonPlanTopics';
+import LessonPlanGeneration from '../Screens/Home/Lessonplanner/LessonPlanGeneration ';
+import GeneratedLessonPlan from '../Screens/Home/Lessonplanner/GeneratedLessonPlan';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,10 +67,25 @@ function AppNavigator() {
             />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="LessonPlanner" component={LessonPlanner} />
-            <Stack.Screen name="LessonPlanTopics" component={LessonPlanTopics} />
+            <Stack.Screen
+              name="LessonPlanTopics"
+              component={LessonPlanTopics}
+            />
             <Stack.Screen name="AssignTest" component={AssignTest} />
-            <Stack.Screen name="StudentsInsights" component={StudentsInsights} />
+            <Stack.Screen
+              name="StudentsInsights"
+              component={StudentsInsights}
+            />
             <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen
+              name="LessonPlanGeneration"
+              component={LessonPlanGeneration}
+            />
+            <Stack.Screen
+              name="GeneratedLessonPlan"
+              component={GeneratedLessonPlan}
+              options={{ headerShown: false }}
+            />
           </>
         ) : (
           <>

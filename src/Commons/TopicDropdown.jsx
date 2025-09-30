@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 
-const TopicDropdown = ({ topics, selectedTopics, onTopicsSelect, placeholder }) => {
+const TopicDropdown = ({
+  topics,
+  selectedTopics,
+  onTopicsSelect,
+  placeholder,
+}) => {
   const [showSavedPlans, setShowSavedPlans] = useState(false);
 
   const handleTopicToggle = (topic) => {
@@ -16,42 +21,59 @@ const TopicDropdown = ({ topics, selectedTopics, onTopicsSelect, placeholder }) 
   return (
     <View className="w-full">
       {/* Saved Lesson Plans Button */}
-      <TouchableOpacity 
-        className="bg-white rounded-lg p-3 mb-4 border border-[#E5E5E3]"
+      <TouchableOpacity
+        className="bg-white rounded-xl p-3 mb-4"
+        style={{
+          borderTopWidth: 1,
+          borderLeftWidth: 2,
+          borderRightWidth: 2,
+          borderBottomWidth: 4,
+          borderColor: '#89D5FB',
+        }}
         onPress={() => setShowSavedPlans(!showSavedPlans)}
       >
-        <Text className="text-[#637381] text-center">
+        <Text className="text-[#1EAFF7] text-center text-[14px]">
           Saved Lesson plans
         </Text>
       </TouchableOpacity>
 
       {/* Topics List */}
-      <ScrollView className="max-h-64">
+      <ScrollView className="">
         {topics.map((topic, index) => {
           const isSelected = selectedTopics.some(t => t.id === topic.id);
           return (
             <TouchableOpacity
               key={topic.id || index}
-              className={`flex-row items-center justify-between p-3 mb-2 rounded-lg border ${
-                isSelected 
-                  ? 'bg-[#FED570] border-[#FED570]' 
-                  : 'bg-white border-[#E5E5E3]'
-              }`}
               onPress={() => handleTopicToggle(topic)}
+              className={`flex-row items-center justify-between px-4 py-3 mb-1 rounded-xl`}
+              style={{
+                borderTopWidth: 1,
+                borderLeftWidth: 2,
+                borderRightWidth: 2,
+                borderBottomWidth: 4,
+                borderColor: isSelected ? '#DC9047' : '#E5E5E3',
+                backgroundColor: isSelected ? '#FFF' : '#FFF',
+              }}
             >
-              <Text className={`flex-1 ${
-                isSelected ? 'text-[#B8860B]' : 'text-[#637381]'
-              }`}>
+              {/* Topic Name */}
+              <Text
+                className={`flex-1 font-semibold ${
+                  isSelected ? 'text-[#DC9047]' : 'text-[#637381]'
+                }`}
+                numberOfLines={1}
+              >
                 {topic.name}
               </Text>
-              <View className={`w-6 h-6 rounded-full border-2 ${
-                isSelected 
-                  ? 'bg-[#B8860B] border-[#B8860B]' 
-                  : 'bg-white border-[#E5E5E3]'
-              } items-center justify-center`}>
-                {isSelected && (
-                  <Text className="text-white text-xs">✓</Text>
-                )}
+
+              {/* Checkbox */}
+              <View
+                className={`w-6 h-6 rounded-lg border-2  items-center justify-center`}
+                style={{
+                  borderColor: isSelected ? '#B0743A' : '#E5E5E3',
+                  backgroundColor: isSelected ? '#DC9047' : '#FFF',
+                }}
+              >
+                {isSelected && <Text className="text-white text-sm">✓</Text>}
               </View>
             </TouchableOpacity>
           );

@@ -150,14 +150,13 @@ const LessonPlanTopics = ({ route }) => {
         {/* Progress Steps */}
         <View className="px-6 mt-6">
           <View className="bg-[#1CB0F6] rounded-2xl px-3 py-6">
-            {/* Stepper */}
             <View className="flex-row items-center justify-between mb-5">
               {/* Step 1 - Completed */}
               <View className="items-center">
-                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
-                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text className="text-white font-semibold text-[12px]">
-                      2
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text className="font-semibold text-[12px]">
+                      1
                     </Text>
                   </View>
                 </View>
@@ -197,7 +196,7 @@ const LessonPlanTopics = ({ route }) => {
                   <Document />
                 </View>
                 <Text className="text-white font-semibold text-[16px] mb-2 text-center">
-                  Pick the topics you want to cover
+                  Pick the topics you want to cover!
                 </Text>
                 <Text className="text-white text-center text-[13px] leading-5 px-2">
                   Select one or more topics from the list to generate a

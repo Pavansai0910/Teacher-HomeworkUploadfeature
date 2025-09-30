@@ -161,7 +161,14 @@ const AssignTest = () => {
             <LeftArrow />
             <Text className="text-[#FED570] font-semibold">Back</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="flex-row gap-1 flex-1 py-3 bg-[#FED570] rounded-lg justify-center items-center border-2 border-[#FEC107]">
+          <TouchableOpacity
+            onPress={() =>
+              navigation.navigate('LessonPlanTopics', {
+                chapterId: selectedChapterId,
+              })
+            }
+            className="flex-row gap-1 flex-1 py-3 bg-[#FED570] rounded-lg justify-center items-center border-2 border-[#FEC107]"
+          >
             <Text className="text-white font-semibold">Continue </Text>
             <RightArrow />
           </TouchableOpacity>
