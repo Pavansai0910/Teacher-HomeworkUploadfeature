@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { apiConnector } from "../Services/Operations/apiconnector"
+import { apiConnector } from '../Services/Operations/apiconnector';
 
 export const getAuthHeader = async () => {
   const token = await AsyncStorage.getItem('token');
@@ -15,6 +15,21 @@ export const getChapters = async ({ classId, subjectId, boardId }) => {
     'GET',
     `/v1/teacher/get-chapters?subjectId=${subjectId}&classId=${classId}&boardId=${boardId}`,
     null,
-    headers
+    headers,
+  );
+};
+
+export const getAllTopics = async ({
+  classId,
+  subjectId,
+  chapterId,
+  boardId,
+}) => {
+  const headers = await getAuthHeader();
+  return apiConnector(
+    'GET',
+    `/v2/teacher/get-topics?classId=${classId}&subjectId=${subjectId}&chapterId=${chapterId}&boardId=${boardId}`,
+    null,
+    headers,
   );
 };
