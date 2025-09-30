@@ -2,6 +2,8 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { ActivityIndicator } from 'react-native';
 import Bluepage from '../../Images/LessonPlan/LessonPlanner';
 import Document from '../../Images/LessonPlan/Document';
 import LeftArrow from '../../Images/LessonPlan/LeftArrow';
@@ -10,60 +12,36 @@ import LessonPlanDropdown from '../../Commons/LessonPlanDropdown';
 
 const AssignTest = () => {
   const navigation = useNavigation();
+  const { chapters, loading } = useSelector(state => state.chapters);
+  const chapterOptions = chapters?.map(chapter => chapter.name) || [];
 
-  return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/* Header (fixed at the top) */}
-      <View className="bg-[#FFF3D6] px-6 py-6">
-        <View className="flex-row items-center">
-          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-            <Bluepage />
+  const renderHeader = () => (
+    <View>
+      {/* Class and Subject Selection */}
+      <View className="mt-6 px-6 bg-white">
+        <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
+          <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
+            <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
+            <Text
+              className="text-gray-800 font-semibold"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              Class 9-A | 50 Students
+            </Text>
           </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-start">
-              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
-                Assign Test
-              </Text>
-              <TouchableOpacity
-                className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
-                onPress={() => navigation.goBack()}
-              >
-                <Text className="text-white text-[14px]">✕</Text>
-              </TouchableOpacity>
-            </View>
-            <Text className="text-[#454F5B] text-[14px]">
-              Boost your students' progress in{'\n'} just a few taps!
+          <View className="flex-[1] ml-2">
+            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
+            <Text
+              className="text-gray-800 font-semibold"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              Mathematics
             </Text>
           </View>
         </View>
       </View>
-
-      <ScrollView className="flex-1">
-        {/* Class and Subject Selection */}
-        <View className="mt-6 px-6 bg-white">
-          <View className="flex-row border-2 border-gray-200 rounded-xl px-4 py-3">
-            <View className="flex-[2] mr-4 border-r-2 border-gray-200 pr-4">
-              <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
-              <Text
-                className="text-gray-800 font-semibold"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Class 9-A | 50 Students
-              </Text>
-            </View>
-            <View className="flex-[1] ml-2">
-              <Text className="text-gray-500 text-xs mb-1">Subject</Text>
-              <Text
-                className="text-gray-800 font-semibold"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                Mathematics
-              </Text>
-            </View>
-          </View>
-        </View>
 
         {/* Progress Steps */}
         <View className="px-6 mt-6">
@@ -122,37 +100,33 @@ const AssignTest = () => {
                   Ready to plan smarter?
                 </Text>
 
-                <Text className="text-[#B68201] text-center text-[13px] leading-5 px-2">
-                  Select a chapter for which you want to assign a test.
-                </Text>
-              </View>
-            </View>
-            {/* Choose Chapter Button */}
-            <View className="w-full">
-              <LessonPlanDropdown
-                placeholder="Choose a chapter to get started..."
-                placeholderStyle={{ fontSize: 12 }}
-                options={[
-                  'Number Systems',
-                  'Polynomials',
-                  'Coordinate Geometry',
-                  'Linear Equations in Two Variables',
-                  "Euclid's Geometry",
-                  'Lines and Angles',
-                  'Triangles',
-                ]}
-                style={{ width: '100%' }}
-              />
+              <Text className="text-[#B68201] text-center text-[13px] leading-5 px-2">
+                Select a chapter for which you want to assign a test.
+              </Text>
             </View>
           </View>
+
+          {/* Choose Chapter Button */}
+          <View className="w-full">
+            {loading ? (
+              <ActivityIndicator size="large" color="#ffffff" />
+            ) : (
+              <LessonPlanDropdown
+                placeholder="Choose a chapter to get started..."
+                options={chapterOptions}
+                style={{ width: '100%' }}
+              />
+            )}
+          </View>
         </View>
-        {/* Pro Tip */}
-        <View className="px-6 mt-4">
-          <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
-            <Text className="font-semibold">Pro Tip:</Text> Regular testing
-            improves retention by 40%!
-          </Text>
-        </View>
+      </View>
+      {/* Pro Tip */}
+      <View className="px-6 mt-4">
+        <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
+          <Text className="font-semibold">Pro Tip:</Text> Regular testing
+          improves retention by 40%!
+        </Text>
+      </View>
 
         <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-14" />
 
