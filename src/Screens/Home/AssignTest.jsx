@@ -1,6 +1,8 @@
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { useSelector } from 'react-redux';
+import { ActivityIndicator } from 'react-native';
 import Bluepage from '../../Images/LessonPlan/LessonPlanner';
 import Document from '../../Images/LessonPlan/Document';
 import LeftArrow from '../../Images/LessonPlan/LeftArrow';
@@ -9,6 +11,8 @@ import LessonPlanDropdown from '../../Commons/LessonPlanDropdown';
 
 const AssignTest = () => {
   const navigation = useNavigation();
+  const { chapters, loading } = useSelector(state => state.chapters);
+  const chapterOptions = chapters?.map(chapter => chapter.name) || [];
 
   const renderHeader = () => (
     <View>
@@ -99,25 +103,22 @@ const AssignTest = () => {
 
               <Text className="text-[#B68201] text-center text-[13px] leading-5 px-2">
                 Select a chapter for which you want to assign a test.
-              
               </Text>
             </View>
           </View>
 
           {/* Choose Chapter Button */}
-          <LessonPlanDropdown
-            placeholder="Choose a chapter to get started..."
-            placeholderStyle={{ fontSize: 12 }} // Added smaller font size for placeholder
-            options={[
-              'Number Systems',
-              'Polynomials',
-              'Coordinate Geometry',
-              'Linear Equations in Two Variables',
-              "Euclid's Geometry",
-              'Lines and Angles',
-              'Triangles',
-            ]}
-          />
+          <View className="w-full">
+            {loading ? (
+              <ActivityIndicator size="large" color="#ffffff" />
+            ) : (
+              <LessonPlanDropdown
+                placeholder="Choose a chapter to get started..."
+                options={chapterOptions}
+                style={{ width: '100%' }}
+              />
+            )}
+          </View>
         </View>
       </View>
       {/* Pro Tip */}
