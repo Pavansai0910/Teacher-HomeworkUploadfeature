@@ -108,7 +108,7 @@ const LessonPlanTopics = ({ route }) => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('LessonPlanner')}
+                onPress={() => navigation.navigate('MainTabNavigator')}
               >
                 <Text className="text-white text-[14px]">✕</Text>
               </TouchableOpacity>
@@ -155,9 +155,7 @@ const LessonPlanTopics = ({ route }) => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                    <Text className="font-semibold text-[12px]">
-                      1
-                    </Text>
+                    <Text className="font-semibold text-[12px]">1</Text>
                   </View>
                 </View>
               </View>
@@ -188,6 +186,11 @@ const LessonPlanTopics = ({ route }) => {
                 </View>
               </View>
             </View>
+
+            <View
+              className="h-[2px] border-t border-white"
+              style={{ borderStyle: 'dashed' }}
+            />
 
             {/* Content Box */}
             <View className="rounded-xl mt-3">

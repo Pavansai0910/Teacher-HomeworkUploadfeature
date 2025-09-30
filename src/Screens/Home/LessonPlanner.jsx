@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -11,7 +17,9 @@ import LessonPlanDropdown from '../../Commons/LessonPlanDropdown';
 
 const LessonPlanner = () => {
   const navigation = useNavigation();
-  const selectedAssignment = useSelector(state => state.assignment.selectedAssignment);
+  const selectedAssignment = useSelector(
+    state => state.assignment.selectedAssignment,
+  );
   const { chapters, loading } = useSelector(state => state.chapters);
   const [selectedChapterName, setSelectedChapterName] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
@@ -21,17 +29,16 @@ const LessonPlanner = () => {
       // Find the full chapter object using the selected name
       const chapterObject = chapters.find(c => c.name === selectedChapterName);
       if (chapterObject) {
-        setSelectedChapterId(chapterObject.id); 
-        console.log("Selected Chapter ID:", chapterObject.id); 
+        setSelectedChapterId(chapterObject.id);
+        console.log('Selected Chapter ID:', chapterObject.id);
       } else {
         setSelectedChapterId(null);
       }
     }
-  }, [selectedChapterName, chapters]); 
-
+  }, [selectedChapterName, chapters]);
 
   // 2. Updated: The handler only sets the name (the immediate action)
-  const handleChapterSelect = (chapterName) => {
+  const handleChapterSelect = chapterName => {
     setSelectedChapterName(chapterName);
   };
 
@@ -40,7 +47,8 @@ const LessonPlanner = () => {
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
     : 'Not selected';
 
-  const subjectDisplay = selectedAssignment?.subjectId?.subjectName || 'Not selected';
+  const subjectDisplay =
+    selectedAssignment?.subjectId?.subjectName || 'Not selected';
 
   // 3. Updated: Map chapters for dropdown options (only names)
   const chapterOptions = chapters?.map(chapter => chapter.name) || [];
@@ -60,7 +68,7 @@ const LessonPlanner = () => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                onPress={() => navigation.goBack()}
+                onPress={() => navigation.navigate('MainTabNavigator')}
               >
                 <Text className="text-white text-[14px]">✕</Text>
               </TouchableOpacity>
@@ -78,13 +86,21 @@ const LessonPlanner = () => {
           <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
             <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
               <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
-              <Text className="text-gray-800 font-semibold" numberOfLines={1} ellipsizeMode="tail">
+              <Text
+                className="text-gray-800 font-semibold"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {classDisplay}
               </Text>
             </View>
             <View className="flex-[1] ml-2">
               <Text className="text-gray-500 text-xs mb-1">Subject</Text>
-              <Text className="text-gray-800 font-semibold" numberOfLines={1} ellipsizeMode="tail">
+              <Text
+                className="text-gray-800 font-semibold"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
                 {subjectDisplay}
               </Text>
             </View>
@@ -100,9 +116,13 @@ const LessonPlanner = () => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                    <Text className="text-[#212B36] font-semibold text-[12px]">1</Text>
+                    <Text className="text-[#212B36] font-semibold text-[12px]">
+                      1
+                    </Text>
                   </View>
-                  <Text className="text-white text-[12px] font-semibold">Choose Chapter</Text>
+                  <Text className="text-white text-[12px] font-semibold">
+                    Choose Chapter
+                  </Text>
                 </View>
               </View>
               <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
@@ -110,7 +130,9 @@ const LessonPlanner = () => {
               <View className="items-center">
                 <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text className="text-white font-semibold text-[12px]">2</Text>
+                    <Text className="text-white font-semibold text-[12px]">
+                      2
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -119,11 +141,18 @@ const LessonPlanner = () => {
               <View className="items-center">
                 <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text className="text-white font-semibold text-[12px]">3</Text>
+                    <Text className="text-white font-semibold text-[12px]">
+                      3
+                    </Text>
                   </View>
                 </View>
               </View>
             </View>
+
+            <View
+              className="h-[2px] border-t border-white"
+              style={{ borderStyle: 'dashed' }}
+            />
 
             {/* Content Box */}
             <View className="rounded-xl mt-3">
@@ -146,14 +175,12 @@ const LessonPlanner = () => {
               {loading ? (
                 <ActivityIndicator size="large" color="#ffffff" />
               ) : (
-                
                 <LessonPlanDropdown
                   placeholder="Choose a chapter to get started..."
                   options={chapterOptions}
                   onSelect={handleChapterSelect} // New prop
                   selectedValue={selectedChapterName} // New prop
                 />
-
               )}
             </View>
           </View>
@@ -162,11 +189,12 @@ const LessonPlanner = () => {
         {/* Pro Tip */}
         <View className="px-6 mt-4">
           <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
-            <Text className="font-semibold">Pro Tip:</Text> Regular testing improves retention by 40%!
+            <Text className="font-semibold">Pro Tip:</Text> Regular testing
+            improves retention by 40%!
           </Text>
         </View>
 
-            <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-14" />
+        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-14" />
 
         {/* Navigation Buttons */}
         <View className="px-6 mt-2">
@@ -179,8 +207,13 @@ const LessonPlanner = () => {
               <Text className="text-[#1EAFF7] font-semibold">Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate('LessonPlanTopics', { chapterId: selectedChapterId })}
-              className="flex-row gap-1 flex-1 py-3 bg-[#1EAFF7] rounded-lg justify-center items-center border-2 border-[#0786C5]">
+              onPress={() =>
+                navigation.navigate('LessonPlanTopics', {
+                  chapterId: selectedChapterId,
+                })
+              }
+              className="flex-row gap-1 flex-1 py-3 bg-[#1EAFF7] rounded-lg justify-center items-center border-2 border-[#0786C5]"
+            >
               <Text className="text-white font-semibold">Continue</Text>
               <RightArrow />
             </TouchableOpacity>

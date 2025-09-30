@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView, ScrollView, Dimensions } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  Animated,
+  Dimensions,
+  Easing,
+} from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Loader = ({ isVisible, onClose }) => {
   const [progress, setProgress] = useState(0);
-  const [clickedTopics, setClickedTopics] = useState(new Set());
+  const [completedTopics, setCompletedTopics] = useState(new Set());
+  const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
   const screenWidth = Dimensions.get('window').width;
   const circleSize = 120;
   const strokeWidth = 12;
+
+  const progressAnim = useRef(new Animated.Value(0)).current;
+  const rotationAnim = useRef(new Animated.Value(0)).current;
 
   const topics = [
     { number: 1, text: 'Analyzing curriculum standards...' },
@@ -19,116 +31,110 @@ const Loader = ({ isVisible, onClose }) => {
     { number: 7, text: 'Finalizing lesson structure...' },
   ];
 
-  const handleTopicClick = (index) => {
-    if (!clickedTopics.has(index) && progress < 100) {
-      setClickedTopics(prev => new Set([...prev, index]));
-      const increment = 100 / topics.length;
-      const newProgress = Math.min(progress + increment, 100);
-      setProgress(newProgress);
-    }
-  };
-
+  // Spinner animation
   useEffect(() => {
-    if (progress >= 100 && isVisible) {
-      const timer = setTimeout(() => {
-        onClose();
-      }, 1000);
-      return () => clearTimeout(timer);
+    if (isVisible) {
+      rotationAnim.setValue(0);
+      Animated.loop(
+        Animated.timing(rotationAnim, {
+          toValue: 1,
+          duration: 1000,
+          easing: Easing.linear,
+          useNativeDriver: true,
+        }),
+      ).start();
     }
-  }, [progress, onClose, isVisible]);
+    return () => rotationAnim.stopAnimation();
+  }, [isVisible]);
+
+  // Auto progress through topics
+  useEffect(() => {
+    if (!isVisible) return;
+
+    setCompletedTopics(new Set());
+    setCurrentTopicIndex(0);
+    setProgress(0);
+    progressAnim.setValue(0);
+
+    const processTopic = (index) => {
+      if (index >= topics.length) {
+        setCurrentTopicIndex(-1);
+        setTimeout(onClose, 1000);
+        return;
+      }
+
+      setCurrentTopicIndex(index);
+
+      setTimeout(() => {
+        setCompletedTopics((prev) => {
+          const newCompleted = new Set(prev);
+          newCompleted.add(index);
+          return newCompleted;
+        });
+
+        const newProgress = ((index + 1) / topics.length) * 100;
+        setProgress(newProgress);
+
+        Animated.timing(progressAnim, {
+          toValue: newProgress,
+          duration: 500,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: false,
+        }).start();
+
+        setTimeout(() => processTopic(index + 1), 500);
+      }, 1000);
+    };
+
+    processTopic(0);
+
+    return () => setCurrentTopicIndex(-1);
+  }, [isVisible]);
 
   if (!isVisible) return null;
 
-  // Calculate SVG circle properties
   const radius = (circleSize - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-      <ScrollView 
-        contentContainerStyle={{ 
-          flexGrow: 1, 
-          paddingTop: 60,
-          paddingBottom: 24,
-          paddingHorizontal: 16 
-        }}
-      >
-        {/* Close Button */}
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            width: 32,
-            height: 32,
-            backgroundColor: '#1EAFF7',
-            borderRadius: 16,
-            justifyContent: 'center',
-            alignItems: 'center',
-            zIndex: 10,
-          }}
-          onPress={onClose}
-        >
-          <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold' }}>✕</Text>
-        </TouchableOpacity>
+  const spin = rotationAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
 
-        {/* Top Section */}
-        <View style={{
-          padding: 20,
-          marginBottom: 20,
-          backgroundColor: 'white',
-        }}>
-          {/* Title */}
-          <Text style={{ 
-            color: '#212B36', 
-            fontWeight: '600', 
-            fontSize: 18, 
-            marginBottom: 6,
-            textAlign: 'center'
-          }}>
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        className="pt-16 pb-6 px-4"
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Header */}
+        <View className="p-5 bg-white">
+          <Text className="text-[#212B36] font-semibold text-lg text-center mb-1">
             Generating Lesson Plan
           </Text>
-
-          {/* Subtitle */}
-          <Text style={{ 
-            color: '#637381', 
-            fontFamily: 'Inter',
-            fontWeight: '400',
-            fontStyle: 'normal',
-            fontSize: 14,
-            lineHeight: 19,
-            letterSpacing: -0.28,
-            marginBottom: 24,
-            textAlign: 'center'
-          }}>
+          <Text className="text-[#637381] text-sm text-center mb-4">
             AI is analyzing best teaching practices for your topic
           </Text>
 
-          {/* Circular Progress - Centered */}
-          <View style={{ 
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <View style={{
-              padding: 20,
-              backgroundColor: 'white',
-            }}>
-              <View style={{ 
-                width: circleSize, 
-                height: circleSize,
-                position: 'relative' 
-              }}>
+          {/* Circular Progress */}
+          <View className="items-center justify-center">
+            <View className="bg-white">
+              <View style={{ width: circleSize, height: circleSize }}>
                 <Svg width={circleSize} height={circleSize}>
-                  {/* Define gradient */}
                   <Defs>
-                    <LinearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <LinearGradient
+                      id="progressGradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
                       <Stop offset="4.62%" stopColor="#1EAFF7" />
                       <Stop offset="93.01%" stopColor="#0679B1" />
                     </LinearGradient>
                   </Defs>
-
-                  {/* Background circle */}
                   <Circle
                     cx={circleSize / 2}
                     cy={circleSize / 2}
@@ -137,8 +143,6 @@ const Loader = ({ isVisible, onClose }) => {
                     strokeWidth={strokeWidth}
                     fill="white"
                   />
-                  
-                  {/* Progress circle with gradient */}
                   <Circle
                     cx={circleSize / 2}
                     cy={circleSize / 2}
@@ -146,36 +150,19 @@ const Loader = ({ isVisible, onClose }) => {
                     stroke="url(#progressGradient)"
                     strokeWidth={strokeWidth}
                     fill="none"
-                    strokeDasharray={[circumference, circumference]}
+                    strokeDasharray={`${circumference} ${circumference}`}
                     strokeDashoffset={strokeDashoffset}
                     strokeLinecap="round"
-                    rotation="-90"
-                    origin={`${circleSize / 2}, ${circleSize / 2}`}
+                    transform={`rotate(-90 ${circleSize / 2} ${circleSize / 2})`}
                   />
                 </Svg>
-                
-                {/* Percentage text overlay */}
-                <View style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                  <Text style={{ 
-                    color: '#1EAFF7', 
-                    fontWeight: 'bold', 
-                    fontSize: 24 
-                  }}>
+
+                {/* % Text */}
+                <View className="absolute inset-0 items-center justify-center">
+                  <Animated.Text className="text-[#1EAFF7] font-bold text-2xl">
                     {Math.round(progress)}%
-                  </Text>
-                  <Text style={{
-                    color: '#67717aff',
-                    fontSize: 11,
-                    marginTop: 2
-                  }}>
+                  </Animated.Text>
+                  <Text className="text-[#67717a] text-[11px] mt-1">
                     Complete
                   </Text>
                 </View>
@@ -184,95 +171,69 @@ const Loader = ({ isVisible, onClose }) => {
           </View>
         </View>
 
-        {/* Bottom Section */}
-        <View style={{
-          width: 327.625,
-          height: 482,
-          opacity: 1,
-          borderRadius: 20,
-          paddingTop: 24,
-          paddingRight: 16,
-          paddingBottom: 24,
-          paddingLeft: 16,
-          backgroundColor: '#FFFFFF',
-          borderWidth: 3.75,
-          borderColor: '#FFFFFF',
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.05,
-          shadowRadius: 8,
-          elevation: 2,
-        }}>
-          {/* Section Title */}
-          <Text style={{
-            color: '#212B36',
-            fontWeight: '600',
-            fontSize: 16,
-            marginBottom: 10,
-            textAlign: 'center'
-          }}>
+        {/* Topics Section */}
+        <View
+          className="self-center rounded-2xl bg-white p-3 px-4 shadow-md"
+          style={{ width: Math.min(330, screenWidth - 32) }}
+        >
+          <Text className="text-[#212B36] font-semibold text-base text-center mb-4">
             Crafting Your Perfect Lesson
           </Text>
 
-          {/* Topics List */}
-          <View style={{ gap: 10 }}>
-            {topics.map((topic, index) => (
-              <TouchableOpacity
-                key={index}
-                style={{
-                  backgroundColor: clickedTopics.has(index) ? '#D4F5B8' : '#F4F6F8',
-                  borderRadius: 12,
-                  padding: 12,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  borderTopWidth: 1,
-                  borderRightWidth: 2,
-                  borderBottomWidth: 3,
-                  borderLeftWidth: 2,
-                  borderColor: clickedTopics.has(index) ? '#7FD45A' : '#E5E7EB',
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 1 },
-                  shadowOpacity: 0.05,
-                  shadowRadius: 2,
-                  elevation: 1,
-                  width: 295.625,
-                  height: 48,
-                  opacity: 1,
-                  transform: [{ rotate: '0deg' }],
-                }}
-                onPress={() => handleTopicClick(index)}
-                activeOpacity={0.7}
-              >
-                {/* Number Circle */}
-                <View style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: 16,
-                  backgroundColor: clickedTopics.has(index) ? '#7FD45A' : '#9CA3AF',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: 8,
-                }}>
-                  <Text style={{
-                    color: 'white',
-                    fontWeight: '600',
-                    fontSize: 14,
-                  }}>
-                    {topic.number}
-                  </Text>
-                </View>
+          <View className="gap-2">
+            {topics.map((topic, index) => {
+              const isCompleted = completedTopics.has(index);
+              const isCurrent = index === currentTopicIndex;
 
-                {/* Topic Text */}
-                <Text style={{ 
-                  color: clickedTopics.has(index) ? '#5CB92B' : '#637381',
-                  fontSize: 14,
-                  flex: 1,
-                  fontWeight: clickedTopics.has(index) ? '600' : '400',
-                }}>
-                  {topic.text}
-                </Text>
-              </TouchableOpacity>
-            ))}
+              let containerClasses =
+                'rounded-xl p-3 flex-row items-center border';
+              let numberCircleClasses =
+                'w-8 h-8 rounded-full justify-center items-center mr-3';
+              let textClasses = 'flex-1 text-sm';
+              let showSpinner = false;
+              let showCheckmark = false;
+
+              if (isCompleted) {
+                containerClasses += ' bg-[#D4F5B8] border-[#7FD45A]';
+                numberCircleClasses += ' bg-[#7FD45A]';
+                textClasses += ' text-[#5CB92B] font-semibold';
+                showCheckmark = true;
+              } else if (isCurrent) {
+                containerClasses += ' bg-[#F4F6F8] border-[#E5E7EB]';
+                numberCircleClasses += ' bg-[#1EAFF7]';
+                textClasses += ' text-[#637381] font-semibold';
+                showSpinner = true;
+              } else {
+                containerClasses += ' bg-[#F4F6F8] border-[#E5E7EB]';
+                numberCircleClasses += ' bg-[#9CA3AF]';
+                textClasses += ' text-[#637381] font-normal';
+              }
+
+              return (
+                <Animated.View key={index} className={containerClasses}>
+                  <View className={numberCircleClasses}>
+                    <Text className="text-white font-semibold text-sm">
+                      {topic.number}
+                    </Text>
+                  </View>
+
+                  <Text className={textClasses}>{topic.text}</Text>
+
+                  {showSpinner && (
+                    <Animated.View
+                      style={{ transform: [{ rotate: spin }] }}
+                      className="w-5 h-5 rounded-full border-2 border-[#1EAFF7] ml-2"
+                    />
+                  )}
+
+                  {showCheckmark && (
+                    <View className="w-5 h-5 rounded-full bg-[#7FD45A] items-center justify-center ml-2">
+                      <Text className="text-white text-xs font-bold">✓</Text>
+                    </View>
+                  )}
+                </Animated.View>
+              );
+            })}
           </View>
         </View>
       </ScrollView>
@@ -280,4 +241,4 @@ const Loader = ({ isVisible, onClose }) => {
   );
 };
 
-export default Loader;
+export default Loader;

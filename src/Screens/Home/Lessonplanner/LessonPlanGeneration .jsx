@@ -8,8 +8,7 @@ import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
-// 👉 Import your calendar icon here
-// import CalendarIcon from '../../../Images/LessonPlan/CalendarIcon';
+import Loader from '../../../Commons/AnimatedLoader/Loader';
 
 const LessonPlanGeneration = () => {
   const navigation = useNavigation();
@@ -23,7 +22,8 @@ const LessonPlanGeneration = () => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [showPicker, setShowPicker] = useState(false);
-  const [pickerTarget, setPickerTarget] = useState(null); // "start" or "end"
+  const [pickerTarget, setPickerTarget] = useState(null);
+  const [showLoader, setShowLoader] = useState(false); // Add loader state
 
   const classDisplay = selectedAssignment
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
@@ -34,11 +34,28 @@ const LessonPlanGeneration = () => {
 
   const handleGenerate = () => {
     if (!startDate || !endDate) return;
+
+    // Show loader animation
+    setShowLoader(true);
+
     console.log('Final Payload:', {
       chapterId,
       selectedTopics,
       startDate,
       endDate,
+    });
+  };
+
+  const handleLoaderComplete = () => {
+    setShowLoader(false);
+    // Navigate to the generated lesson plan with all the data
+    navigation.navigate('GeneratedLessonPlan', {
+      chapterId,
+      selectedTopics,
+      startDate,
+      endDate,
+      classDisplay,
+      subjectDisplay,
     });
   };
 
@@ -61,6 +78,11 @@ const LessonPlanGeneration = () => {
     }
   };
 
+  // Show loader if it's visible
+  if (showLoader) {
+    return <Loader isVisible={showLoader} onClose={handleLoaderComplete} />;
+  }
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
@@ -76,7 +98,7 @@ const LessonPlanGeneration = () => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('LessonPlanner')}
+                onPress={() => navigation.navigate('MainTabNavigator')}
               >
                 <Text className="text-white text-[14px]">✕</Text>
               </TouchableOpacity>
@@ -118,7 +140,45 @@ const LessonPlanGeneration = () => {
         {/* Progress Steps */}
         <View className="px-6 mt-6">
           <View className="bg-[#1CB0F6] rounded-2xl px-3 py-6">
-            {/* Stepper (unchanged) */}
+            <View className="flex-row items-center justify-between mb-5">
+              {/* Step 1 - Completed */}
+              <View className="items-center">
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text className="font-semibold text-[12px]">1</Text>
+                  </View>
+                </View>
+              </View>
+              <View className="flex-1 h-[3px] bg-[#F7F7F5]" />
+              {/* Step 2 - Active */}
+              <View className="items-center">
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text className="font-semibold text-[12px]">2</Text>
+                  </View>
+                </View>
+              </View>
+              <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
+
+              {/* Step 3 */}
+              <View className="items-center">
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
+                    <Text className="text-[#212B36] font-semibold text-[12px]">
+                      3
+                    </Text>
+                  </View>
+                  <Text className="text-white text-[12px] font-semibold">
+                    Generate Plan
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            <View
+              className="h-[2px] border-t border-white"
+              style={{ borderStyle: 'dashed' }}
+            />
 
             {/* Content Box */}
             <View className="rounded-xl mt-3">
@@ -139,7 +199,6 @@ const LessonPlanGeneration = () => {
 
             {/* Date Inputs */}
             <View className="px-3">
-              {/* Start Date */}
               <Text className="text-white mb-2">
                 Start Date <Text className="text-[#E34F57]">*</Text>
               </Text>
@@ -160,14 +219,9 @@ const LessonPlanGeneration = () => {
                 <Text className="text-[#DC9047] font-semibold text-[16px]">
                   {startDate || 'dd/mm/yyyy'}
                 </Text>
-                {/* 👉 Replace with your Calendar Icon */}
-                <View className="w-5 h-5">
-                  {/* <CalendarIcon /> */}
-                  {/* <Text>📅</Text> */}
-                </View>
+                <View className="w-5 h-5"></View>
               </TouchableOpacity>
 
-              {/* End Date */}
               <Text className="text-white mb-2">
                 End Date <Text className="text-[#E34F57]">*</Text>
               </Text>
@@ -188,18 +242,18 @@ const LessonPlanGeneration = () => {
                 <Text className="text-[#DC9047] font-semibold text-[16px]">
                   {endDate || 'dd/mm/yyyy'}
                 </Text>
-                {/* 👉 Replace with your Calendar Icon */}
                 <View className="w-5 h-5">
-                  {/* <CalendarIcon /> */}
-                  {/* <Text>📅</Text> */}
+                  {/* Add your calendar icon here */}
                 </View>
               </TouchableOpacity>
             </View>
           </View>
         </View>
 
+        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2" />
+
         {/* Navigation Buttons */}
-        <View className="px-6 mt-6 mb-8">
+        <View className="px-6 mt-4">
           <View className="flex-row gap-2">
             <TouchableOpacity
               className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
