@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +13,31 @@ const LessonPlanner = () => {
   const navigation = useNavigation();
   const selectedAssignment = useSelector(state => state.assignment.selectedAssignment);
   const { chapters, loading } = useSelector(state => state.chapters);
+  const [selectedChapterName, setSelectedChapterName] = useState(null);
+  const [selectedChapterId, setSelectedChapterId] = useState(null);
+
+  // 1. New: Use a useEffect hook to find the ID whenever the name changes.
+  // This is safer than doing the lookup inside the handle function.
+  useEffect(() => {
+    if (selectedChapterName && chapters && chapters.length > 0) {
+      // Find the full chapter object using the selected name
+      const chapterObject = chapters.find(c => c.name === selectedChapterName);
+      
+      // Set the ID, using 'id' (as per your example data) or '_id'
+      // Check for chapterObject before accessing its id
+      if (chapterObject) {
+        setSelectedChapterId(chapterObject.id); // Assuming 'id' is the field name
+        console.log("Selected Chapter ID:", chapterObject.id); // Check here
+      } else {
+        setSelectedChapterId(null);
+      }
+    }
+  }, [selectedChapterName, chapters]); // Depend on selectedChapterName and chapters
+
+  // 2. Updated: The handler only sets the name (the immediate action)
+  const handleChapterSelect = (chapterName) => {
+    setSelectedChapterName(chapterName);
+  };
 
   // Prepare class and subject display
   const classDisplay = selectedAssignment
@@ -21,7 +46,7 @@ const LessonPlanner = () => {
 
   const subjectDisplay = selectedAssignment?.subjectId?.subjectName || 'Not selected';
 
-  // Map chapters for dropdown options
+  // 3. Updated: Map chapters for dropdown options (only names)
   const chapterOptions = chapters?.map(chapter => chapter.name) || [];
 
   return (
@@ -125,11 +150,14 @@ const LessonPlanner = () => {
               {loading ? (
                 <ActivityIndicator size="large" color="#ffffff" />
               ) : (
+                
                 <LessonPlanDropdown
                   placeholder="Choose a chapter to get started..."
                   options={chapterOptions}
-                  style={{ width: '100%' }}
+                  onSelect={handleChapterSelect} // New prop
+                  selectedValue={selectedChapterName} // New prop
                 />
+
               )}
             </View>
           </View>
@@ -154,7 +182,9 @@ const LessonPlanner = () => {
               <LeftArrow />
               <Text className="text-[#1EAFF7] font-semibold">Back</Text>
             </TouchableOpacity>
-            <TouchableOpacity className="flex-row gap-1 flex-1 py-3 bg-[#1EAFF7] rounded-lg justify-center items-center border-2 border-[#0786C5]">
+            <TouchableOpacity
+              onPress={() => navigation.navigate('LessonPlanTopics', { chapterId: selectedChapterId })}
+              className="flex-row gap-1 flex-1 py-3 bg-[#1EAFF7] rounded-lg justify-center items-center border-2 border-[#0786C5]">
               <Text className="text-white font-semibold">Continue</Text>
               <RightArrow />
             </TouchableOpacity>

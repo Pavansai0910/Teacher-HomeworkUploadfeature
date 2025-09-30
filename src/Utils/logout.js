@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default async function checkAuthentication() {
   const storedDate = await AsyncStorage.getItem("loginDate");
-  console.log("storedDate", storedDate);
   if (!storedDate) return false; // No login date found
 
   const loginDate = new Date(storedDate);

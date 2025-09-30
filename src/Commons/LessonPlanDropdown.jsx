@@ -1,14 +1,17 @@
+
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 
-const LessonPlanDropdown = ({ options, placeholder }) => {
+const LessonPlanDropdown = ({ options, placeholder, onSelect, selectedValue }) => {
   const [open, setOpen] = useState(false);
-  const [selected, setSelected] = useState(null);
 
   const toggleDropdown = () => setOpen(!open);
 
   const handleSelect = (item) => {
-    setSelected(item);
+    // 3. Call the onSelect prop instead of setting local state
+    if (onSelect) {
+      onSelect(item);
+    }
     setOpen(false);
   };
 
@@ -26,8 +29,9 @@ const LessonPlanDropdown = ({ options, placeholder }) => {
           borderColor: '#A17F5E',
         }}
       >
+        {/* 4. Use selectedValue for display */}
         <Text className="text-[#DC9047] font-bold text-[16px] flex-1">
-          {selected || placeholder}
+          {selectedValue || placeholder}
         </Text>
         <Text className="text-[#DC9047] text-lg font-bold">{open ? '⌃' : '⌄'}</Text>
       </TouchableOpacity>
@@ -38,7 +42,8 @@ const LessonPlanDropdown = ({ options, placeholder }) => {
           <View className="bg-[#F5E7D3] px-6 py-2 rounded-xl">
             <ScrollView showsVerticalScrollIndicator={false}>
               {options.map((item, index) => {
-                const isSelected = selected === item;
+                // 5. Check against selectedValue
+                const isSelected = selectedValue === item;
                 return (
                   <TouchableOpacity
                     key={index}

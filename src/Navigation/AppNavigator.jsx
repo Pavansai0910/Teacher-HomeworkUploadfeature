@@ -13,6 +13,7 @@ import LessonPlanner from '../Screens/Home/LessonPlanner';
 import MainTabNavigator from './MainTabNavigator';
 import StudentsInsights from '../Screens/Home/StudentsInsights';
 import Settings from '../Screens/Settings/Settings';
+import LessonPlanTopics from '../Screens/Home/LessonPlanTopics';
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +65,7 @@ function AppNavigator() {
             />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="LessonPlanner" component={LessonPlanner} />
+            <Stack.Screen name="LessonPlanTopics" component={LessonPlanTopics} />
             <Stack.Screen name="AssignTest" component={AssignTest} />
             <Stack.Screen name="StudentsInsights" component={StudentsInsights} />
             <Stack.Screen name="Settings" component={Settings} />

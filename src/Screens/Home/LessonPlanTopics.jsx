@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -15,13 +15,13 @@ import LeftArrow from '../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../Images/LessonPlan/RightArrow';
 import { getAllTopics } from '../../Services/teacherAPIV1';
 import TopicDropdown from '../../Commons/TopicDropdown';
+import { AuthContext } from '../../Context/AuthContext';
 
-const LessonPlanTopics = () => {
+const LessonPlanTopics = ({route}) => {
   const navigation = useNavigation();
-  const route = useRoute();
-  
-  // Get all parameters from route
-  const { chapterId, classId, subjectId, boardId, sectionId } = route.params;
+  const chapterId = route.params.chapterId;
+  console.log('Chapter ID:', chapterId);
+  const { teacherProfile } = useContext(AuthContext)
 
   const selectedAssignment = useSelector(
     state => state.assignment.selectedAssignment,
@@ -39,33 +39,21 @@ const LessonPlanTopics = () => {
   const subjectDisplay =
     selectedAssignment?.subjectId?.subjectName || 'Not selected';
 
+
   useEffect(() => {
     const fetchTopics = async () => {
-      // Check if all required IDs are available
-      if (!classId || !subjectId || !chapterId || !boardId) {
-        console.warn('Cannot fetch topics: Missing IDs', {
-          classId,
-          subjectId,
-          chapterId,
-          boardId,
-        });
+      if (!chapterId) {
         return;
       }
 
       setLoading(true);
       try {
-        console.log('Fetching topics with IDs', {
-          classId,
-          subjectId,
-          chapterId,
-          boardId,
-        });
-
         const response = await getAllTopics({
-          classId,
-          subjectId,
+          classId: selectedAssignment?.classId?._id,
+          subjectId: selectedAssignment?.subjectId?._id,
+          boardId: teacherProfile?.schoolId?.boardId,
           chapterId,
-          boardId,
+
         });
 
         const topicData =
@@ -87,7 +75,7 @@ const LessonPlanTopics = () => {
     };
 
     fetchTopics();
-  }, [chapterId, classId, subjectId, boardId]);
+  }, [chapterId]);
 
   const handleTopicToggle = topic => {
     const isSelected = selectedTopics.some(t => t.id === topic.id);
@@ -103,9 +91,6 @@ const LessonPlanTopics = () => {
 
     navigation.navigate('LessonPlanGeneration', {
       chapterId,
-      classId,
-      subjectId,
-      boardId,
       selectedTopics: selectedTopics,
     });
   };

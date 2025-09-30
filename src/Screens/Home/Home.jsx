@@ -81,9 +81,9 @@ const Home = () => {
   }, [selectedAssignment]);
 
   useEffect(() => {
-    console.log('Selected Assignment:', selectedAssignment);
-    console.log('Classes:', classes);
-    console.log('Selected Class:', selectedClass);
+    // console.log('Selected Assignment:', selectedAssignment);
+    // console.log('Classes:', classes);
+    // console.log('Selected Class:', selectedClass);
   }, [selectedAssignment, classes, selectedClass]);
 
   // Get display text for class dropdown
