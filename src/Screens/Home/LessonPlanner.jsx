@@ -8,7 +8,6 @@ import Document from '../../Images/LessonPlan/Document';
 import LeftArrow from '../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../Commons/LessonPlanDropdown';
-import Loader from './Loader'; // Adjust path as needed
 
 const LessonPlanner = () => {
   const navigation = useNavigation();
