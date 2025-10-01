@@ -13,7 +13,7 @@ import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
-import { getAllTopics } from '../../../Services/lessonPlanService';
+import { getAllTopics } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 
 const AssignTestTopics = ({ route }) => {
@@ -29,6 +29,8 @@ const AssignTestTopics = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [chapterName, setChapterName] = useState('Selected Chapter');
+  
 
   // Prepare class and subject display
   const classDisplay = selectedAssignment
@@ -38,41 +40,74 @@ const AssignTestTopics = ({ route }) => {
   const subjectDisplay =
     selectedAssignment?.subjectId?.subjectName || 'Not selected';
 
+  // Combined display for header
+  const classSubjectDisplay = `${selectedAssignment?.classId?.className || 'Class'}-${selectedAssignment?.sectionId?.sectionName || 'Section'} - ${selectedAssignment?.subjectId?.subjectName || 'Subject'}`;
+
   useEffect(() => {
     const fetchTopics = async () => {
       if (!chapterId) {
+        console.warn('Chapter ID is missing');
+        return;
+      }
+
+      const classId = selectedAssignment?.classId?._id;
+      const subjectId = selectedAssignment?.subjectId?._id;
+      const boardId = teacherProfile?.schoolId?.boardId;
+
+      if (!classId || !subjectId || !boardId) {
+        console.error('Missing required parameters for fetching topics:', {
+          classId,
+          subjectId,
+          boardId,
+          chapterId,
+        });
+        setTopics([]);
+        setLoading(false);
         return;
       }
 
       setLoading(true);
       try {
+        console.log('Fetching topics with params:', { classId, subjectId, boardId, chapterId });
         const response = await getAllTopics({
-          classId: selectedAssignment?.classId?._id,
-          subjectId: selectedAssignment?.subjectId?._id,
-          boardId: teacherProfile?.schoolId?.boardId,
+          classId,
+          subjectId,
+          boardId,
           chapterId,
         });
 
+        console.log('API Response:', response.data);
+
+        // Extract chapter name from API response
+        if (response.data?.chapterName) {
+          setChapterName(response.data.chapterName);
+        } else if (response.data?.chapter?.name) {
+          setChapterName(response.data.chapter.name);
+        }
+
         const topicData =
           response.data?.topics?.map(t => ({
-            id: t.id,
+            id: t.id || t._id,
             name: t.name,
-            status: t.status || 'pending', // 'assigned', 'completed', 'pending'
+            status: t.status || 'pending',
           })) || [];
 
+        console.log('Processed topics:', topicData);
         setTopics(topicData);
       } catch (err) {
         console.error(
           'Failed to fetch topics',
           err.response?.data || err.message,
+          err,
         );
+        setTopics([]);
       } finally {
         setLoading(false);
       }
     };
 
     fetchTopics();
-  }, [chapterId]);
+  }, [chapterId, selectedAssignment, teacherProfile]);
 
   const handleTopicToggle = topic => {
     const isSelected = selectedTopics.some(t => t.id === topic.id);
@@ -84,27 +119,26 @@ const AssignTestTopics = ({ route }) => {
   };
 
   const handleContinue = () => {
-    if (selectedTopics.length === 0) return;
+    if (selectedTopics.length === 0) {
+      console.log('No topics selected');
+      return;
+    }
 
-    navigation.navigate('AssignTestGeneration', {
-      chapterId,
-      selectedTopics: selectedTopics,
-    });
+    const payload = { chapterId, selectedTopics };
+    console.log('Navigating with payload:', payload);
+    navigation.navigate('AssignTestDate', payload);
   };
 
-  // Filter topics based on active filter
   const getFilteredTopics = () => {
     if (activeFilter === 'all') return topics;
     return topics.filter(t => t.status === activeFilter);
   };
 
-  // Count topics by status
   const getStatusCount = status => {
     if (status === 'all') return topics.length;
     return topics.filter(t => t.status === status).length;
   };
 
-  // Get status badge style and text
   const getStatusBadge = status => {
     switch (status) {
       case 'assigned':
@@ -121,9 +155,10 @@ const AssignTestTopics = ({ route }) => {
         };
       case 'pending':
         return {
-          bg: '#FFC466',
-          text: '#92400E',
+          bg: 'white',
+          text: '#B68201',
           label: 'Pending',
+          borderColor: '#B68201',
         };
       default:
         return {
@@ -131,20 +166,6 @@ const AssignTestTopics = ({ route }) => {
           text: '#6B7280',
           label: 'Unknown',
         };
-    }
-  };
-
-  // Get topic card background color based on status
-  const getTopicCardStyle = status => {
-    switch (status) {
-      case 'assigned':
-        return 'bg-white';
-      case 'completed':
-        return 'bg-white';
-      case 'pending':
-        return 'bg-[#F59E0B]';
-      default:
-        return 'bg-white';
     }
   };
 
@@ -159,7 +180,7 @@ const AssignTestTopics = ({ route }) => {
             <Bluepage />
           </View>
           <View className="flex-1">
-            <View className="flex-row justify-between items-start">
+            <View className="flex-row justify-between items-center">
               <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
                 Assign Test
               </Text>
@@ -167,11 +188,38 @@ const AssignTestTopics = ({ route }) => {
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
                 onPress={() => navigation.navigate('AssignTest')}
               >
-                <Text className="text-[#1F2937] text-[14px]">✕</Text>
+                <Text className="text-white text-[14px]">✕</Text>
               </TouchableOpacity>
             </View>
             <Text className="text-[#454F5B] text-[14px]">
               Assign tests to your students{'\n'}quickly and easily
+            </Text>
+          </View>
+        </View>
+        
+      </View>
+
+      {/* Class-Section-Subject Display */}
+      <View className="mt-6 px-6 bg-white">
+        <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
+          <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
+            <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
+            <Text
+              className="text-gray-800 font-semibold"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {classDisplay} | {selectedAssignment?.classId?.studentCount || '0'} Students
+            </Text>
+          </View>
+          <View className="flex-1">
+            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
+            <Text
+              className="text-gray-800 font-semibold"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {subjectDisplay}
             </Text>
           </View>
         </View>
@@ -185,28 +233,13 @@ const AssignTestTopics = ({ route }) => {
             <View className="flex-row items-center justify-between mb-5">
               {/* Step 1 - Completed */}
               <View className="items-center">
-                <View style={{
-                  width: 41.25,
-                  height: 41.25,
-                  borderRadius: 63.75,
-                  borderWidth: 2,
-                  borderColor: 'white',
-                  padding: 11.25,
-                  backgroundColor: '#5FCC3D',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  opacity: 1,
-                }}>
-                  <Text style={{
-                    fontWeight: 'bold',
-                    fontSize: 14,
-                    color: 'white',
-                  }}>
-                    1
-                  </Text>
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text className="font-semibold text-[12px]">1</Text>
+                  </View>
                 </View>
               </View>
-              <View className="flex-1 h-[3px] bg-white/30" />
+              <View className="flex-1 h-[3px] bg-white" />
               {/* Step 2 - Active */}
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
@@ -220,36 +253,21 @@ const AssignTestTopics = ({ route }) => {
                   </Text>
                 </View>
               </View>
-              <View className="flex-1 h-[2px] bg-white/30" />
+              <View className="flex-1 h-[2px] bg-white" />
 
               {/* Step 3 */}
               <View className="items-center">
-                <View style={{
-                  width: 41.25,
-                  height: 41.25,
-                  borderRadius: 63.75,
-                  borderWidth: 2,
-                  borderColor: 'white',
-                  padding: 11.25,
-                  backgroundColor: '#CCCCCC',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  opacity: 1,
-                }}>
-                  <Text style={{
-                    fontWeight: 'bold',
-                    fontSize: 14,
-                    color: 'white',
-                  }}>
-                    3
-                  </Text>
+                <View className="flex-row bg-[#CCCCCC] rounded-full px-3 py-3 border-2 border-white items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text className="font-semibold text-[12px]">3</Text>
+                  </View>
                 </View>
               </View>
             </View>
 
             {/* Divider */}
-            <View className="h-[1px] bg-white/50 my-4" />
-
+            <View className="flex-1 h-0 border-t-2 border-white border-dashed mb-6" />
+            
             {/* Content Header */}
             <View className="items-center mb-4">
               <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
@@ -259,7 +277,7 @@ const AssignTestTopics = ({ route }) => {
                 Zoom in and pick your focus!
               </Text>
               <Text className="text-[#B68201] text-center text-[12px] leading-5 px-4">
-                Here is the list of topics from the selected chapter.{'\n'}
+                Here is the list of topics from {chapterName}.{'\n'}
                 Select a topic you want to assign a test for.
               </Text>
             </View>
@@ -334,25 +352,23 @@ const AssignTestTopics = ({ route }) => {
               <View className="py-8">
                 <ActivityIndicator size="large" color="#B68201" />
               </View>
+            ) : topics.length === 0 ? (
+              <View className="py-8">
+                <Text className="text-center text-[#B68201] text-[14px]">
+                  No topics available. Please check console for errors.
+                </Text>
+              </View>
             ) : (
-              <View className="gap-3">
+              <View className="gap-3 items-center">
                 {filteredTopics.map(topic => {
                   const isSelected = selectedTopics.some(t => t.id === topic.id);
                   const statusBadge = getStatusBadge(topic.status);
+                  const hasBorder = topic.status === 'pending';
 
                   return (
                     <TouchableOpacity
                       key={topic.id}
-                      className={`rounded-xl px-4 py-4 flex-row justify-between items-center ${
-                        isSelected ? 'bg-[#F59E0B]' : 'bg-white'
-                      }`}
-                      style={{
-                        borderTopWidth: 1.5,
-                        borderRightWidth: 2.5,
-                        borderBottomWidth: 4,
-                        borderLeftWidth: 2.5,
-                        borderColor: '#DC9047',
-                      }}
+                      className={`w-[311px] h-[52px] justify-between opacity-100 rounded-[16px] pr-[14px] pl-[14px] border-t-[1.5px] border-r-[2.5px] border-b-[4px] border-l-[2.5px] border-[#DC9047] ${isSelected ? 'bg-[#F59E0B]' : 'bg-white'} flex-row items-center`}
                       onPress={() => handleTopicToggle(topic)}
                       activeOpacity={0.7}
                     >
@@ -365,12 +381,11 @@ const AssignTestTopics = ({ route }) => {
                         {topic.name}
                       </Text>
                       <View
-                        className="px-3 py-1 rounded-full ml-3"
-                        style={{ backgroundColor: statusBadge.bg }}
+                        className={`ml-3 w-[75px] h-[27px] opacity-100 rounded-full pt-[2px] pr-[10px] pb-[2px] pl-[10px] ${hasBorder ? 'border-t-[0.5px] border-r-[1px] border-b-[2px] border-l-[1px]' : ''} bg-[${statusBadge.bg}] border-[${statusBadge.borderColor || statusBadge.text}] flex-row items-center justify-center`}
                       >
                         <Text
-                          className="text-[12px] font-semibold"
-                          style={{ color: statusBadge.text }}
+                          className={`text-[12px] font-semibold text-[${statusBadge.text}]`}
+                          numberOfLines={1}
                         >
                           {statusBadge.label}
                         </Text>
@@ -379,7 +394,7 @@ const AssignTestTopics = ({ route }) => {
                   );
                 })}
 
-                {filteredTopics.length === 0 && (
+                {filteredTopics.length === 0 && topics.length > 0 && (
                   <View className="py-8">
                     <Text className="text-center text-[#B68201] text-[14px]">
                       No topics found for this filter
@@ -394,12 +409,12 @@ const AssignTestTopics = ({ route }) => {
         {/* Pro Tip */}
         <View className="px-6 mt-4">
           <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-4 py-4 rounded-lg">
-            <Text className="font-semibold">Pro Tip:</Text> Including multiple
-            topics helps assess comprehensive understanding!
+            <Text className="font-semibold">Pro Tip:</Text> Regular testing
+          improves retention by 40%!
           </Text>
         </View>
 
-        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-8" />
+        <View className="h-[2px] bg-[#DFE3E8] mt-8" />
 
         {/* Navigation Buttons */}
         <View className="px-6 mt-2 pb-6">
