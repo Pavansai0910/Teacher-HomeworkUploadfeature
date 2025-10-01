@@ -9,12 +9,12 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import Bluepage from '../../Images/LessonPlan/LessonPlanner';
-import Document from '../../Images/LessonPlan/Document';
-import LeftArrow from '../../Images/LessonPlan/LeftArrow';
-import RightArrow from '../../Images/LessonPlan/RightArrow';
-import { getAllTopics } from '../../Services/teacherAPIV1';
-import { AuthContext } from '../../Context/AuthContext';
+import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
+import Document from '../../../Images/LessonPlan/Document';
+import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
+import RightArrow from '../../../Images/LessonPlan/RightArrow';
+import { getAllTopics } from '../../../Services/lessonPlanService';
+import { AuthContext } from '../../../Context/AuthContext';
 
 const AssignTestTopics = ({ route }) => {
   const navigation = useNavigation();

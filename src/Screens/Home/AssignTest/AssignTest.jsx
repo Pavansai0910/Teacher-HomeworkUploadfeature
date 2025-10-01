@@ -3,11 +3,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
-import Bluepage from '../../Images/LessonPlan/LessonPlanner';
-import Document from '../../Images/LessonPlan/Document';
-import LeftArrow from '../../Images/LessonPlan/LeftArrow';
-import RightArrow from '../../Images/LessonPlan/RightArrow';
-import LessonPlanDropdown from '../../Commons/LessonPlanDropdown';
+import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
+import Document from '../../../Images/LessonPlan/Document';
+import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
+import RightArrow from  '../../../Images/LessonPlan/RightArrow';
+import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
 import React, { useState, useEffect } from 'react';
 
 const AssignTest = () => {

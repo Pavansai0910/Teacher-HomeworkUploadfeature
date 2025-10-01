@@ -8,15 +8,15 @@ import GetStartedScreen from '../Screens/GetStartedScreen';
 import Loader from '../Commons/Loader';
 import checkAuthentication from '../Utils/logout';
 import Home from '../Screens/Home/Home';
-import AssignTest from '../Screens/Home/AssignTest';
-import LessonPlanner from '../Screens/Home/LessonPlanner';
+import AssignTest from '../Screens/Home/AssignTest/AssignTest';
+import LessonPlanner from '../Screens/Home/Lessonplanner/LessonPlanner';
 import MainTabNavigator from './MainTabNavigator';
-import StudentsInsights from '../Screens/Home/StudentsInsights';
+import StudentsInsights from '../Screens/Home/StudentInsights/StudentsInsights'
 import Settings from '../Screens/Settings/Settings';
-import LessonPlanTopics from '../Screens/Home/LessonPlanTopics';
+import LessonPlanTopics from '../Screens/Home/Lessonplanner/LessonPlanTopics';
 import LessonPlanGeneration from '../Screens/Home/Lessonplanner/LessonPlanGeneration ';
 import GeneratedLessonPlan from '../Screens/Home/Lessonplanner/GeneratedLessonPlan';
-import AssignTestTopics from '../Screens/Home/AssignTestTopics';
+import AssignTestTopics from '../Screens/Home/AssignTest/AssignTestTopics';
 
 
 const Stack = createNativeStackNavigator();
