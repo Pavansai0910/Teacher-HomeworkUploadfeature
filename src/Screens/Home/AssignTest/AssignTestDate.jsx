@@ -200,7 +200,7 @@ const AssignTestDate = () => {
               <Text className="text-[#FFB84D] font-medium text-[15px]">
                 {dueDate || 'dd\\mm\\yyyy'}
               </Text>
-              <Text className="text-[#FFB84D] text-[18px]">📅</Text>
+              <Text className="text-[#FFB84D] text-[18px]"></Text>
             </TouchableOpacity>
           </View>
 
@@ -237,7 +237,7 @@ const AssignTestDate = () => {
                   borderColor: '#63738140',
                 }}
               >
-                <Text className="text-[#FFB84D] text-[20px] mr-1">👁</Text>
+                <Text className="text-[#FFB84D] text-[20px] mr-1"></Text>
                 <Text className="text-[#FFB84D] font-semibold text-[13px]">
                   View test
                 </Text>
