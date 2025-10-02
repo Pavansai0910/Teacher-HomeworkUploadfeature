@@ -24,6 +24,8 @@ import ScanIcon from '../Images/Home/ScanIcon';
 import BarGraphIcon from '../Images/Home/BarGraphIcon';
 import { versionChecker, teacherLoginEvent } from '../Services/teacherAPIV1';
 import GetFontSize from '../Commons/GetFontSize';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useSelector } from 'react-redux';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -44,22 +46,29 @@ function MainTabNavigator() {
   const [loading, setLoading] = useState(true);
   const { teacherProfile } = useContext(AuthContext);
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
+    const selectedAssignment = useSelector(
+      (state) => state.assignment.selectedAssignment
+    );
+  
     async function loginEvent() {
     try {
       const response = await teacherLoginEvent({
-        studentId: teacherProfile?._id,
-      });
+        teacherId: teacherProfile?._id,
+        classId: selectedAssignment?.classId?._id,
+        subjectId: selectedAssignment?.subjectId?._id,
+        sectionId: selectedAssignment?.sectionId?._id,
 
+      });
       // Store the current date (YYYY-MM-DD format) when API was called
       const today = new Date().toISOString().split('T')[0];
-      await AsyncStorage.setItem('studentlastLoginEventDate', today);
+      await AsyncStorage.setItem('teacherlastLoginEventDate', today);
     } catch (error) {
       // console.error(error);
     }
   }
 
   const shouldCallApi = async () => {
-    const lastCallDate = await AsyncStorage.getItem('studentlastLoginEventDate');
+    const lastCallDate = await AsyncStorage.getItem('teacherlastLoginEventDate');
     const today = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
 
     if (!lastCallDate) {

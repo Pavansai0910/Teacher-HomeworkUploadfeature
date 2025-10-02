@@ -41,10 +41,12 @@ export const versionChecker = async ({ studentId, versionNumber,newdownloaded}) 
   return apiConnector("POST", `/v1/student/student-app-version-update/${studentId}`, requestBody, headers);
 };
 
-export const teacherLoginEvent = async ({teacherId}) => {
+export const teacherLoginEvent = async ({teacherId, classId, subjectId, sectionId}) => {
     const headers = await getAuthHeader()
-    return apiConnector('POST', `/v1/teacher/login-event-for-teacher/${teacherId}`, null, headers)
+    const requestBody = {classId, subjectId, sectionId}
+    return apiConnector('POST', `/v2/teacher/login-event-for-teacher/${teacherId}`, requestBody, headers)
 }
+
 export const createLessonPlan = async payload => {
   const headers = await getAuthHeader();
   const requestBody = payload;

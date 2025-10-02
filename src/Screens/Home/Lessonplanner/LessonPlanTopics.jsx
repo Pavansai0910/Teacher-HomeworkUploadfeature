@@ -16,6 +16,7 @@ import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import { getAllTopics } from '../../../Services/teacherAPIV1';
 import TopicDropdown from '../../../Commons/TopicDropdown';
 import { AuthContext } from '../../../Context/AuthContext';
+import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -36,7 +37,7 @@ const LessonPlanTopics = ({ route }) => {
     : 'Not selected';
 
   const subjectDisplay =
-    selectedAssignment?.subjectId?.subjectName || 'Not selected';
+  capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
 
   useEffect(() => {
     const fetchTopics = async () => {

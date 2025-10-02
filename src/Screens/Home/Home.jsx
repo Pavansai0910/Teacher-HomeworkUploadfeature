@@ -17,6 +17,7 @@ import StudentsInsightsCard from '../HomeScreen/Cards/StudentsInsightsCard';
 import LessonPlannerCard from '../HomeScreen/Cards/LessonPlannerCard';
 import AssignTestCard from '../HomeScreen/Cards/AssignTestCard';
 import NotificationIcon from '../../Images/Home/NotificationIcon';
+import capitalizeSubject from '../../Utils/CapitalizeSubject';
 
 const { width } = Dimensions.get('window');
 
@@ -33,7 +34,7 @@ const Home = () => {
   const [subjectModalVisible, setSubjectModalVisible] = useState(false);
 
   const gradientBackgrounds = [
-    ['#FFFFFF', '#BBF192'],
+    // ['#FFFFFF', '#BBF192'],
     ['#FFFFFF', '#93D8FB'],
     ['#FFFFFF', '#FEDB85'],
   ];
@@ -105,7 +106,7 @@ const Home = () => {
     }
     // Fallback to selectedAssignment
     if (selectedAssignment?.subjectId) {
-      return selectedAssignment.subjectId.subjectName;
+      return capitalizeSubject(selectedAssignment.subjectId.subjectName);
     }
     return 'Select Subject';
   };
@@ -255,7 +256,7 @@ const Home = () => {
                     }}
                   >
                     <Text className="text-[#454F5B] text-base font-semibold">
-                      {item?.subjectName}
+                      {capitalizeSubject(item?.subjectName)}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -291,21 +292,21 @@ const Home = () => {
               alignItems: 'center',
             }}
           >
-            <StudentsInsightsCard
+            {/* <StudentsInsightsCard
               onPress={() => navigation.navigate('StudentsInsights')}
               isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
-            />
+            /> */}
             <LessonPlannerCard
               onPress={() => navigation.navigate('LessonPlanner')}
-              isActive={currentIndex === 1}
+              isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             />
             <AssignTestCard
               onPress={() => navigation.navigate('AssignTest')}
-              isActive={currentIndex === 2}
+              isActive={currentIndex === 1}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             />

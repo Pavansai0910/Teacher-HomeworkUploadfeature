@@ -12,6 +12,7 @@ import Loader from '../../../Commons/AnimatedLoader/Loader';
 import { createLessonPlan } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import Calendar from '../../../Images/LessonPlan/Calendar';
+import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 
 const LessonPlanGeneration = () => {
   const navigation = useNavigation();
@@ -34,8 +35,7 @@ const LessonPlanGeneration = () => {
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
     : 'Not selected';
 
-  const subjectDisplay =
-    selectedAssignment?.subjectId?.subjectName || 'Not selected';
+  const subjectDisplay = capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
 
   const handleGenerate = async () => {
     if (!startDate || !endDate) return;

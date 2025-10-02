@@ -8,6 +8,7 @@ import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
+import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 
 
 const AssignTestDate = () => {
@@ -29,7 +30,7 @@ const AssignTestDate = () => {
     : 'Not selected';
 
   const subjectDisplay =
-    selectedAssignment?.subjectId?.subjectName || 'Not selected';
+    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
 
   const handleGenerate = () => {
     if (!dueDate) return;

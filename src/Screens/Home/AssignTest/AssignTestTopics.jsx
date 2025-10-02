@@ -15,6 +15,7 @@ import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import { getAllTopics } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
+import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 
 const AssignTestTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -38,10 +39,10 @@ const AssignTestTopics = ({ route }) => {
     : 'Not selected';
 
   const subjectDisplay =
-    selectedAssignment?.subjectId?.subjectName || 'Not selected';
+    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
 
   // Combined display for header
-  const classSubjectDisplay = `${selectedAssignment?.classId?.className || 'Class'}-${selectedAssignment?.sectionId?.sectionName || 'Section'} - ${selectedAssignment?.subjectId?.subjectName || 'Subject'}`;
+  const classSubjectDisplay = `${selectedAssignment?.classId?.className || 'Class'}-${selectedAssignment?.sectionId?.sectionName || 'Section'} - ${capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Subject'}`;
 
   useEffect(() => {
     const fetchTopics = async () => {
