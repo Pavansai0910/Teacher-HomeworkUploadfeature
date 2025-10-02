@@ -20,7 +20,6 @@ import { AuthContext } from '../../../Context/AuthContext';
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
-  console.log('Chapter ID:', chapterId);
   const { teacherProfile } = useContext(AuthContext);
 
   const selectedAssignment = useSelector(
@@ -61,7 +60,6 @@ const LessonPlanTopics = ({ route }) => {
           })) || [];
 
         setTopics(topicData);
-        console.log('Fetched topics successfully:', topicData);
       } catch (err) {
         console.error(
           'Failed to fetch topics',

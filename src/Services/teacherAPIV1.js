@@ -33,3 +33,14 @@ export const getAllTopics = async ({
     headers,
   );
 };
+
+export const createLessonPlan = async payload => {
+  const headers = await getAuthHeader();
+  const requestBody = payload;
+  return apiConnector(
+    'POST',
+    `/v2/teacher/lessonplan/generate`,
+    requestBody,
+    headers,
+  );
+};
