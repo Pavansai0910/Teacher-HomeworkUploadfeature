@@ -30,7 +30,6 @@ const LessonPlanner = () => {
       const chapterObject = chapters.find(c => c.name === selectedChapterName);
       if (chapterObject) {
         setSelectedChapterId(chapterObject.id);
-        console.log('Selected Chapter ID:', chapterObject.id);
       } else {
         setSelectedChapterId(null);
       }

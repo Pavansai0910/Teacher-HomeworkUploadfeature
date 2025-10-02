@@ -84,7 +84,7 @@ function MainTabNavigator() {
           setShowUpdatePopup(false)
         }
       } catch (error) {
-        setShowUpdatePopup(true)
+        // setShowUpdatePopup(true)
       }
     };
 
@@ -170,7 +170,7 @@ function MainTabNavigator() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="YourStats"
         component={YourStats}
         options={{
@@ -195,7 +195,7 @@ function MainTabNavigator() {
             </View>
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -9,11 +9,15 @@ import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import Loader from '../../../Commons/AnimatedLoader/Loader';
+import { createLessonPlan } from '../../../Services/teacherAPIV1';
+import { AuthContext } from '../../../Context/AuthContext';
+import Calendar from '../../../Images/LessonPlan/Calendar';
 
 const LessonPlanGeneration = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { chapterId, selectedTopics } = route.params;
+  const { teacherProfile } = useContext(AuthContext);
 
   const selectedAssignment = useSelector(
     state => state.assignment.selectedAssignment,
@@ -23,7 +27,8 @@ const LessonPlanGeneration = () => {
   const [endDate, setEndDate] = useState('');
   const [showPicker, setShowPicker] = useState(false);
   const [pickerTarget, setPickerTarget] = useState(null);
-  const [showLoader, setShowLoader] = useState(false); // Add loader state
+  const [showLoader, setShowLoader] = useState(false);
+  const [lessonPlanData, setLessonPlanData] = useState(null);
 
   const classDisplay = selectedAssignment
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
@@ -32,23 +37,78 @@ const LessonPlanGeneration = () => {
   const subjectDisplay =
     selectedAssignment?.subjectId?.subjectName || 'Not selected';
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!startDate || !endDate) return;
 
-    // Show loader animation
     setShowLoader(true);
 
-    console.log('Final Payload:', {
-      chapterId,
-      selectedTopics,
-      startDate,
-      endDate,
-    });
+    try {
+      // Build payload with better validation
+      const payload = {
+        boardId:
+          teacherProfile?.schoolId?.boardId || selectedAssignment?.boardId,
+        teacherId: teacherProfile?._id || teacherProfile?.teacherId,
+        classId:
+          selectedAssignment?.classId?._id || selectedAssignment?.classId,
+        subjectId:
+          selectedAssignment?.subjectId?._id || selectedAssignment?.subjectId,
+        sectionId:
+          selectedAssignment?.sectionId?._id || selectedAssignment?.sectionId,
+        chapterId: chapterId,
+        topicId: selectedTopics.map(topic => topic._id || topic.id || topic),
+        depth: 'Introductory',
+        dateRange: {
+          startDate: convertDateFormat(startDate),
+          endDate: convertDateFormat(endDate),
+        },
+      };
+
+      // Validate required fields
+      const requiredFields = [
+        'boardId',
+        'teacherId',
+        'classId',
+        'subjectId',
+        'sectionId',
+        'chapterId',
+      ];
+      const missingFields = requiredFields.filter(field => !payload[field]);
+
+      if (missingFields.length > 0) {
+        throw new Error(`Missing required fields: ${missingFields.join(', ')}`);
+      }
+
+      if (!payload.topicId || payload.topicId.length === 0) {
+        throw new Error('No topics selected');
+      }
+
+      // Call the API
+      const response = await createLessonPlan(payload);
+
+      if (response?.data) {
+        setLessonPlanData(response.data);
+        setTimeout(() => {
+          handleLoaderComplete(response.data);
+        }, 1000);
+      } else {
+        throw new Error('Invalid response from server');
+      }
+    } catch (error) {
+      console.error('Error generating lesson plan:', error);
+      setShowLoader(false);
+
+      // Show detailed error message
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        'Failed to generate lesson plan. Please try again.';
+
+      Alert.alert('Error', errorMessage, [{ text: 'OK' }]);
+    }
   };
 
-  const handleLoaderComplete = () => {
+  const handleLoaderComplete = (apiData = lessonPlanData) => {
     setShowLoader(false);
-    // Navigate to the generated lesson plan with all the data
     navigation.navigate('GeneratedLessonPlan', {
       chapterId,
       selectedTopics,
@@ -56,7 +116,13 @@ const LessonPlanGeneration = () => {
       endDate,
       classDisplay,
       subjectDisplay,
+      lessonPlanData: apiData,
     });
+  };
+
+  // Convert DD/MM/YYYY to DD-MM-YYYY format for API
+  const convertDateFormat = dateString => {
+    return dateString.replace(/\//g, '-');
   };
 
   const formatDate = date => {
@@ -78,9 +144,19 @@ const LessonPlanGeneration = () => {
     }
   };
 
+  // Validate dates (end date should be after start date)
+  const isValidDateRange = () => {
+    if (!startDate || !endDate) return false;
+
+    const start = new Date(startDate.split('/').reverse().join('-'));
+    const end = new Date(endDate.split('/').reverse().join('-'));
+
+    return end >= start;
+  };
+
   // Show loader if it's visible
   if (showLoader) {
-    return <Loader isVisible={showLoader} onClose={handleLoaderComplete} />;
+    return <Loader isVisible={showLoader} onClose={() => {}} />;
   }
 
   return (
@@ -190,9 +266,12 @@ const LessonPlanGeneration = () => {
                   Your tailored lesson plan is almost ready!
                 </Text>
                 <Text className="text-white text-center text-[13px] leading-5 px-2">
-                  You selected {selectedTopics.map(t => t.name).join(', ')}. Set
-                  the dates and hit Generate Plan to create the perfect plan for
-                  you.
+                  You selected{' '}
+                  {selectedTopics
+                    ?.map(t => t.name || t.topicName || 'Topic')
+                    .join(', ')}
+                  . Set the dates and hit Generate Plan to create the perfect
+                  plan for you.
                 </Text>
               </View>
             </View>
@@ -219,7 +298,7 @@ const LessonPlanGeneration = () => {
                 <Text className="text-[#DC9047] font-semibold text-[16px]">
                   {startDate || 'dd/mm/yyyy'}
                 </Text>
-                <View className="w-5 h-5"></View>
+                <Calendar width={20} height={20} color="#DC9047" />
               </TouchableOpacity>
 
               <Text className="text-white mb-2">
@@ -242,10 +321,15 @@ const LessonPlanGeneration = () => {
                 <Text className="text-[#DC9047] font-semibold text-[16px]">
                   {endDate || 'dd/mm/yyyy'}
                 </Text>
-                <View className="w-5 h-5">
-                  {/* Add your calendar icon here */}
-                </View>
+                <Calendar width={20} height={20} color="#DC9047" />
               </TouchableOpacity>
+
+              {/* Date validation error */}
+              {startDate && endDate && !isValidDateRange() && (
+                <Text className="text-red-200 text-sm mt-2">
+                  End date should be after or same as start date
+                </Text>
+              )}
             </View>
           </View>
         </View>
@@ -262,14 +346,15 @@ const LessonPlanGeneration = () => {
               <LeftArrow />
               <Text className="text-[#1EAFF7] font-semibold">Back</Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
-                startDate && endDate
+                startDate && endDate && isValidDateRange()
                   ? 'bg-[#1EAFF7] border-[#0786C5]'
                   : 'bg-gray-400 border-gray-400'
               }`}
               onPress={handleGenerate}
-              disabled={!startDate || !endDate}
+              disabled={!startDate || !endDate || !isValidDateRange()}
             >
               <Text className="text-white font-semibold">
                 Generate Lesson Plan
@@ -287,6 +372,7 @@ const LessonPlanGeneration = () => {
           mode="date"
           display="calendar"
           onChange={handleDateChange}
+          minimumDate={new Date()}
         />
       )}
     </SafeAreaView>
