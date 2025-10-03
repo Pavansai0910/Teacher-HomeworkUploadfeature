@@ -12,21 +12,21 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { AuthContext } from '../../Context/AuthContext';
-import { useSelector } from 'react-redux';
 import StudentsInsightsCard from '../HomeScreen/Cards/StudentsInsightsCard';
 import LessonPlannerCard from '../HomeScreen/Cards/LessonPlannerCard';
 import AssignTestCard from '../HomeScreen/Cards/AssignTestCard';
 import NotificationIcon from '../../Images/Home/NotificationIcon';
 import capitalizeSubject from '../../Utils/CapitalizeSubject';
 import GetFontSize from '../../Commons/GetFontSize';
-
+import { useSelector, useDispatch } from 'react-redux';
 const { width } = Dimensions.get('window');
-
+import { setAssignment } from '../../store/Slices/assignment';
 const Home = () => {
   const { teacherProfile } = useContext(AuthContext);
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const dispatch = useDispatch();
 
   // Dropdown states
   const [selectedClass, setSelectedClass] = useState(null);
@@ -50,31 +50,31 @@ const Home = () => {
   };
 
   // Get classes with combined class and section data
-const classes =
-  teacherProfile?.assignments
-    ?.reduce((acc, a) => {
-      const key = `${a.classId?._id}-${a.sectionId?._id}`;
-      if (!acc.some(item => item.key === key)) {
-        acc.push({
-          key,
-          classId: a.classId,
-          sectionId: a.sectionId,
-          displayName: `${a.classId?.className || 'Class'} - ${a.sectionId?.sectionName || 'Section'}`,
-        });
-      }
-      return acc;
-    }, []) || [];
+  const classes =
+    teacherProfile?.assignments
+      ?.reduce((acc, a) => {
+        const key = `${a.classId?._id}-${a.sectionId?._id}`;
+        if (!acc.some(item => item.key === key)) {
+          acc.push({
+            key,
+            classId: a.classId,
+            sectionId: a.sectionId,
+            displayName: `${a.classId?.className || 'Class'} - ${a.sectionId?.sectionName || 'Section'}`,
+          });
+        }
+        return acc;
+      }, []) || [];
 
   // Get subjects based on selected class
   const subjects = selectedClass
     ? teacherProfile?.assignments
-        ?.filter(
-          a =>
-            a.classId?._id === selectedClass.classId?._id &&
-            a.sectionId?._id === selectedClass.sectionId?._id,
-        )
-        .map(a => a.subjectId)
-        .filter(Boolean)
+      ?.filter(
+        a =>
+          a.classId?._id === selectedClass.classId?._id &&
+          a.sectionId?._id === selectedClass.sectionId?._id,
+      )
+      .map(a => a.subjectId)
+      .filter(Boolean)
     : [];
 
   const selectedAssignment = useSelector(
@@ -239,11 +239,21 @@ const classes =
                   <TouchableOpacity
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
+                      const updatedAssignment = {
+                        ...selectedAssignment, // keep existing values
+                        classId: item.classId,
+                        sectionId: item.sectionId,
+                      };
+
                       setSelectedClass({
                         classId: item.classId,
                         sectionId: item.sectionId,
                       });
                       setSelectedSubject(null);
+
+                      // update redux
+                      dispatch(setAssignment(updatedAssignment));
+
                       setClassModalVisible(false);
                     }}
                   >
@@ -298,10 +308,20 @@ const classes =
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     className="py-3 border-b border-gray-200"
-                    onPress={() => {
-                      setSelectedSubject(item);
-                      setSubjectModalVisible(false);
-                    }}
+                   onPress={() => {
+  const updatedAssignment = {
+    ...selectedAssignment, // keep classId & sectionId as is
+    subjectId: item,
+  };
+
+  setSelectedSubject(item);
+
+  // update redux
+  dispatch(setAssignment(updatedAssignment));
+
+  setSubjectModalVisible(false);
+}}
+
                   >
                     <Text className="text-[#454F5B] text-base font-semibold">
                       {capitalizeSubject(item?.subjectName)}
@@ -346,24 +366,24 @@ const classes =
               alignItems: 'center',
             }}
           > */}
-            {/* <StudentsInsightsCard
+          {/* <StudentsInsightsCard
               onPress={() => navigation.navigate('StudentsInsights')}
               isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             /> */}
-            {/* <LessonPlannerCard
+          {/* <LessonPlannerCard
               onPress={() => navigation.navigate('LessonPlanner')}
               isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             /> */}
-            <AssignTestCard
-              onPress={() => navigation.navigate('AssignTest')}
-              isActive={currentIndex === 1}
-              cardWidth={cardWidth}
-              // cardSpacing={cardSpacing}
-            />
+          <AssignTestCard
+            onPress={() => navigation.navigate('AssignTest')}
+            isActive={currentIndex === 1}
+            cardWidth={cardWidth}
+          // cardSpacing={cardSpacing}
+          />
           {/* </ScrollView> */}
 
           {/* Pagination Dots */}

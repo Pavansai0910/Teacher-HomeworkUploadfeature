@@ -37,7 +37,7 @@ export const getAllTopics = async ({
 export const versionChecker = async ({ teacherId, versionNumber,newdownloaded}) => {
   const headers = await getAuthHeader();
   const requestBody = { versionNumber,newdownloaded };
-  return apiConnector("POST", `/v1/teacher/student-app-version-update/${teacherId}`, requestBody, headers);
+  return apiConnector("POST", `/v2/teacher/teacher-app-version-update/${teacherId}`, requestBody, headers);
 };
 
 export const teacherLoginEvent = async ({teacherId, classId, subjectId, sectionId}) => {

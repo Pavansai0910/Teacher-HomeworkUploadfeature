@@ -83,9 +83,9 @@ function MainTabNavigator() {
     const checkVersion = async () => {
       try {
         const version = await versionChecker({
-          studentId: teacherProfile?._id,
+          teacherId: teacherProfile?._id,
           newdownloaded: true,
-          versionNumber: process.env.APP_VERSION,
+          versionNumber: process.env.APP_VERSION
         })
         if (version.data?.updateRequired === true) {
           setShowUpdatePopup(true)
