@@ -143,7 +143,7 @@ const AssignTestTopics = ({ route }) => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('Home')}
+                onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
               >
                 <Text
                   style={{ fontSize: GetFontSize(14) }}

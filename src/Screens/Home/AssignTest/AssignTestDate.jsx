@@ -85,7 +85,7 @@ const AssignTestDate = ({ route }) => {
       await assignExam(payload);
       setShowLoader(false);
       Toast.show({ type: 'success', text1: 'Yeah! You assigned test' });
-      navigation.navigate("Home");
+      navigation.navigate("MainTabNavigator", { screen: 'Home' });
     } catch (error) {
       setShowLoader(false);
       console.error(error);
@@ -170,7 +170,7 @@ const AssignTestDate = ({ route }) => {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
-                onPress={() => navigation.navigate('MainTabNavigator')}
+                onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
               >
                 <Text
                   style={{

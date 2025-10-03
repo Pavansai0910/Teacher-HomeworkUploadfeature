@@ -7,28 +7,63 @@ import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
+import { getChapters } from '../../../Services/teacherAPIV1';
+import { AuthContext } from '../../../Context/AuthContext';
+import Toast from 'react-native-toast-message';
 
 const AssignTest = () => {
   const navigation = useNavigation();
+  const { teacherProfile } = useContext(AuthContext)
   const [selectedChapterName, setSelectedChapterName] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
-  const { chapters, loading } = useSelector(state => state.chapters);
-  const chapterOptions = chapters?.map(chapter => chapter.name) || [];
-  
+  const [loading, setLoading] = useState(true);
+  const [allChapters, setAllChapters] = useState([]);
+  const selectedAssignment = useSelector(
+    (state) => state.assignment.selectedAssignment
+  );
+
   useEffect(() => {
-    if (selectedChapterName && chapters && chapters.length > 0) {
-      const chapterObject = chapters.find(c => c.name === selectedChapterName);
+    const fetchChapters = async () => {
+      try {
+        const response = await getChapters({
+          classId: selectedAssignment?.classId?._id,
+          subjectId: selectedAssignment?.subjectId?._id,
+          boardId: teacherProfile?.schoolId?.boardId,
+        });
+        setAllChapters(response.data.chapters);
+        console.log(response.data.chapters)
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error)
+        if (error.response.status != 400 && error.response.status != 404) {
+          Toast.show({
+            type: 'error',
+            text1: "Unable to fetch chapters"
+          });
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChapters();
+  }, [selectedAssignment]);
+
+  useEffect(() => {
+    if (selectedChapterName && allChapters.length > 0) {
+      const chapterObject = allChapters.find(c => c.name === selectedChapterName);
       if (chapterObject) {
-        setSelectedChapterId(chapterObject.id);
+        setSelectedChapterId(chapterObject.id || chapterObject._id); // handle both id/_id
       } else {
         setSelectedChapterId(null);
       }
     }
-  }, [selectedChapterName, chapters]);
+  }, [selectedChapterName, allChapters]);
 
   const handleChapterSelect = chapterName => {
     setSelectedChapterName(chapterName);
@@ -37,7 +72,7 @@ const AssignTest = () => {
   const renderHeader = () => (
     <View>
 
-    <NavHeader />
+      <NavHeader />
 
       <View className="px-4 mt-6">
         <View className="bg-[#FED570] rounded-2xl p-6">
@@ -46,13 +81,13 @@ const AssignTest = () => {
             <View className="items-center">
               <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center ">
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                  <Text style={{fontSize: GetFontSize(12)}}
-                  className="text-[#212B36] font-inter600">
+                  <Text style={{ fontSize: GetFontSize(12) }}
+                    className="text-[#212B36] font-inter600">
                     1
                   </Text>
                 </View>
-                <Text style={{fontSize: GetFontSize(12)}}
-                className="text-white font-inter600">
+                <Text style={{ fontSize: GetFontSize(12) }}
+                  className="text-white font-inter600">
                   Choose Chapter
                 </Text>
               </View>
@@ -63,8 +98,8 @@ const AssignTest = () => {
             <View className="items-center">
               <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                 <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                  <Text style={{fontSize: GetFontSize(12)}}
-                  className="text-white font-inter600">
+                  <Text style={{ fontSize: GetFontSize(12) }}
+                    className="text-white font-inter600">
                     2
                   </Text>
                 </View>
@@ -76,8 +111,8 @@ const AssignTest = () => {
             <View className="items-center">
               <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                 <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                  <Text style={{fontSize: GetFontSize(12)}}
-                  className="text-white font-inter600">
+                  <Text style={{ fontSize: GetFontSize(12) }}
+                    className="text-white font-inter600">
                     3
                   </Text>
                 </View>
@@ -97,13 +132,13 @@ const AssignTest = () => {
                 <Document />
               </View>
 
-              <Text style={{fontSize: GetFontSize(16)}}
-              className="text-[#B68201] font-inter700 mb-2 text-center">
+              <Text style={{ fontSize: GetFontSize(16) }}
+                className="text-[#B68201] font-inter700 mb-2 text-center">
                 Ready to plan smarter?
               </Text>
 
-              <Text style={{fontSize: GetFontSize(13)}}
-              className="text-[#B68201] font-inter500 px-2">
+              <Text style={{ fontSize: GetFontSize(13) }}
+                className="text-[#B68201] font-inter500 px-2">
                 Select a chapter for which you want to assign a test.
               </Text>
             </View>
@@ -116,7 +151,7 @@ const AssignTest = () => {
             ) : (
               <LessonPlanDropdown
                 placeholder="Choose a chapter to get started..."
-                options={chapterOptions}
+                options={allChapters.map((chapter) => chapter.name)}
                 onSelect={handleChapterSelect}
                 selectedValue={selectedChapterName}
               />
@@ -149,19 +184,19 @@ const AssignTest = () => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
-              <Text style={{fontSize: GetFontSize(18)}}
-              className="text-[#212B36] font-inter600 flex-shrink">
+              <Text style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-inter600 flex-shrink">
                 Assign Test
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
-                onPress={() => navigation.goBack()}
+                onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
               >
                 <Text className="text-white font-inter400">✕</Text>
               </TouchableOpacity>
             </View>
-            <Text style={{fontSize: GetFontSize(14)}}
-            className="text-[#454F5B] font-inter400">
+            <Text style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B] font-inter400">
               Boost your students's progress in{'\n'} just few taps!
             </Text>
           </View>
@@ -171,7 +206,7 @@ const AssignTest = () => {
       {/* Scrollable Content */}
       <FlatList
         style={{ flex: 1 }}
-        data={[]} 
+        data={[]}
         renderItem={() => null}
         ListHeaderComponent={renderHeader}
       />
@@ -180,17 +215,17 @@ const AssignTest = () => {
       <View className="px-6 py-4 bg-white">
         <View className="flex-row gap-2">
           <TouchableOpacity
-          style={{fontSize: GetFontSize(16)}}
+            style={{ fontSize: GetFontSize(16) }}
             className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3 font-inter600"
             onPress={() => navigation.goBack()}
           >
             <LeftArrow color="#FED570" />
-            <Text 
-            style={{fontSize: GetFontSize(16)}}
-            className="font-inter600 text-[#FED570] ">Back</Text>
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="font-inter600 text-[#FED570] ">Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
-          style={{fontSize: GetFontSize(13)}}
+            style={{ fontSize: GetFontSize(13) }}
             disabled={!selectedChapterId}
             onPress={() =>
               navigation.navigate('AssignTestTopics', {
@@ -198,17 +233,15 @@ const AssignTest = () => {
                 chapterName: selectedChapterName,
               })
             }
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
-              selectedChapterId
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
                 ? 'bg-[#FED570] border-[#FEC107]'
                 : 'bg-gray-300 border-gray-300'
-            }`}
+              }`}
           >
             <Text
-            style={{fontSize: GetFontSize(16)}}
-              className={`font-inter600 ${
-                selectedChapterId ? 'text-[#B68201]' : 'text-gray-600'
-              }`}
+              style={{ fontSize: GetFontSize(16) }}
+              className={`font-inter600 ${selectedChapterId ? 'text-[#B68201]' : 'text-gray-600'
+                }`}
             >
               Continue
             </Text>
