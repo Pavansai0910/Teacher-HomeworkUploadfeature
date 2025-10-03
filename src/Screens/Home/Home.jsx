@@ -154,9 +154,9 @@ const classes =
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity className="w-9 h-9 rounded-full bg-blue-50 items-center justify-center">
-          {/* <NotificationIcon /> */}
-        </TouchableOpacity>
+        {/* <TouchableOpacity className="w-9 h-9 rounded-full bg-blue-50 items-center justify-center">
+          <NotificationIcon />
+        </TouchableOpacity> */}
       </View>
 
       {/* Gradient Background */}
@@ -331,8 +331,8 @@ const classes =
         </Modal>
 
         {/* Cards */}
-        <View className="flex-1 justify-center">
-          <ScrollView
+        <View className="flex-1 justify-center items-center">
+          {/* <ScrollView
             ref={scrollViewRef}
             horizontal
             pagingEnabled={false}
@@ -345,7 +345,7 @@ const classes =
               paddingHorizontal: width * 0.15,
               alignItems: 'center',
             }}
-          >
+          > */}
             {/* <StudentsInsightsCard
               onPress={() => navigation.navigate('StudentsInsights')}
               isActive={currentIndex === 0}
@@ -364,7 +364,7 @@ const classes =
               cardWidth={cardWidth}
               // cardSpacing={cardSpacing}
             />
-          </ScrollView>
+          {/* </ScrollView> */}
 
           {/* Pagination Dots */}
           {/* <View className="flex-row justify-center items-center mt-5 mb-8">

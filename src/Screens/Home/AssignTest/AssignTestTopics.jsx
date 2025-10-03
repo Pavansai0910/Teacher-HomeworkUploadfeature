@@ -87,14 +87,22 @@ const AssignTestTopics = ({ route }) => {
 
   const getFilteredExamData = () => {
     if (activeFilter === 'all') return examData;
-    return examData.filter(t => t.status === activeFilter);
+
+    return examData?.filter(paper => {
+      let status;
+      if (paper.isAssigned && paper.lastAttempted) status = 'completed';
+      else if (paper.isAssigned) status = 'assigned';
+      else status = 'pending';
+
+      return status === activeFilter;
+    });
   };
 
   const statusCounts = {
     all: examData?.length || 0,
-    pending: examData?.filter(p => !p.isAssigned && !p.lastAttempted).length,
-    assigned: examData?.filter(p => p.isAssigned && !p.lastAttempted).length,
-    completed: examData?.filter(p => p.isAssigned && p.lastAttempted).length,
+    pending: examData?.filter(p => !p.isAssigned && !p.lastAttempted)?.length,
+    assigned: examData?.filter(p => p.isAssigned && !p.lastAttempted)?.length,
+    completed: examData?.filter(p => p.isAssigned && p.lastAttempted)?.length,
   };
 
   const getStatusBadge = status => {
@@ -246,60 +254,54 @@ const AssignTestTopics = ({ route }) => {
             >
               <View className="flex-row gap-2">
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${
-                    activeFilter === 'all'
+                  className={`px-4 py-2 rounded-full ${activeFilter === 'all'
                       ? 'bg-white border-2 border-[#FED570]'
                       : 'bg-white'
-                  }`}
+                    }`}
                   onPress={() => setActiveFilter('all')}
                 >
                   <Text
                     style={{ fontSize: GetFontSize(13) }}
-                    className={`font-inter600 ${
-                      activeFilter === 'all'
+                    className={`font-inter600 ${activeFilter === 'all'
                         ? 'text-[#B68201]'
                         : 'text-[#6B7280]'
-                    }`}
+                      }`}
                   >
                     All Tests ({statusCounts.all})
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${
-                    activeFilter === 'pending'
+                  className={`px-4 py-2 rounded-full ${activeFilter === 'pending'
                       ? 'bg-white border-2 border-[#FED570]'
                       : 'bg-white'
-                  }`}
+                    }`}
                   onPress={() => setActiveFilter('pending')}
                 >
                   <Text
                     style={{ fontSize: GetFontSize(13) }}
-                    className={`font-inter600 ${
-                      activeFilter === 'pending'
+                    className={`font-inter600 ${activeFilter === 'pending'
                         ? 'text-[#B68201]'
                         : 'text-[#6B7280]'
-                    }`}
+                      }`}
                   >
                     Pending ({statusCounts.pending})
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${
-                    activeFilter === 'assigned'
+                  className={`px-4 py-2 rounded-full ${activeFilter === 'assigned'
                       ? 'bg-white border-2 border-[#FED570]'
                       : 'bg-white'
-                  }`}
+                    }`}
                   onPress={() => setActiveFilter('assigned')}
                 >
                   <Text
                     style={{ fontSize: GetFontSize(13) }}
-                    className={`font-inter600 ${
-                      activeFilter === 'assigned'
+                    className={`font-inter600 ${activeFilter === 'assigned'
                         ? 'text-[#B68201]'
                         : 'text-[#6B7280]'
-                    }`}
+                      }`}
                   >
                     Assigned ({statusCounts.assigned})
                   </Text>
@@ -376,8 +378,6 @@ const AssignTestTopics = ({ route }) => {
           </View>
         </View>
 
-        {/* Spacer so last item not hidden */}
-        <View className="h-[100px]" />
       </ScrollView>
 
       {/* Fixed Bottom Buttons */}

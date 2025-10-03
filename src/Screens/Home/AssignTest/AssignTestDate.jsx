@@ -195,7 +195,7 @@ const AssignTestDate = ({ route }) => {
       </View>
 
       {/* Scrollable Content */}
-      <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
+      <ScrollView>
         <NavHeader />
 
         {/* Progress Steps */}
