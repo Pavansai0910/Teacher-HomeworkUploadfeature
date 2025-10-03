@@ -22,6 +22,7 @@ import RNFS, { DownloadDirectoryPath } from 'react-native-fs';
 import { downloadExam } from '../../../Services/teacherAPIV1';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
 import NavHeader from '../../NavHeader';
+import GetFontSize from '../../../Commons/GetFontSize';
 
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
@@ -93,53 +94,54 @@ const AssignTestDate = ({ route }) => {
   };
 
 
-    const handleExamDownload = async (questionPaperCode) => {
-      setDownloadLoader(true);  
-      // 1. Permission Check
-      const hasPermission = await requestStoragePermission()
-      if (!hasPermission) {
-        setDownloadLoader(false);
-        return;
+  const handleExamDownload = async (questionPaperCode) => {
+    setDownloadLoader(true);
+    // 1. Permission Check
+    const hasPermission = await requestStoragePermission()
+    if (!hasPermission) {
+      setDownloadLoader(false);
+      return;
+    }
+
+    try {
+      const response = await downloadExam({ questionPaperCode: questionPaperCode });
+
+      const base64Data = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(response.data);
+        reader.onloadend = () => {
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = reject;
+      });
+
+      const directoryPath = `${DownloadDirectoryPath}/Adaptmate Educator App`;
+      const checkDirectory = await RNFS.exists(directoryPath);
+      if (!checkDirectory) {
+        await RNFS.mkdir(directoryPath);
       }
-  
-      try {
-        const response = await downloadExam({ questionPaperCode: questionPaperCode });
-  
-        const base64Data = await new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(response.data);
-          reader.onloadend = () => {
-            const base64 = reader.result.split(',')[1];
-            resolve(base64);
-          };
-          reader.onerror = reject;
-        });
-  
-        const directoryPath = `${DownloadDirectoryPath}/Adaptmate Educator App`;
-        const checkDirectory = await RNFS.exists(directoryPath);
-        if (!checkDirectory) {
-          await RNFS.mkdir(directoryPath);
-        }
-  
-        const path = `${directoryPath}/LGA_${Date.now()}.pdf`;
-        await RNFS.writeFile(path, base64Data, 'base64');
-  
-        Toast.show({
-          type: 'success',
-          text1: `Saved in Download/Adaptmate Educator App`,
-        });
-        setDownloadLoader(false);
-      } catch (error) {
-        console.error("RNFS Write Error:", error);
-        setDownloadLoader(false);
-        Toast.show({
-          type: 'error',
-          text1: "Download Failed",
-          text2: "Could not save file. Check permissions or internal file error.",
-        });
-      } finally {
-        setDownloadLoader(false);}
-    };
+
+      const path = `${directoryPath}/LGA_${Date.now()}.pdf`;
+      await RNFS.writeFile(path, base64Data, 'base64');
+
+      Toast.show({
+        type: 'success',
+        text1: `Saved in Download/Adaptmate Educator App`,
+      });
+      setDownloadLoader(false);
+    } catch (error) {
+      console.error("RNFS Write Error:", error);
+      setDownloadLoader(false);
+      Toast.show({
+        type: 'error',
+        text1: "Download Failed",
+        text2: "Could not save file. Check permissions or internal file error.",
+      });
+    } finally {
+      setDownloadLoader(false);
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-[#F5F5F0]">
       {/* Header */}
@@ -150,7 +152,9 @@ const AssignTestDate = ({ route }) => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-center mb-1">
-              <Text className="text-[#1A1A1A] font-bold text-[18px]">
+              <Text
+                style={{ fontSize: GetFontSize(18) }}
+                className="text-[#1A1A1A] font-inter700">
                 Assign Test
               </Text>
               <TouchableOpacity
@@ -167,14 +171,16 @@ const AssignTestDate = ({ route }) => {
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
                 <Text
-                  style={{ lineHeight: 24, textAlign: 'center' }}
-                  className="text-white text-[14px] font-bold"
+                  style={{ lineHeight: 24, textAlign: 'center', fontSize: GetFontSize(14) }}
+                  className="text-white font-inter700"
                 >
                   X
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text className="text-[#6B5D4F] text-[13px]">
+            <Text
+              style={{ fontSize: GetFontSize(13) }}
+              className="text-[#6B5D4F] font-inter500">
               Boost your students' progress in{'\n'}just a few taps!
             </Text>
           </View>
@@ -195,7 +201,9 @@ const AssignTestDate = ({ route }) => {
             <View className="items-center">
               <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                  <Text className="font-semibold text-[12px]">1</Text>
+                  <Text
+                    style={{ fontSize: GetFontSize(12) }}
+                    className="font-inter600">1</Text>
                 </View>
               </View>
             </View>
@@ -203,7 +211,9 @@ const AssignTestDate = ({ route }) => {
             <View className="items-center">
               <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                  <Text className="font-semibold text-[12px]">2</Text>
+                  <Text
+                    style={{ fontSize: GetFontSize(12) }}
+                    className="font-inter600">2</Text>
                 </View>
               </View>
             </View>
@@ -211,11 +221,15 @@ const AssignTestDate = ({ route }) => {
             <View className="items-center">
               <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                  <Text className="text-[#212B36] font-semibold text-[12px]">
+                  <Text
+                    style={{ fontSize: GetFontSize(12) }}
+                    className="text-[#212B36] font-inter600">
                     3
                   </Text>
                 </View>
-                <Text className="text-white text-[12px] font-semibold">
+                <Text 
+                style={{fontSize: GetFontSize(12)}}
+                className="text-white font-inter600">
                   Generate Plan
                 </Text>
               </View>
@@ -233,10 +247,14 @@ const AssignTestDate = ({ route }) => {
               <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
                 <Document />
               </View>
-              <Text className="text-[#8B6914] font-bold text-[16px] mb-2 text-center">
+              <Text 
+              style={{fontSize: GetFontSize(16)}}
+              className="text-[#8B6914] font-inter700 mb-2 text-center">
                 Ready to plan smarter?
               </Text>
-              <Text className="text-[#8B6914] text-center text-[13px] leading-5">
+              <Text 
+              style={{fontSize: GetFontSize(13)}}
+              className="text-[#8B6914] text-center font-inter500">
                 Just select a deadline for your students, and{'\n'}you're good
                 to go!
               </Text>
@@ -245,7 +263,9 @@ const AssignTestDate = ({ route }) => {
 
           {/* Due Date Input */}
           <View className="mb-6 items-center">
-            <Text className="text-[#5FCC3D] mb-2 text-[13px] font-medium self-start">
+            <Text
+            style={{fontSize: GetFontSize(13)}}
+            className="text-[#5FCC3D] mb-2 font-inter500 self-start">
               Select Due Date <Text className="text-[#E74C3C]">*</Text>
             </Text>
             <TouchableOpacity
@@ -265,7 +285,9 @@ const AssignTestDate = ({ route }) => {
                 setShowPicker(true);
               }}
             >
-              <Text className="text-[#FFB84D] font-medium text-[15px]">
+              <Text 
+              style={{fontSize: GetFontSize(15)}}
+              className="text-[#FFB84D] font-inter500">
                 {dueDate ? formatDate(dueDate) : 'dd\\mm\\yyyy'}
               </Text>
             </TouchableOpacity>
@@ -274,7 +296,9 @@ const AssignTestDate = ({ route }) => {
           {/* Selected Topics */}
           <View className="bg-white rounded-xl p-4">
             <View className="flex-row justify-between items-start mb-3">
-              <Text className="text-[#1A1A1A] font-semibold text-[14px] flex-1">
+              <Text 
+              style={{fontSize: GetFontSize(14)}}
+              className="text-[#1A1A1A] font-inter600 flex-1">
                 {questionPaper.questionPaperTitle}
               </Text>
               <View
@@ -288,7 +312,9 @@ const AssignTestDate = ({ route }) => {
                   borderColor: '#DFAF02',
                 }}
               >
-                <Text className="text-[#FFB84D] text-[11px] font-semibold">
+                <Text 
+                style={{fontSize: GetFontSize(11)}}
+                className="text-[#FFB84D] font-inter600">
                   Pending
                 </Text>
               </View>
@@ -307,10 +333,12 @@ const AssignTestDate = ({ route }) => {
               >
                 {downloadLoader ? (
                   <ActivityIndicator size="small" color="#FFB84D" />
-                ):(  
-                  <Text className="text-[#FFB84D] font-semibold text-[13px]">
-                  Download LGA
-                </Text>
+                ) : (
+                  <Text 
+                  style={{fontSize: GetFontSize(13)}}
+                  className="text-[#FFB84D] font-inter600">
+                    Download LGA
+                  </Text>
                 )}
               </TouchableOpacity>
               {/* <TouchableOpacity
@@ -338,7 +366,9 @@ const AssignTestDate = ({ route }) => {
           onPress={() => navigation.goBack()}
         >
           <LeftArrow color="#FFB84D" />
-          <Text className="text-[#FFB84D] font-semibold text-[15px] ml-1">
+          <Text
+          style={{fontSize: GetFontSize(15)}}
+          className="text-[#FFB84D] font-inter600 ml-1">
             back
           </Text>
         </TouchableOpacity>
@@ -353,7 +383,8 @@ const AssignTestDate = ({ route }) => {
           ) : (
             <View className="flex-row items-center">
               <Text
-                className={`font-semibold text-[15px] mr-1 ${dueDate ? 'text-[#8B6914]' : 'text-[#999999]'}`}
+              style={{fontSize: GetFontSize(15)}}
+                className={`font-inter600 mr-1 ${dueDate ? 'text-[#8B6914]' : 'text-[#999999]'}`}
               >
                 Continue
               </Text>

@@ -103,7 +103,7 @@ const Home = () => {
   // Get display text for subject dropdown
   const getSubjectDisplayText = () => {
     if (selectedSubject) {
-      return selectedSubject.subjectName;
+      return capitalizeSubject(selectedSubject.subjectName);
     }
     // Fallback to selectedAssignment
     if (selectedAssignment?.subjectId) {

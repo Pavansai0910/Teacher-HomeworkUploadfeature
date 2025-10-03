@@ -102,8 +102,8 @@ const AssignTest = () => {
                 Ready to plan smarter?
               </Text>
 
-              <Text style={{fontSize: GetFontSize(16)}}
-              className="text-[#B68201] font-inter500 leading-5 px-2">
+              <Text style={{fontSize: GetFontSize(13)}}
+              className="text-[#B68201] font-inter500 px-2">
                 Select a chapter for which you want to assign a test.
               </Text>
             </View>
@@ -119,8 +119,6 @@ const AssignTest = () => {
                 options={chapterOptions}
                 onSelect={handleChapterSelect}
                 selectedValue={selectedChapterName}
-                className="font-inter700"
-                style={{fontSize: GetFontSize(16)}}
               />
             )}
           </View>
@@ -187,7 +185,9 @@ const AssignTest = () => {
             onPress={() => navigation.goBack()}
           >
             <LeftArrow color="#FED570" />
-            <Text className="text-[#FED570] ">Back</Text>
+            <Text 
+            style={{fontSize: GetFontSize(16)}}
+            className="font-inter600 text-[#FED570] ">Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
           style={{fontSize: GetFontSize(13)}}
@@ -198,14 +198,15 @@ const AssignTest = () => {
                 chapterName: selectedChapterName,
               })
             }
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 font-inter600 ${
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
               selectedChapterId
                 ? 'bg-[#FED570] border-[#FEC107]'
                 : 'bg-gray-300 border-gray-300'
             }`}
           >
             <Text
-              className={`font-semibold ${
+            style={{fontSize: GetFontSize(16)}}
+              className={`font-inter600 ${
                 selectedChapterId ? 'text-[#B68201]' : 'text-gray-600'
               }`}
             >

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import capitalizeSubject from '../Utils/CapitalizeSubject';
+import GetFontSize from './GetFontSize';
 
 const LessonPlanDropdown = ({ options, placeholder, onSelect, selectedValue }) => {
   const [open, setOpen] = useState(false);
@@ -31,7 +32,9 @@ const LessonPlanDropdown = ({ options, placeholder, onSelect, selectedValue }) =
         }}
       >
         {/* 4. Use selectedValue for display */}
-        <Text className="text-[#DC9047] font-bold text-[16px] flex-1">
+        <Text
+        style={{fontSize: GetFontSize(16)}}
+        className="font-inter700 text-[#DC9047] flex-1">
           {selectedValue || placeholder}
         </Text>
         <Text className="text-[#DC9047] text-lg font-bold">{open ? '⌃' : '⌄'}</Text>
@@ -56,7 +59,9 @@ const LessonPlanDropdown = ({ options, placeholder, onSelect, selectedValue }) =
                     }`}
                   >
                     <Text
-                      className={`text-center py-3 text-[15px] ${
+                style={{fontSize: GetFontSize(16)}}
+
+                      className={`font-inter700 text-center py-3 ${
                         isSelected ? 'text-[#DC9047] font-semibold ' : 'text-[#637381]'
                       }`}
                     >

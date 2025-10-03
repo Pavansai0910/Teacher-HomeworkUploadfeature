@@ -168,8 +168,8 @@ const AssignTestTopics = ({ route }) => {
           <View className="flex-1">
             <View className="flex-row justify-between items-center">
               <Text
-              style={{fontSize: GetFontSize(18)}}
-              className="text-[#212B36] font-poppins600 
+                style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-poppins600 
                flex-shrink">
                 Assign Test
               </Text>
@@ -177,10 +177,14 @@ const AssignTestTopics = ({ route }) => {
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
                 onPress={() => navigation.navigate('Home')}
               >
-                <Text className="text-white text-[14px]">✕</Text>
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-white">✕</Text>
               </TouchableOpacity>
             </View>
-            <Text className="text-[#454F5B] text-[14px]">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B]">
               Assign tests to your students{'\n'}quickly and easily
             </Text>
           </View>
@@ -200,7 +204,9 @@ const AssignTestTopics = ({ route }) => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                    <Text className="font-semibold text-[12px]">1</Text>
+                    <Text 
+                    style={{fontSize: GetFontSize(12)}}
+                    className="font-inter600">1</Text>
                   </View>
                 </View>
               </View>
@@ -209,11 +215,15 @@ const AssignTestTopics = ({ route }) => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                    <Text className="text-[#212B36] font-semibold text-[12px]">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-[#212B36] font-inter600">
                       2
                     </Text>
                   </View>
-                  <Text className="text-white text-[12px] font-semibold">
+                  <Text
+                    style={{ fontSize: GetFontSize(12) }}
+                    className="text-white font-inter600">
                     Select Topics
                   </Text>
                 </View>
@@ -224,7 +234,9 @@ const AssignTestTopics = ({ route }) => {
               <View className="items-center">
                 <View className="flex-row bg-[#CCCCCC] rounded-full px-3 py-3 border-2 border-white items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                    <Text className="font-semibold text-[12px]">3</Text>
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="font-inter600">3</Text>
                   </View>
                 </View>
               </View>
@@ -238,10 +250,14 @@ const AssignTestTopics = ({ route }) => {
               <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
                 <Document />
               </View>
-              <Text className="text-[#B68201] font-bold text-[16px] mb-1 text-center">
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
+                className="text-[#B68201] font-inter700 mb-1 text-center">
                 Zoom in and pick your focus!
               </Text>
-              <Text className="text-[#B68201] text-center text-[12px] leading-5 px-4">
+              <Text
+                style={{ fontSize: GetFontSize(12) }}
+                className="text-[#B68201] text-center font-inter700 px-4">
                 Here is the list of topics from {chapterName}.{'\n'}
                 Select a topic you want to assign a test for.
               </Text>
@@ -263,7 +279,8 @@ const AssignTestTopics = ({ route }) => {
                   onPress={() => setActiveFilter('all')}
                 >
                   <Text
-                    className={`text-[13px] font-semibold ${activeFilter === 'all'
+                    style={{ fontSize: GetFontSize(13) }}
+                    className={`font-inter600 ${activeFilter === 'all'
                       ? 'text-[#B68201]'
                       : 'text-[#6B7280]'
                       }`}
@@ -280,7 +297,8 @@ const AssignTestTopics = ({ route }) => {
                   onPress={() => setActiveFilter('pending')}
                 >
                   <Text
-                    className={`text-[13px] font-semibold ${activeFilter === 'pending'
+                    style={{ fontSize: GetFontSize(13) }}
+                    className={`font-inter600 ${activeFilter === 'pending'
                       ? 'text-[#B68201]'
                       : 'text-[#6B7280]'
                       }`}
@@ -297,7 +315,8 @@ const AssignTestTopics = ({ route }) => {
                   onPress={() => setActiveFilter('assigned')}
                 >
                   <Text
-                    className={`text-[13px] font-semibold ${activeFilter === 'assigned'
+                    style={{ fontSize: GetFontSize(13) }}
+                    className={`font-inter600 ${activeFilter === 'assigned'
                       ? 'text-[#B68201]'
                       : 'text-[#6B7280]'
                       }`}
@@ -315,7 +334,9 @@ const AssignTestTopics = ({ route }) => {
               </View>
             ) : !examData || examData.length === 0 ? (
               <View className="py-8">
-                <Text className="text-center text-[#B68201] text-[14px]">
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-center text-[#B68201] font-inter500">
                   No exams available.
                 </Text>
               </View>
@@ -344,7 +365,8 @@ const AssignTestTopics = ({ route }) => {
                       activeOpacity={0.7}
                     >
                       <Text
-                        className={`flex-1 font-semibold text-[14px] ${isSelected ? "text-white" : "text-[#212B36]"
+                        style={{ fontSize: GetFontSize(14) }}
+                        className={`flex-1 font-inter600 ${isSelected ? "text-white" : "text-[#212B36]"
                           }`}
                         numberOfLines={2}
                       >
@@ -363,8 +385,8 @@ const AssignTestTopics = ({ route }) => {
                         }}
                       >
                         <Text
-                          className="text-[12px] font-semibold"
-                          style={{ color: statusBadge.text }}
+                          className="font-inter600"
+                          style={{ fontSize: GetFontSize(12), color: statusBadge.text }}
                           numberOfLines={1}
                         >
                           {statusBadge.label}
@@ -377,7 +399,9 @@ const AssignTestTopics = ({ route }) => {
                 {/* Empty filter case */}
                 {getFilteredExam?.length === 0 && (
                   <View className="py-8">
-                    <Text className="text-center text-[#B68201] text-[14px]">
+                    <Text
+                      style={{ fontSize: GetFontSize(14) }}
+                      className="text-center text-[#B68201] font-inter500 ">
                       No exams found for this filter.
                     </Text>
                   </View>
@@ -406,7 +430,9 @@ const AssignTestTopics = ({ route }) => {
               onPress={() => navigation.goBack()}
             >
               <LeftArrow color="#FED570" />
-              <Text className="text-[#FED570] font-semibold">Back</Text>
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
+                className="text-[#FED570] font-semibold">Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopic ? "bg-[#FED570] border-[#FEC107]" : "bg-gray-300 border-gray-300"
@@ -415,7 +441,8 @@ const AssignTestTopics = ({ route }) => {
               disabled={!selectedTopic}
             >
               <Text
-                className={`font-semibold ${selectedTopic ? "text-[#B68201]" : "text-gray-600"
+                style={{ fontSize: GetFontSize(16) }}
+                className={`font-inter600 ${selectedTopic ? "text-[#B68201]" : "text-gray-600"
                   }`}
               >
                 Continue
