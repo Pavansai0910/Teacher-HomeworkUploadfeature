@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 
 
 const AssignTestDate = () => {
@@ -68,8 +68,8 @@ const AssignTestDate = () => {
       {/* Header */}
       <View className="bg-[#FFF3D6] px-5 py-4 rounded-2xl">
         <View className="flex-row items-center">
-          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-            <Bluepage />
+          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg mr-3 justify-center items-center">
+            <AssignTestDoc />
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-center mb-1">
@@ -266,7 +266,7 @@ const AssignTestDate = () => {
             className="border-2 border-[#E5E5E5] bg-white rounded-xl px-6 py-3 flex-row items-center justify-center"
             onPress={() => navigation.goBack()}
           >
-            <LeftArrow />
+            <LeftArrow color="#FED570" />
             <Text className="text-[#FFB84D] font-semibold text-[15px] ml-1">back</Text>
           </TouchableOpacity>
           

@@ -9,13 +9,13 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import { getAllTopics } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 
 const AssignTestTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -31,7 +31,6 @@ const AssignTestTopics = ({ route }) => {
   const [selectedTopics, setSelectedTopics] = useState([]);
   const [activeFilter, setActiveFilter] = useState('all');
   const [chapterName, setChapterName] = useState('Selected Chapter');
-  
 
   // Prepare class and subject display
   const classDisplay = selectedAssignment
@@ -39,7 +38,8 @@ const AssignTestTopics = ({ route }) => {
     : 'Not selected';
 
   const subjectDisplay =
-    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
+    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    'Not selected';
 
   // Combined display for header
   const classSubjectDisplay = `${selectedAssignment?.classId?.className || 'Class'}-${selectedAssignment?.sectionId?.sectionName || 'Section'} - ${capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Subject'}`;
@@ -69,7 +69,12 @@ const AssignTestTopics = ({ route }) => {
 
       setLoading(true);
       try {
-        console.log('Fetching topics with params:', { classId, subjectId, boardId, chapterId });
+        console.log('Fetching topics with params:', {
+          classId,
+          subjectId,
+          boardId,
+          chapterId,
+        });
         const response = await getAllTopics({
           classId,
           subjectId,
@@ -126,7 +131,6 @@ const AssignTestTopics = ({ route }) => {
     }
 
     const payload = { chapterId, selectedTopics };
-    console.log('Navigating with payload:', payload);
     navigation.navigate('AssignTestDate', payload);
   };
 
@@ -177,8 +181,8 @@ const AssignTestTopics = ({ route }) => {
       {/* Header */}
       <View className="bg-[#FEF3C7] px-6 py-6">
         <View className="flex-row items-center">
-          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-            <Bluepage />
+          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg mr-3 justify-center items-center">
+            <AssignTestDoc />
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-center">
@@ -197,7 +201,6 @@ const AssignTestTopics = ({ route }) => {
             </Text>
           </View>
         </View>
-        
       </View>
 
       {/* Class-Section-Subject Display */}
@@ -210,7 +213,8 @@ const AssignTestTopics = ({ route }) => {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {classDisplay} | {selectedAssignment?.classId?.studentCount || '0'} Students
+              {classDisplay} |{' '}
+              {selectedAssignment?.classId?.studentCount || '0'} Students
             </Text>
           </View>
           <View className="flex-1">
@@ -268,7 +272,7 @@ const AssignTestTopics = ({ route }) => {
 
             {/* Divider */}
             <View className="flex-1 h-0 border-t-2 border-white border-dashed mb-6" />
-            
+
             {/* Content Header */}
             <View className="items-center mb-4">
               <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
@@ -284,8 +288,8 @@ const AssignTestTopics = ({ route }) => {
             </View>
 
             {/* Filter Tabs - Scrollable */}
-            <ScrollView 
-              horizontal 
+            <ScrollView
+              horizontal
               showsHorizontalScrollIndicator={false}
               className="mb-4"
               contentContainerStyle={{ paddingRight: 16 }}
@@ -301,7 +305,9 @@ const AssignTestTopics = ({ route }) => {
                 >
                   <Text
                     className={`text-[13px] font-semibold ${
-                      activeFilter === 'all' ? 'text-[#B68201]' : 'text-[#6B7280]'
+                      activeFilter === 'all'
+                        ? 'text-[#B68201]'
+                        : 'text-[#6B7280]'
                     }`}
                   >
                     All Tests ({getStatusCount('all')})
@@ -362,7 +368,9 @@ const AssignTestTopics = ({ route }) => {
             ) : (
               <View className="gap-3 items-center">
                 {filteredTopics.map(topic => {
-                  const isSelected = selectedTopics.some(t => t.id === topic.id);
+                  const isSelected = selectedTopics.some(
+                    t => t.id === topic.id,
+                  );
                   const statusBadge = getStatusBadge(topic.status);
                   const hasBorder = topic.status === 'pending';
 
@@ -411,7 +419,7 @@ const AssignTestTopics = ({ route }) => {
         <View className="px-6 mt-4">
           <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-4 py-4 rounded-lg">
             <Text className="font-semibold">Pro Tip:</Text> Regular testing
-          improves retention by 40%!
+            improves retention by 40%!
           </Text>
         </View>
 
@@ -424,20 +432,26 @@ const AssignTestTopics = ({ route }) => {
               className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
               onPress={() => navigation.goBack()}
             >
-              <LeftArrow />
+              <LeftArrow color="#FED570" />
               <Text className="text-[#FED570] font-semibold">Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
               className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
                 selectedTopics.length > 0
                   ? 'bg-[#FED570] border-[#FEC107]'
-                  : 'bg-gray-400 border-gray-400'
+                  : 'bg-gray-300 border-gray-300'
               }`}
               onPress={handleContinue}
               disabled={selectedTopics.length === 0}
             >
-              <Text className="text-white font-semibold">Continue</Text>
-              <RightArrow />
+              <Text
+                className={`font-semibold ${
+                  selectedTopics ? 'text-[#B68201]' : 'text-gray-600'
+                }`}
+              >
+                Continue
+              </Text>
+              {selectedTopics && <RightArrow color="#B68201" />}
             </TouchableOpacity>
           </View>
         </View>

@@ -3,12 +3,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { ActivityIndicator } from 'react-native';
-import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
-import RightArrow from  '../../../Images/LessonPlan/RightArrow';
+import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 
 const AssignTest = () => {
   const navigation = useNavigation();
@@ -23,7 +23,6 @@ const AssignTest = () => {
       const chapterObject = chapters.find(c => c.name === selectedChapterName);
       if (chapterObject) {
         setSelectedChapterId(chapterObject.id);
-        console.log('Selected Chapter ID:', chapterObject.id);
       } else {
         setSelectedChapterId(null);
       }
@@ -158,12 +157,30 @@ const AssignTest = () => {
             className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
             onPress={() => navigation.goBack()}
           >
-            <LeftArrow />
+            <LeftArrow color="#FED570" />
             <Text className="text-[#FED570] font-semibold">Back</Text>
           </TouchableOpacity>
-          <TouchableOpacity  onPress={() => navigation.navigate('AssignTestTopics', { chapterId: selectedChapterId })}className ="flex-row gap-1 flex-1 py-3 bg-[#FED570] rounded-lg justify-center items-center border-2 border-[#FEC107]">
-            <Text className="text-white font-semibold">Continue </Text>
-            <RightArrow />
+          <TouchableOpacity
+            disabled={!selectedChapterId} 
+            onPress={() =>
+              navigation.navigate('AssignTestTopics', {
+                chapterId: selectedChapterId,
+              })
+            }
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
+              selectedChapterId
+                ? 'bg-[#FED570] border-[#FEC107]'
+                : 'bg-gray-300 border-gray-300'
+            }`}
+          >
+            <Text
+              className={`font-semibold ${
+                selectedChapterId ? 'text-[#B68201]' : 'text-gray-600'
+              }`}
+            >
+              Continue
+            </Text>
+            {selectedChapterId && <RightArrow color="#B68201" />}
           </TouchableOpacity>
         </View>
       </View>
@@ -175,8 +192,8 @@ const AssignTest = () => {
       {/* Header (fixed at the top) */}
       <View className="bg-[#FFF3D6] px-6 py-6">
         <View className="flex-row items-center">
-          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-            <Bluepage />
+          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg mr-3 justify-center items-center">
+            <AssignTestDoc />
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">

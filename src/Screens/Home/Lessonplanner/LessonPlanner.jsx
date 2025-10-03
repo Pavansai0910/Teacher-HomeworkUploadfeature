@@ -48,7 +48,8 @@ const LessonPlanner = () => {
     : 'Not selected';
 
   const subjectDisplay =
-  capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
+    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    'Not selected';
 
   // 3. Updated: Map chapters for dropdown options (only names)
   const chapterOptions = chapters?.map(chapter => chapter.name) || [];
@@ -178,8 +179,8 @@ const LessonPlanner = () => {
                 <LessonPlanDropdown
                   placeholder="Choose a chapter to get started..."
                   options={chapterOptions}
-                  onSelect={handleChapterSelect} // New prop
-                  selectedValue={selectedChapterName} // New prop
+                  onSelect={handleChapterSelect} 
+                  selectedValue={selectedChapterName}
                 />
               )}
             </View>
@@ -203,19 +204,30 @@ const LessonPlanner = () => {
               className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
               onPress={() => navigation.goBack()}
             >
-              <LeftArrow />
+              <LeftArrow color="#1EAFF7" />
               <Text className="text-[#1EAFF7] font-semibold">Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
+              disabled={!selectedChapterId} 
               onPress={() =>
                 navigation.navigate('LessonPlanTopics', {
                   chapterId: selectedChapterId,
                 })
               }
-              className="flex-row gap-1 flex-1 py-3 bg-[#1EAFF7] rounded-lg justify-center items-center border-2 border-[#0786C5]"
+              className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
+                selectedChapterId
+                  ? 'bg-[#1EAFF7] border-[#0786C5]'
+                  : 'bg-gray-300 border-gray-300' 
+              }`}
             >
-              <Text className="text-white font-semibold">Continue</Text>
-              <RightArrow />
+              <Text
+                className={`font-semibold ${
+                  selectedChapterId ? 'text-white' : 'text-gray-600'
+                }`}
+              >
+                Continue
+              </Text>
+              {selectedChapterId && <RightArrow />}
             </TouchableOpacity>
           </View>
         </View>

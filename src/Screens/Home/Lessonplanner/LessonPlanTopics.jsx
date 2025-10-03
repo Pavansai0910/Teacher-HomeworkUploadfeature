@@ -240,7 +240,7 @@ const LessonPlanTopics = ({ route }) => {
               className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
               onPress={() => navigation.goBack()}
             >
-              <LeftArrow />
+              <LeftArrow color="#1EAFF7" />
               <Text className="text-[#1EAFF7] font-semibold">Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
