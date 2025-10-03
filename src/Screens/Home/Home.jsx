@@ -1,226 +1,343 @@
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  FlatList,
+  Modal,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+import { AuthContext } from '../../Context/AuthContext';
 import { useSelector } from 'react-redux';
-import { ActivityIndicator } from 'react-native';
-import Document from '../../../Images/LessonPlan/Document';
-import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
-import RightArrow from '../../../Images/LessonPlan/RightArrow';
-import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
-import { useState, useEffect } from 'react';
-import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
+import StudentsInsightsCard from '../HomeScreen/Cards/StudentsInsightsCard';
+import LessonPlannerCard from '../HomeScreen/Cards/LessonPlannerCard';
+import AssignTestCard from '../HomeScreen/Cards/AssignTestCard';
+import NotificationIcon from '../../Images/Home/NotificationIcon';
+import capitalizeSubject from '../../Utils/CapitalizeSubject';
 
-const AssignTest = () => {
+const { width } = Dimensions.get('window');
+
+const Home = () => {
+  const { teacherProfile } = useContext(AuthContext);
   const navigation = useNavigation();
-  const [selectedChapterName, setSelectedChapterName] = useState(null);
-  const [selectedChapterId, setSelectedChapterId] = useState(null);
+  const scrollViewRef = useRef(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const { chapters, loading } = useSelector(state => state.chapters);
-  const chapterOptions = chapters?.map(chapter => chapter.name) || [];
+  // Dropdown states
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [classModalVisible, setClassModalVisible] = useState(false);
+  const [subjectModalVisible, setSubjectModalVisible] = useState(false);
 
-  useEffect(() => {
-    if (selectedChapterName && chapters && chapters.length > 0) {
-      const chapterObject = chapters.find(c => c.name === selectedChapterName);
-      if (chapterObject) {
-        setSelectedChapterId(chapterObject.id);
-      } else {
-        setSelectedChapterId(null);
-      }
-    }
-  }, [selectedChapterName, chapters]);
+  const gradientBackgrounds = [
+    // ['#FFFFFF', '#BBF192'],
+    ['#FFFFFF', '#93D8FB'],
+    ['#FFFFFF', '#FEDB85'],
+  ];
 
-  const handleChapterSelect = chapterName => {
-    setSelectedChapterName(chapterName);
+  const cardWidth = width * 0.7;
+  const cardSpacing = 1;
+
+  const handleScroll = event => {
+    const contentOffset = event.nativeEvent.contentOffset;
+    const index = Math.round(contentOffset.x / cardWidth);
+    setCurrentIndex(index);
   };
 
-  const renderHeader = () => (
-    <View>
-      {/* Class and Subject Selection */}
-      <View className="mt-6 px-6 bg-white">
-        <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
-          <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-            <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
-            <Text
-              className="text-gray-800 font-semibold"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              Class 9-A | 50 Students
-            </Text>
-          </View>
-          <View className="flex-[1] ml-2">
-            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
-            <Text
-              className="text-gray-800 font-semibold"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              Mathematics
-            </Text>
-          </View>
-        </View>
-      </View>
+  // Get classes with combined class and section data
+  const classes = teacherProfile?.assignments?.map(a => ({
+    classId: a.classId,
+    sectionId: a.sectionId,
+    displayName: `${a.classId?.className || 'Class'} - ${a.sectionId?.sectionName || 'Section'}`
+  })) || [];
 
-      {/* Progress Steps */}
-      <View className="px-4 mt-6">
-        <View className="bg-[#FED570] rounded-2xl p-6">
-          {/* Progress Steps */}
-          <View className="flex-row items-center justify-between mb-5">
-            <View className="items-center">
-              <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center ">
-                <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                  <Text className="text-[#212B36] font-semibold text-[12px]">
-                    1
-                  </Text>
-                </View>
-                <Text className="text-white text-[12px] font-semibold">
-                  Choose Chapter
-                </Text>
-              </View>
-            </View>
+  // Get subjects based on selected class
+  const subjects = selectedClass
+    ? teacherProfile?.assignments
+        ?.filter(a => 
+          a.classId?._id === selectedClass.classId?._id && 
+          a.sectionId?._id === selectedClass.sectionId?._id
+        )
+        .map(a => a.subjectId)
+        .filter(Boolean) // Remove null/undefined subjects
+    : [];
 
-            <View className="flex-1 h-[2px] bg-[#F7F7F5] " />
-
-            <View className="items-center">
-              <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
-                <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                  <Text className="text-white font-semibold text-[12px]">
-                    2
-                  </Text>
-                </View>
-              </View>
-            </View>
-
-            <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
-
-            <View className="items-center">
-              <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
-                <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                  <Text className="text-white font-semibold text-[12px]">
-                    3
-                  </Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
-          <View
-            className="flex-1 h-0 border-t-2 border-[#F7F7F5]"
-            style={{ borderStyle: 'dashed' }}
-          />
-
-          {/* Content Box */}
-          <View className="rounded-xl mt-3">
-            <View className="items-center mb-6">
-              <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
-                <Document />
-              </View>
-
-              <Text className="text-[#B68201] font-semibold text-[16px] mb-2 text-center">
-                Ready to plan smarter?
-              </Text>
-
-              <Text className="text-[#B68201] text-center text-[13px] leading-5 px-2">
-                Select a chapter for which you want to assign a test.
-              </Text>
-            </View>
-          </View>
-
-          {/* Choose Chapter Button */}
-          <View className="w-full">
-            {loading ? (
-              <ActivityIndicator size="large" color="#ffffff" />
-            ) : (
-              <LessonPlanDropdown
-                placeholder="Choose a chapter to get started..."
-                options={chapterOptions}
-                onSelect={handleChapterSelect}
-                selectedValue={selectedChapterName}
-              />
-            )}
-          </View>
-        </View>
-      </View>
-      {/* Pro Tip */}
-      <View className="px-6 mt-4">
-        <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
-          <Text className="font-semibold">Pro Tip:</Text> Regular testing
-          improves retention by 40%!
-        </Text>
-      </View>
-
-      <View className="h-[2px] bg-[#DFE3E8] mt-14" />
-
-      <View className="px-6 mt-2">
-        <View className="flex-row gap-2">
-          <TouchableOpacity
-            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
-            onPress={() => navigation.goBack()}
-          >
-            <LeftArrow color="#FED570" />
-            <Text className="text-[#FED570] font-semibold">Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            disabled={!selectedChapterId} 
-            onPress={() =>
-              navigation.navigate('AssignTestTopics', {
-                chapterId: selectedChapterId,
-              })
-            }
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
-              selectedChapterId
-                ? 'bg-[#FED570] border-[#FEC107]'
-                : 'bg-gray-300 border-gray-300'
-            }`}
-          >
-            <Text
-              className={`font-semibold ${
-                selectedChapterId ? 'text-[#B68201]' : 'text-gray-600'
-              }`}
-            >
-              Continue
-            </Text>
-            {selectedChapterId && <RightArrow color="#B68201" />}
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
+  const selectedAssignment = useSelector(
+    state => state.assignment.selectedAssignment,
   );
 
+  // Initialize with selectedAssignment data
+  useEffect(() => {
+    if (selectedAssignment) {
+      setSelectedClass({
+        classId: selectedAssignment.classId,
+        sectionId: selectedAssignment.sectionId
+      });
+      setSelectedSubject(selectedAssignment.subjectId);
+    }
+  }, [selectedAssignment]);
+
+  useEffect(() => {
+    // console.log('Selected Assignment:', selectedAssignment);
+    // console.log('Classes:', classes);
+    // console.log('Selected Class:', selectedClass);
+  }, [selectedAssignment, classes, selectedClass]);
+
+  // Get display text for class dropdown
+  const getClassDisplayText = () => {
+    if (selectedClass) {
+      return `${selectedClass.classId?.className || 'Class'} - ${selectedClass.sectionId?.sectionName || 'Section'}`;
+    }
+    // Fallback to selectedAssignment
+    if (selectedAssignment) {
+      return `${selectedAssignment.classId?.className || 'Class'} - ${selectedAssignment.sectionId?.sectionName || 'Section'}`;
+    }
+    return 'Select Class';
+  };
+
+  // Get display text for subject dropdown
+  const getSubjectDisplayText = () => {
+    if (selectedSubject) {
+      return selectedSubject.subjectName;
+    }
+    // Fallback to selectedAssignment
+    if (selectedAssignment?.subjectId) {
+      return capitalizeSubject(selectedAssignment.subjectId.subjectName);
+    }
+    return 'Select Subject';
+  };
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/* Header (fixed at the top) */}
-      <View className="bg-[#FFF3D6] px-6 py-6">
-        <View className="flex-row items-center">
-          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg mr-3 justify-center items-center">
-            <AssignTestDoc />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-start">
-              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
-                Assign Test
-              </Text>
-              <TouchableOpacity
-                className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('Home')}
-              >
-                <Text className="text-white text-[14px]">✕</Text>
-              </TouchableOpacity>
-            </View>
-            <Text className="text-[#454F5B] text-[14px]">
-              Boost your students's progess in{'\n'} just few taps!
+    <SafeAreaView className="flex-1 mt-6">
+      {/* Header */}
+      <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white">
+        <TouchableOpacity
+          className="flex-row items-center"
+          onPress={() => navigation.navigate('Settings')}
+        >
+          <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
+            <Text className="text-white font-bold text-base">
+              {teacherProfile?.name?.[0] || 'T'}
             </Text>
           </View>
-        </View>
+          <View>
+            <Text className="text-[#454F5B] text-[16px] font-bold">
+              {teacherProfile?.name}
+            </Text>
+            <Text className="text-[#637381] text-[14px] font-regular">
+              Welcome to Adaptmate
+            </Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity className="w-9 h-9 rounded-full bg-blue-50 items-center justify-center">
+          <NotificationIcon />
+        </TouchableOpacity>
       </View>
 
-      <FlatList
+      {/* Gradient Background */}
+      <LinearGradient
+        colors={gradientBackgrounds[currentIndex]}
         style={{ flex: 1 }}
-        data={[]}
-        renderItem={() => null}
-        ListHeaderComponent={renderHeader}
-      />
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      >
+        {/* Dropdowns */}
+        <View className="flex-row justify-between px-6 pt-4 pb-6">
+          {/* Class Dropdown */}
+          <TouchableOpacity
+            className="flex-1 mr-2 rounded-[16px] py-3 px-4 flex-row justify-between items-center shadow-sm"
+            style={{
+              backgroundColor: '#FFF',
+              borderTopWidth: 3,
+              borderRightWidth: 3,
+              borderBottomWidth: 6,
+              borderLeftWidth: 3,
+              borderColor: '#A17F5E',
+            }}
+            onPress={() => setClassModalVisible(true)}
+          >
+            <Text className="text-[#DC9047] font-semibold text-sm">
+              {getClassDisplayText()}
+            </Text>
+            <Text className="text-[#DC9047] text-lg">▼</Text>
+          </TouchableOpacity>
+
+          {/* Subject Dropdown */}
+          <TouchableOpacity
+            className="flex-1 mr-2 rounded-[16px] py-3 px-4 flex-row justify-between items-center shadow-sm"
+            style={{
+              backgroundColor: '#FFF',
+              borderTopWidth: 3,
+              borderRightWidth: 3,
+              borderBottomWidth: 6,
+              borderLeftWidth: 3,
+              borderColor: '#A17F5E',
+            }}
+            onPress={() => {
+              if (!selectedClass && !selectedAssignment) {
+                alert('Please select a class first');
+                return;
+              }
+              setSubjectModalVisible(true);
+            }}
+            disabled={!selectedClass && !selectedAssignment}
+          >
+            <Text className="text-[#DC9047] font-semibold text-sm">
+              {getSubjectDisplayText()}
+            </Text>
+            <Text className="text-[#DC9047] text-lg">▼</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Class Modal */}
+        <Modal visible={classModalVisible} transparent animationType="fade">
+          <View className="flex-1 justify-center items-center bg-black/50">
+            <View className="bg-white w-3/4 rounded-lg p-4 max-h-80">
+              <Text className="text-lg font-bold mb-4 text-center">Select Class & Section</Text>
+              <FlatList
+                data={classes}
+                keyExtractor={(item, index) =>
+                  `${item.classId?._id}-${item.sectionId?._id}` || index.toString()
+                }
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    className="py-3 border-b border-gray-200"
+                    onPress={() => {
+                      setSelectedClass({
+                        classId: item.classId,
+                        sectionId: item.sectionId
+                      });
+                      setSelectedSubject(null); 
+                      setClassModalVisible(false);
+                    }}
+                  >
+                    <Text className="text-[#454F5B] text-base font-semibold">
+                      {item.displayName}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                ListEmptyComponent={
+                  <Text className="text-center text-gray-500 py-4">
+                    No classes available
+                  </Text>
+                }
+              />
+              <TouchableOpacity
+                className="mt-4 bg-red-500 py-2 rounded-lg"
+                onPress={() => setClassModalVisible(false)}
+              >
+                <Text className="text-white text-center font-semibold">Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Subject Modal - Remove the duplicate one */}
+        <Modal visible={subjectModalVisible} transparent animationType="fade">
+          <View className="flex-1 justify-center items-center bg-black/50">
+            <View className="bg-white w-3/4 rounded-lg p-4 max-h-80">
+              <Text className="text-lg font-bold mb-4 text-center">Select Subject</Text>
+              <FlatList
+                data={subjects}
+                keyExtractor={(item, index) =>
+                  item?._id || index.toString()
+                }
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    className="py-3 border-b border-gray-200"
+                    onPress={() => {
+                      setSelectedSubject(item);
+                      setSubjectModalVisible(false);
+                    }}
+                  >
+                    <Text className="text-[#454F5B] text-base font-semibold">
+                      {capitalizeSubject(item?.subjectName)}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+                ListEmptyComponent={
+                  <Text className="text-center text-gray-500 py-4">
+                    No subjects available for selected class
+                  </Text>
+                }
+              />
+              <TouchableOpacity
+                className="mt-4 bg-red-500 py-2 rounded-lg"
+                onPress={() => setSubjectModalVisible(false)}
+              >
+                <Text className="text-white text-center font-semibold">Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Cards */}
+        <View className="flex-1 justify-center">
+          <ScrollView
+            ref={scrollViewRef}
+            horizontal
+            pagingEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            onScroll={handleScroll}
+            scrollEventThrottle={16}
+            snapToInterval={cardWidth + cardSpacing}
+            decelerationRate="fast"
+            contentContainerStyle={{
+              paddingHorizontal: width * 0.15,
+              alignItems: 'center',
+            }}
+          >
+            {/* <StudentsInsightsCard
+              onPress={() => navigation.navigate('StudentsInsights')}
+              isActive={currentIndex === 0}
+              cardWidth={cardWidth}
+              cardSpacing={cardSpacing}
+            /> */}
+            <LessonPlannerCard
+              onPress={() => navigation.navigate('LessonPlanner')}
+              isActive={currentIndex === 0}
+              cardWidth={cardWidth}
+              cardSpacing={cardSpacing}
+            />
+            <AssignTestCard
+              onPress={() => navigation.navigate('AssignTest')}
+              isActive={currentIndex === 1}
+              cardWidth={cardWidth}
+              cardSpacing={cardSpacing}
+            />
+          </ScrollView>
+
+          {/* Pagination Dots */}
+          <View className="flex-row justify-center items-center mt-5 mb-8">
+            {gradientBackgrounds.map((_, index) => {
+              let dotColor = '#FFFFFF';
+              if (currentIndex === index) {
+                if (index === 0) dotColor = '#A5ED6F';
+                else if (index === 1) dotColor = '#1EAFF7';
+                else if (index === 2) dotColor = '#FED570';
+              }
+              return (
+                <View
+                  key={index}
+                  className="rounded-full mx-1"
+                  style={{
+                    width: 10,
+                    height: 10,
+                    backgroundColor: dotColor,
+                  }}
+                />
+              );
+            })}
+          </View>
+        </View>
+      </LinearGradient>
     </SafeAreaView>
   );
 };
-export default AssignTest;
+
+export default Home;
