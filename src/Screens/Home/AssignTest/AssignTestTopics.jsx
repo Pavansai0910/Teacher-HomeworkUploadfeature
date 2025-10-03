@@ -173,11 +173,11 @@ const AssignTestTopics = ({ route }) => {
             {/* Content Header */}
             <View className="flex-row items-center justify-between mb-5">
               <View className="items-center">
-                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
-                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
                     <Text
                       style={{ fontSize: GetFontSize(12) }}
-                      className="text-white font-inter600"
+                      className="text-black font-inter600"
                     >
                       1
                     </Text>
@@ -254,7 +254,7 @@ const AssignTestTopics = ({ route }) => {
             >
               <View className="flex-row gap-2">
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${activeFilter === 'all'
+                  className={`px-3 py-2 rounded-full ${activeFilter === 'all'
                       ? 'bg-white border-2 border-[#FED570]'
                       : 'bg-white'
                     }`}
@@ -272,7 +272,7 @@ const AssignTestTopics = ({ route }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${activeFilter === 'pending'
+                  className={`px-3 py-2 rounded-full ${activeFilter === 'pending'
                       ? 'bg-white border-2 border-[#FED570]'
                       : 'bg-white'
                     }`}
@@ -290,7 +290,7 @@ const AssignTestTopics = ({ route }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${activeFilter === 'assigned'
+                  className={`px-3 py-2 rounded-full ${activeFilter === 'assigned'
                       ? 'bg-white border-2 border-[#FED570]'
                       : 'bg-white'
                     }`}
@@ -338,7 +338,7 @@ const AssignTestTopics = ({ route }) => {
                   return (
                     <TouchableOpacity
                       key={paper._id}
-                      className={`w-[94%] justify-between rounded-[16px] px-[14px] border-t-[1.5px] border-r-[2.5px] border-b-[4px] border-l-[2.5px] border-[#DC9047] ${isSelected ? 'bg-[#F59E0B]' : 'bg-white'} flex-row items-center`}
+                      className={`w-[94%] py-3 justify-between rounded-[16px] px-[14px] border-t-[1.5px] border-r-[2.5px] border-b-[4px] border-l-[2.5px] border-[#DC9047] ${isSelected ? 'bg-[#F59E0B]' : 'bg-white'} flex-row items-center`}
                       onPress={() => handlePaperToggle(paper)}
                       activeOpacity={0.7}
                     >

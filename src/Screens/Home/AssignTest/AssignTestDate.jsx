@@ -85,7 +85,7 @@ const AssignTestDate = ({ route }) => {
       await assignExam(payload);
       setShowLoader(false);
       Toast.show({ type: 'success', text1: 'Yeah! You assigned test' });
-      navigation.goBack();
+      navigation.navigate("Home");
     } catch (error) {
       setShowLoader(false);
       console.error(error);
@@ -388,6 +388,7 @@ const AssignTestDate = ({ route }) => {
           <TouchableOpacity
             className="border-2 border-[#E5E5E5] bg-white rounded-xl px-6 py-3 flex-row items-center justify-center"
             onPress={() => navigation.goBack()}
+            disabled={showLoader}
           >
             <LeftArrow color="#FFB84D" />
             <Text
@@ -401,19 +402,22 @@ const AssignTestDate = ({ route }) => {
           <TouchableOpacity
             className={`flex-1 rounded-xl py-3 flex-row justify-center items-center border-2 ${dueDate ? 'bg-[#FED570] border-[#FEC107]' : 'bg-gray-300 border-gray-600'}`}
             onPress={() => handleAssign(questionPaper)}
-            disabled={!dueDate}
+            disabled={!dueDate || showLoader}
           >
             {showLoader ? (
+              <View className="flex-row items-center">
+                <Text className="text-[#8B6914]">Assigning Test</Text>
               <ActivityIndicator size="small" color="#FFB84D" />
+              </View>
             ) : (
               <View className="flex-row items-center">
                 <Text
                   style={{ fontSize: GetFontSize(15) }}
                   className={`font-inter600 mr-1 ${dueDate ? 'text-[#8B6914]' : 'text-[#999999]'}`}
                 >
-                  Continue
+                  Assign Test
                 </Text>
-                <RightArrow color={dueDate ? '#8B6914' : '#999999'} />
+                {/* <RightArrow color={dueDate ? '#8B6914' : '#999999'} /> */}
               </View>
             )}
           </TouchableOpacity>
