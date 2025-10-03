@@ -17,6 +17,7 @@ import { AuthContext } from '../../../Context/AuthContext';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import Toast from 'react-native-toast-message';
+import GetFontSize from '../../../Commons/GetFontSize';
 
 const AssignTestTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -72,7 +73,7 @@ const AssignTestTopics = ({ route }) => {
     }
   };
 
-  const handlePaperToggle = (paper) => {
+  const handlePaperToggle = paper => {
     if (paper.isAssigned) {
       return Toast.show({
         type: 'error',
@@ -90,7 +91,7 @@ const AssignTestTopics = ({ route }) => {
   const handleContinue = () => {
     if (!selectedTopic) return;
     const payload = { questionPaper: selectedTopic };
-    navigation.navigate("AssignTestDate", payload);
+    navigation.navigate('AssignTestDate', payload);
   };
 
   // Status counts
@@ -136,7 +137,10 @@ const AssignTestTopics = ({ route }) => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-center">
-              <Text className="text-[#212B36] font-poppins600 text-[18px] flex-shrink">
+              <Text
+                style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-poppins600  flex-shrink"
+              >
                 Assign Test
               </Text>
               <TouchableOpacity
@@ -146,7 +150,10 @@ const AssignTestTopics = ({ route }) => {
                 <Text className="text-white text-[14px]">✕</Text>
               </TouchableOpacity>
             </View>
-            <Text className="text-[#454F5B] text-[14px]">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B] font-inter400"
+            >
               Assign tests to your students{'\n'}quickly and easily
             </Text>
           </View>
@@ -156,26 +163,39 @@ const AssignTestTopics = ({ route }) => {
       {/* Content */}
       <View className="flex-1">
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 88 }} 
+          contentContainerStyle={{ paddingBottom: 88 }}
           showsVerticalScrollIndicator={false}
         >
           {/* Class-Section-Subject Display */}
           <View className="mt-6 px-6 bg-white">
             <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
               <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-                <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
                 <Text
-                  className="text-gray-800 font-semibold"
+                  style={{ fontSize: GetFontSize(12) }}
+                  className="text-gray-500 font-inter400 mb-1"
+                >
+                  Selected Class
+                </Text>
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-[#212B36] font-inter500"
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
-                  {classDisplay} | {selectedAssignment?.classId?.studentCount || '0'} Students
+                  {classDisplay} |{' '}
+                  {selectedAssignment?.classId?.studentCount || '0'} Students
                 </Text>
               </View>
               <View className="flex-1">
-                <Text className="text-gray-500 text-xs mb-1">Subject</Text>
                 <Text
-                  className="text-gray-800 font-semibold"
+                  style={{ fontSize: GetFontSize(12) }}
+                  className="text-gray-500 mb-1"
+                >
+                  Subject
+                </Text>
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-gray-800 font-inter500"
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
@@ -193,28 +213,39 @@ const AssignTestTopics = ({ route }) => {
                 <View className="items-center">
                   <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
                     <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                      <Text className="font-semibold text-[12px]">1</Text>
+                      <Text
+                        style={{ fontSize: GetFontSize(12) }}
+                        className="font-semibold font-inter600"
+                      >
+                        1
+                      </Text>
                     </View>
                   </View>
                 </View>
                 <View className="flex-1 h-[3px] bg-white" />
                 <View className="items-center">
                   <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
-                    <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                      <Text className="text-[#212B36] font-semibold text-[12px]">
+                    <View className="w-8 h-8 font-inter600 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
+                      <Text
+                        style={{ fontSize: GetFontSize(12) }}
+                        className="text-[#212B36] font-semibold "
+                      >
                         2
                       </Text>
                     </View>
-                    <Text className="text-white text-[12px] font-semibold">
-                      Select Topics
-                    </Text>
+                    <Text className="text-white ">Select Topics</Text>
                   </View>
                 </View>
                 <View className="flex-1 h-[2px] bg-white" />
                 <View className="items-center">
                   <View className="flex-row bg-[#CCCCCC] rounded-full px-3 py-3 border-2 border-white items-center">
                     <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                      <Text className="font-semibold text-[12px]">3</Text>
+                      <Text
+                        style={{ fontSize: GetFontSize(12) }}
+                        className="font-semibold font-inter600"
+                      >
+                        3
+                      </Text>
                     </View>
                   </View>
                 </View>
@@ -227,11 +258,21 @@ const AssignTestTopics = ({ route }) => {
                 <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
                   <Document />
                 </View>
-                <Text className="text-[#B68201] font-bold text-[16px] mb-1 text-center">
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-[#B68201] font-inter600 mb-1 text-center"
+                >
                   Zoom in and pick your focus!
                 </Text>
-                <Text className="text-[#B68201] text-center text-[12px] leading-5 px-4">
-                  Here is the list of topics from {chapterName}.{'\n'}
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-[#B68201] text-center text-[12px] leading-5 px-4"
+                >
+                  Here is the list of topics from
+                  <Text className="font-semibold">
+                    {chapterName}
+                  </Text>
+                  {'\n'}
                   Select a topic you want to assign a test for.
                 </Text>
               </View>
@@ -245,37 +286,46 @@ const AssignTestTopics = ({ route }) => {
               >
                 <View className="flex-row gap-2">
                   <TouchableOpacity
-                    className={`px-4 py-2 rounded-full ${activeFilter === 'all'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                      }`}
+                    className={`px-4 py-2 rounded-full ${
+                      activeFilter === 'all'
+                        ? 'bg-white border-2 border-[#FED570]'
+                        : 'bg-white'
+                    }`}
                     onPress={() => setActiveFilter('all')}
                   >
-                    <Text className={`text-[13px] font-semibold ${activeFilter === 'all' ? 'text-[#B68201]' : 'text-[#6B7280]'}`}>
+                    <Text
+                      className={`text-[13px] font-semibold ${activeFilter === 'all' ? 'text-[#B68201]' : 'text-[#6B7280]'}`}
+                    >
                       All Tests ({statusCounts.all})
                     </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    className={`px-4 py-2 rounded-full ${activeFilter === 'pending'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                      }`}
+                    className={`px-4 py-2 rounded-full ${
+                      activeFilter === 'pending'
+                        ? 'bg-white border-2 border-[#FED570]'
+                        : 'bg-white'
+                    }`}
                     onPress={() => setActiveFilter('pending')}
                   >
-                    <Text className={`text-[13px] font-semibold ${activeFilter === 'pending' ? 'text-[#B68201]' : 'text-[#6B7280]'}`}>
+                    <Text
+                      className={`text-[13px] font-semibold ${activeFilter === 'pending' ? 'text-[#B68201]' : 'text-[#6B7280]'}`}
+                    >
                       Pending Test ({statusCounts.pending})
                     </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    className={`px-4 py-2 rounded-full ${activeFilter === 'assigned'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                      }`}
+                    className={`px-4 py-2 rounded-full ${
+                      activeFilter === 'assigned'
+                        ? 'bg-white border-2 border-[#FED570]'
+                        : 'bg-white'
+                    }`}
                     onPress={() => setActiveFilter('assigned')}
                   >
-                    <Text className={`text-[13px] font-semibold ${activeFilter === 'assigned' ? 'text-[#B68201]' : 'text-[#6B7280]'}`}>
+                    <Text
+                      className={`text-[13px] font-semibold ${activeFilter === 'assigned' ? 'text-[#B68201]' : 'text-[#6B7280]'}`}
+                    >
                       Assigned ({statusCounts.assigned})
                     </Text>
                   </TouchableOpacity>
@@ -295,37 +345,44 @@ const AssignTestTopics = ({ route }) => {
                 </View>
               ) : (
                 <View className="gap-3 items-center">
-                  {getFilteredExam.map((paper) => {
+                  {getFilteredExam.map(paper => {
                     const isSelected = selectedTopic?._id === paper._id;
 
                     let status;
-                    if (paper.isAssigned && paper.lastAttempted) status = "completed";
-                    else if (paper.isAssigned) status = "assigned";
+                    if (paper.isAssigned && paper.lastAttempted)
+                      status = 'completed';
+                    else if (paper.isAssigned) status = 'assigned';
                     const statusBadge = getStatusBadge(status);
-                    const hasBorder = status === "pending";
+                    const hasBorder = status === 'pending';
 
                     return (
                       <TouchableOpacity
                         key={paper._id}
-                        className={`w-[311px] h-[52px] justify-between rounded-[16px] px-[14px] border-t-[1.5px] border-r-[2.5px] border-b-[4px] border-l-[2.5px] border-[#DC9047] ${isSelected ? "bg-[#F59E0B]" : "bg-white"
-                          } flex-row items-center`}
+                        className={`w-[311px] h-[52px] justify-between rounded-[16px] px-[14px] border-t-[1.5px] border-r-[2.5px] border-b-[4px] border-l-[2.5px] border-[#DC9047] ${
+                          isSelected ? 'bg-[#F59E0B]' : 'bg-white'
+                        } flex-row items-center`}
                         onPress={() => handlePaperToggle(paper)}
                         activeOpacity={0.7}
                       >
                         <Text
-                          className={`flex-1 font-semibold text-[14px] ${isSelected ? "text-white" : "text-[#212B36]"} `}
+                          className={`flex-1 font-semibold text-[14px] ${isSelected ? 'text-white' : 'text-[#212B36]'} `}
                           numberOfLines={2}
                         >
                           {paper.questionPaperTitle}
                         </Text>
                         <View
-                          className={`ml-3 w-[75px] h-[27px] rounded-full px-[10px] justify-center items-center ${hasBorder ? "border-t-[0.5px] border-r-[1px] border-b-[2px] border-l-[1px]" : ""}`}
+                          className={`ml-3 w-[75px] h-[27px] rounded-full px-[10px] justify-center items-center ${hasBorder ? 'border-t-[0.5px] border-r-[1px] border-b-[2px] border-l-[1px]' : ''}`}
                           style={{
                             backgroundColor: statusBadge.bg,
-                            borderColor: statusBadge.borderColor || statusBadge.text,
+                            borderColor:
+                              statusBadge.borderColor || statusBadge.text,
                           }}
                         >
-                          <Text className="text-[12px] font-semibold" style={{ color: statusBadge.text }} numberOfLines={1}>
+                          <Text
+                            className="text-[12px] font-semibold"
+                            style={{ color: statusBadge.text }}
+                            numberOfLines={1}
+                          >
                             {statusBadge.label}
                           </Text>
                         </View>
@@ -365,12 +422,17 @@ const AssignTestTopics = ({ route }) => {
             </TouchableOpacity>
 
             <TouchableOpacity
-              className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopic ? "bg-[#FED570] border-[#FEC107]" : "bg-gray-300 border-gray-300"
-                }`}
+              className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
+                selectedTopic
+                  ? 'bg-[#FED570] border-[#FEC107]'
+                  : 'bg-gray-300 border-gray-300'
+              }`}
               onPress={handleContinue}
               disabled={!selectedTopic}
             >
-              <Text className={`font-semibold ${selectedTopic ? "text-[#B68201]" : "text-gray-600"}`}>
+              <Text
+                className={`font-semibold ${selectedTopic ? 'text-[#B68201]' : 'text-gray-600'}`}
+              >
                 Continue
               </Text>
               {selectedTopic && <RightArrow color="#B68201" />}

@@ -9,6 +9,7 @@ import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
 import { useState, useEffect } from 'react';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
+import GetFontSize from '../../../Commons/GetFontSize';
 
 const AssignTest = () => {
   const navigation = useNavigation();
@@ -39,9 +40,10 @@ const AssignTest = () => {
       <View className="mt-6 px-6 bg-white">
         <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
           <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-            <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
-            <Text
-              className="text-gray-800 font-semibold"
+            <Text style={{fontSize: GetFontSize(12)}}
+            className="text-gray-500 font-inter400 mb-1">Selected Class</Text>
+            <Text style={{fontSize: GetFontSize(14)}}
+              className="text-gray-800 font-inter500"
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -49,9 +51,10 @@ const AssignTest = () => {
             </Text>
           </View>
           <View className="flex-[1] ml-2">
-            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
-            <Text
-              className="text-gray-800 font-semibold"
+            <Text style={{fontSize: GetFontSize(12)}}
+            className="text-gray-500 font-inter400 mb-1">Subject</Text>
+            <Text style={{fontSize: GetFontSize(14)}}
+              className="text-gray-800 font-inter500"
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -69,11 +72,13 @@ const AssignTest = () => {
             <View className="items-center">
               <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center ">
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                  <Text className="text-[#212B36] font-semibold text-[12px]">
+                  <Text style={{fontSize: GetFontSize(12)}}
+                  className="text-[#212B36] font-inter600">
                     1
                   </Text>
                 </View>
-                <Text className="text-white text-[12px] font-semibold">
+                <Text style={{fontSize: GetFontSize(12)}}
+                className="text-white font-inter600">
                   Choose Chapter
                 </Text>
               </View>
@@ -84,7 +89,8 @@ const AssignTest = () => {
             <View className="items-center">
               <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                 <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                  <Text className="text-white font-semibold text-[12px]">
+                  <Text style={{fontSize: GetFontSize(12)}}
+                  className="text-white font-inter600">
                     2
                   </Text>
                 </View>
@@ -96,7 +102,8 @@ const AssignTest = () => {
             <View className="items-center">
               <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                 <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                  <Text className="text-white font-semibold text-[12px]">
+                  <Text style={{fontSize: GetFontSize(12)}}
+                  className="text-white font-inter600">
                     3
                   </Text>
                 </View>
@@ -116,11 +123,13 @@ const AssignTest = () => {
                 <Document />
               </View>
 
-              <Text className="text-[#B68201] font-semibold text-[16px] mb-2 text-center">
+              <Text style={{fontSize: GetFontSize(16)}}
+              className="text-[#B68201] font-inter700 mb-2 text-center">
                 Ready to plan smarter?
               </Text>
 
-              <Text className="text-[#B68201] text-center text-[13px] leading-5 px-2">
+              <Text style={{fontSize: GetFontSize(16)}}
+              className="text-[#B68201] font-inter500 leading-5 px-2">
                 Select a chapter for which you want to assign a test.
               </Text>
             </View>
@@ -136,6 +145,8 @@ const AssignTest = () => {
                 options={chapterOptions}
                 onSelect={handleChapterSelect}
                 selectedValue={selectedChapterName}
+                className="font-inter700"
+                style={{fontSize: GetFontSize(16)}}
               />
             )}
           </View>
@@ -144,8 +155,10 @@ const AssignTest = () => {
 
       {/* Pro Tip */}
       <View className="px-6 mt-4">
-        <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
-          <Text className="font-semibold">Pro Tip:</Text> Regular testing
+        <Text style={{fontSize: GetFontSize(13)}}
+        className="text-gray-600 font-inter500 bg-[#F5F0FD] px-2 py-4 rounded-lg">
+          <Text style={{fontSize: GetFontSize(14)}}
+          className="font-inter600">Pro Tip:</Text> Regular testing
           improves retention by 40%!
         </Text>
       </View>
@@ -164,17 +177,19 @@ const AssignTest = () => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
-              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
+              <Text style={{fontSize: GetFontSize(18)}}
+              className="text-[#212B36] font-inter600 flex-shrink">
                 Assign Test
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
                 onPress={() => navigation.goBack()}
               >
-                <Text className="text-white text-[14px]">✕</Text>
+                <Text className="text-white font-inter400">✕</Text>
               </TouchableOpacity>
             </View>
-            <Text className="text-[#454F5B] text-[14px]">
+            <Text style={{fontSize: GetFontSize(14)}}
+            className="text-[#454F5B] font-inter400">
               Boost your students's progress in{'\n'} just few taps!
             </Text>
           </View>
@@ -193,13 +208,15 @@ const AssignTest = () => {
       <View className="px-6 py-4 bg-white">
         <View className="flex-row gap-2">
           <TouchableOpacity
-            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
+          style={{fontSize: GetFontSize(16)}}
+            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3 font-inter600"
             onPress={() => navigation.goBack()}
           >
             <LeftArrow color="#FED570" />
-            <Text className="text-[#FED570] font-semibold">Back</Text>
+            <Text className="text-[#FED570] ">Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
+          style={{fontSize: GetFontSize(13)}}
             disabled={!selectedChapterId}
             onPress={() =>
               navigation.navigate('AssignTestTopics', {
@@ -207,7 +224,7 @@ const AssignTest = () => {
                 chapterName: selectedChapterName,
               })
             }
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 font-inter600 ${
               selectedChapterId
                 ? 'bg-[#FED570] border-[#FEC107]'
                 : 'bg-gray-300 border-gray-300'

@@ -18,6 +18,7 @@ import LessonPlannerCard from '../HomeScreen/Cards/LessonPlannerCard';
 import AssignTestCard from '../HomeScreen/Cards/AssignTestCard';
 import NotificationIcon from '../../Images/Home/NotificationIcon';
 import capitalizeSubject from '../../Utils/CapitalizeSubject';
+import GetFontSize from '../../Commons/GetFontSize';
 
 const { width } = Dimensions.get('window');
 
@@ -63,7 +64,7 @@ const Home = () => {
           a.sectionId?._id === selectedClass.sectionId?._id
         )
         .map(a => a.subjectId)
-        .filter(Boolean) // Remove null/undefined subjects
+        .filter(Boolean) 
     : [];
 
   const selectedAssignment = useSelector(
@@ -120,15 +121,18 @@ const Home = () => {
           onPress={() => navigation.navigate('Settings')}
         >
           <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
-            <Text className="text-white font-bold text-base">
+            <Text style={{fontSize: GetFontSize(16)}}
+            className="text-white font-poppins400">
               {teacherProfile?.name?.[0] || 'T'}
             </Text>
           </View>
           <View>
-            <Text className="text-[#454F5B] text-[16px] font-bold">
+            <Text style={{fontSize: GetFontSize(16)}}
+            className="text-[#454F5B] font-inter700">
               {teacherProfile?.name}
             </Text>
-            <Text className="text-[#637381] text-[14px] font-regular">
+            <Text style={{fontSize: GetFontSize(14)}}
+            className="text-[#637381] font-inter400">
               Welcome to Adaptmate
             </Text>
           </View>
@@ -161,8 +165,9 @@ const Home = () => {
             }}
             onPress={() => setClassModalVisible(true)}
           >
-            <Text className="text-[#DC9047] font-semibold text-sm">
-              {getClassDisplayText()}
+            <Text style={{fontSize: GetFontSize(16)}}
+            className="text-[#DC9047] font-inter700">
+              Class: {getClassDisplayText()}
             </Text>
             <Text className="text-[#DC9047] text-lg">▼</Text>
           </TouchableOpacity>
@@ -187,7 +192,8 @@ const Home = () => {
             }}
             disabled={!selectedClass && !selectedAssignment}
           >
-            <Text className="text-[#DC9047] font-semibold text-sm">
+            <Text style={{fontSize: GetFontSize(16)}}
+            className="text-[#DC9047] font-inter700">
               {getSubjectDisplayText()}
             </Text>
             <Text className="text-[#DC9047] text-lg">▼</Text>
@@ -198,7 +204,8 @@ const Home = () => {
         <Modal visible={classModalVisible} transparent animationType="fade">
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white w-3/4 rounded-lg p-4 max-h-80">
-              <Text className="text-lg font-bold mb-4 text-center">Select Class & Section</Text>
+              <Text style={{fontSize: GetFontSize(16)}}
+              className="font-inter700 mb-4">Select Class & Section</Text>
               <FlatList
                 data={classes}
                 keyExtractor={(item, index) =>
@@ -216,13 +223,15 @@ const Home = () => {
                       setClassModalVisible(false);
                     }}
                   >
-                    <Text className="text-[#454F5B] text-base font-semibold">
+                    <Text style={{fontSize: GetFontSize(16)}}
+                    className="text-[#454F5B] font-inter700">
                       {item.displayName}
                     </Text>
                   </TouchableOpacity>
                 )}
                 ListEmptyComponent={
-                  <Text className="text-center text-gray-500 py-4">
+                  <Text style={{fontSize: GetFontSize(16)}}
+                  className="text-center font-inter700 py-4">
                     No classes available
                   </Text>
                 }
@@ -231,7 +240,8 @@ const Home = () => {
                 className="mt-4 bg-red-500 py-2 rounded-lg"
                 onPress={() => setClassModalVisible(false)}
               >
-                <Text className="text-white text-center font-semibold">Close</Text>
+                <Text style={{fontSize: GetFontSize(16)}}
+                className="text-white text-center font-inter700">Close</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -241,7 +251,8 @@ const Home = () => {
         <Modal visible={subjectModalVisible} transparent animationType="fade">
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white w-3/4 rounded-lg p-4 max-h-80">
-              <Text className="text-lg font-bold mb-4 text-center">Select Subject</Text>
+              <Text style={{fontSize: GetFontSize(16)}}
+              className="font-inter700 mb-4 text-center">Select Subject</Text>
               <FlatList
                 data={subjects}
                 keyExtractor={(item, index) =>
@@ -270,7 +281,8 @@ const Home = () => {
                 className="mt-4 bg-red-500 py-2 rounded-lg"
                 onPress={() => setSubjectModalVisible(false)}
               >
-                <Text className="text-white text-center font-semibold">Close</Text>
+                <Text style={{fontSize: GetFontSize(16)}}
+                className="text-white text-center font-inter700">Close</Text>
               </TouchableOpacity>
             </View>
           </View>
