@@ -34,11 +34,10 @@ export const getAllTopics = async ({
   );
 };
 
-export const versionChecker = async ({ studentId, versionNumber,newdownloaded}) => {
+export const versionChecker = async ({ teacherId, versionNumber,newdownloaded}) => {
   const headers = await getAuthHeader();
   const requestBody = { versionNumber,newdownloaded };
-
-  return apiConnector("POST", `/v1/student/student-app-version-update/${studentId}`, requestBody, headers);
+  return apiConnector("POST", `/v1/teacher/student-app-version-update/${teacherId}`, requestBody, headers);
 };
 
 export const teacherLoginEvent = async ({teacherId, classId, subjectId, sectionId}) => {
@@ -96,6 +95,33 @@ export const assignExam = async ({
     deadline,
     boardId,
   };
-  console.log(requestBody, 'requestBody');
   return apiConnector("POST", "/v1/exam/create-exam", requestBody, headers);
+};
+
+export const getAllStudents = async ({
+  sectionId,
+  classId,
+  schoolId,
+  subjectId,
+}) => {
+  const headers = await getAuthHeader();
+  const requestBody = { sectionId, classId, schoolId, subjectId };
+  return apiConnector(
+    "POST",
+    "/v1/teacher/get-students-of-particular-section",
+    requestBody,
+    headers
+  );
+};
+
+export const downloadExam = async ({ questionPaperCode }) => {
+  const headers = await getAuthHeader();
+  return apiConnector(
+    "GET",
+    `/v1/teacher/get-question-paper-with-question-paper-code/${questionPaperCode}`,
+    null,
+    headers,
+    {},
+    "blob"
+  );
 };

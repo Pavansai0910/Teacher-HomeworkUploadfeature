@@ -18,6 +18,10 @@ import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import { assignExam } from '../../../Services/teacherAPIV1';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../../Context/AuthContext';
+import RNFS, { DownloadDirectoryPath } from 'react-native-fs';
+import { downloadExam } from '../../../Services/teacherAPIV1';
+import { requestStoragePermission } from '../../../Permission/StoragePermission';
+import NavHeader from '../../NavHeader';
 
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
@@ -31,6 +35,7 @@ const AssignTestDate = ({ route }) => {
   const [showPicker, setShowPicker] = useState(false);
   const [pickerTarget, setPickerTarget] = useState(null);
   const [showLoader, setShowLoader] = useState(false);
+  const [downloadLoader, setDownloadLoader] = useState(false);
 
   const classDisplay = selectedAssignment
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
@@ -87,6 +92,54 @@ const AssignTestDate = ({ route }) => {
     }
   };
 
+
+    const handleExamDownload = async (questionPaperCode) => {
+      setDownloadLoader(true);  
+      // 1. Permission Check
+      const hasPermission = await requestStoragePermission()
+      if (!hasPermission) {
+        setDownloadLoader(false);
+        return;
+      }
+  
+      try {
+        const response = await downloadExam({ questionPaperCode: questionPaperCode });
+  
+        const base64Data = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(response.data);
+          reader.onloadend = () => {
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+        });
+  
+        const directoryPath = `${DownloadDirectoryPath}/Adaptmate Educator App`;
+        const checkDirectory = await RNFS.exists(directoryPath);
+        if (!checkDirectory) {
+          await RNFS.mkdir(directoryPath);
+        }
+  
+        const path = `${directoryPath}/LGA_${Date.now()}.pdf`;
+        await RNFS.writeFile(path, base64Data, 'base64');
+  
+        Toast.show({
+          type: 'success',
+          text1: `Saved in Download/Adaptmate Educator App`,
+        });
+        setDownloadLoader(false);
+      } catch (error) {
+        console.error("RNFS Write Error:", error);
+        setDownloadLoader(false);
+        Toast.show({
+          type: 'error',
+          text1: "Download Failed",
+          text2: "Could not save file. Check permissions or internal file error.",
+        });
+      } finally {
+        setDownloadLoader(false);}
+    };
   return (
     <SafeAreaView className="flex-1 bg-[#F5F5F0]">
       {/* Header */}
@@ -130,30 +183,8 @@ const AssignTestDate = ({ route }) => {
 
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
-        {/* Class and Subject */}
-        <View className="mt-4 bg-white rounded-2xl p-4 flex-row mx-4">
-          <View className="flex-1 pr-3">
-            <Text className="text-[#999999] text-[11px] mb-1">
-              Selected Class
-            </Text>
-            <Text
-              className="text-[#1A1A1A] font-semibold text-[14px]"
-              numberOfLines={1}
-            >
-              {classDisplay}
-            </Text>
-          </View>
-          <View className="w-[1px] bg-[#E5E5E5]" />
-          <View className="flex-1 pl-3">
-            <Text className="text-[#999999] text-[11px] mb-1">Subject</Text>
-            <Text
-              className="text-[#1A1A1A] font-semibold text-[14px]"
-              numberOfLines={1}
-            >
-              {subjectDisplay}
-            </Text>
-          </View>
-        </View>
+
+        <NavHeader />
 
         {/* Progress Steps */}
         <View
@@ -272,12 +303,17 @@ const AssignTestDate = ({ route }) => {
                   borderBottomWidth: 3,
                   borderColor: '#63738140',
                 }}
+                onPress={() => handleExamDownload(questionPaper.questionPaperCode)}
               >
-                <Text className="text-[#FFB84D] font-semibold text-[13px]">
+                {downloadLoader ? (
+                  <ActivityIndicator size="small" color="#FFB84D" />
+                ):(  
+                  <Text className="text-[#FFB84D] font-semibold text-[13px]">
                   View test
                 </Text>
+                )}
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 className="w-10 h-10 rounded-xl justify-center items-center"
                 style={{
                   backgroundColor: '#FFFFFF',
@@ -289,7 +325,7 @@ const AssignTestDate = ({ route }) => {
                 }}
               >
                 <Text className="text-[#FFB84D] text-[18px]">⬇</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>

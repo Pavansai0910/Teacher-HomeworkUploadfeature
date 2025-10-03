@@ -9,15 +9,14 @@ import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
 import { useState, useEffect } from 'react';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
-
+import NavHeader from '../../NavHeader';
 const AssignTest = () => {
   const navigation = useNavigation();
   const [selectedChapterName, setSelectedChapterName] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
-
   const { chapters, loading } = useSelector(state => state.chapters);
   const chapterOptions = chapters?.map(chapter => chapter.name) || [];
-
+  
   useEffect(() => {
     if (selectedChapterName && chapters && chapters.length > 0) {
       const chapterObject = chapters.find(c => c.name === selectedChapterName);
@@ -35,33 +34,9 @@ const AssignTest = () => {
 
   const renderHeader = () => (
     <View>
-      {/* Class and Subject Selection */}
-      <View className="mt-6 px-6 bg-white">
-        <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
-          <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-            <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
-            <Text
-              className="text-gray-800 font-semibold"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              Class 9-A | 50 Students
-            </Text>
-          </View>
-          <View className="flex-[1] ml-2">
-            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
-            <Text
-              className="text-gray-800 font-semibold"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              Mathematics
-            </Text>
-          </View>
-        </View>
-      </View>
 
-      {/* Progress Steps */}
+    <NavHeader />
+
       <View className="px-4 mt-6">
         <View className="bg-[#FED570] rounded-2xl p-6">
           {/* Progress Steps */}
@@ -143,12 +118,12 @@ const AssignTest = () => {
       </View>
 
       {/* Pro Tip */}
-      <View className="px-6 mt-4">
+      {/* <View className="px-6 mt-4">
         <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
           <Text className="font-semibold">Pro Tip:</Text> Regular testing
           improves retention by 40%!
         </Text>
-      </View>
+      </View> */}
 
       <View className="h-[2px] bg-[#DFE3E8] mt-4" />
     </View>
