@@ -191,7 +191,7 @@ const AssignTestTopics = ({ route }) => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('AssignTest')}
+                onPress={() => navigation.navigate('Home')}
               >
                 <Text className="text-white text-[14px]">✕</Text>
               </TouchableOpacity>
@@ -446,12 +446,12 @@ const AssignTestTopics = ({ route }) => {
             >
               <Text
                 className={`font-semibold ${
-                  selectedTopics ? 'text-[#B68201]' : 'text-gray-600'
+                  selectedTopics.length > 0 ? 'text-[#B68201]' : 'text-gray-600'
                 }`}
               >
                 Continue
               </Text>
-              {selectedTopics && <RightArrow color="#B68201" />}
+              {selectedTopics.length > 0 && <RightArrow color="#B68201" />}
             </TouchableOpacity>
           </View>
         </View>

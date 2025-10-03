@@ -62,7 +62,7 @@ const AssignTest = () => {
       </View>
 
       {/* Progress Steps */}
-      <View className="px-6 mt-6">
+      <View className="px-4 mt-6">
         <View className="bg-[#FED570] rounded-2xl p-6">
           {/* Progress Steps */}
           <View className="flex-row items-center justify-between mb-5">
