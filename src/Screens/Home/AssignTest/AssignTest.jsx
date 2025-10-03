@@ -141,6 +141,7 @@ const AssignTest = () => {
           </View>
         </View>
       </View>
+
       {/* Pro Tip */}
       <View className="px-6 mt-4">
         <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
@@ -149,9 +150,47 @@ const AssignTest = () => {
         </Text>
       </View>
 
-      <View className="h-[2px] bg-[#DFE3E8] mt-14" />
+      <View className="h-[2px] bg-[#DFE3E8] mt-4" />
+    </View>
+  );
 
-      <View className="px-6 mt-2">
+  return (
+    <SafeAreaView className="flex-1 bg-white">
+      {/* Header */}
+      <View className="bg-[#FFF3D6] px-6 py-6">
+        <View className="flex-row items-center">
+          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg mr-3 justify-center items-center">
+            <AssignTestDoc />
+          </View>
+          <View className="flex-1">
+            <View className="flex-row justify-between items-start">
+              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
+                Assign Test
+              </Text>
+              <TouchableOpacity
+                className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
+                onPress={() => navigation.goBack()}
+              >
+                <Text className="text-white text-[14px]">✕</Text>
+              </TouchableOpacity>
+            </View>
+            <Text className="text-[#454F5B] text-[14px]">
+              Boost your students's progress in{'\n'} just few taps!
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Scrollable Content */}
+      <FlatList
+        style={{ flex: 1 }}
+        data={[]} 
+        renderItem={() => null}
+        ListHeaderComponent={renderHeader}
+      />
+
+      {/* Fixed Bottom Buttons */}
+      <View className="px-6 py-4 bg-white">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
@@ -161,7 +200,7 @@ const AssignTest = () => {
             <Text className="text-[#FED570] font-semibold">Back</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            disabled={!selectedChapterId} 
+            disabled={!selectedChapterId}
             onPress={() =>
               navigation.navigate('AssignTestTopics', {
                 chapterId: selectedChapterId,
@@ -185,43 +224,8 @@ const AssignTest = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
-  );
-
-  return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/* Header (fixed at the top) */}
-      <View className="bg-[#FFF3D6] px-6 py-6">
-        <View className="flex-row items-center">
-          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg mr-3 justify-center items-center">
-            <AssignTestDoc />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-start">
-              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
-                Assign Test
-              </Text>
-              <TouchableOpacity
-                className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
-                onPress={() => navigation.goBack()}
-              >
-                <Text className="text-white text-[14px]">✕</Text>
-              </TouchableOpacity>
-            </View>
-            <Text className="text-[#454F5B] text-[14px]">
-              Boost your students's progess in{'\n'} just few taps!
-            </Text>
-          </View>
-        </View>
-      </View>
-
-      <FlatList
-        style={{ flex: 1 }}
-        data={[]}
-        renderItem={() => null}
-        ListHeaderComponent={renderHeader}
-      />
     </SafeAreaView>
   );
 };
+
 export default AssignTest;
