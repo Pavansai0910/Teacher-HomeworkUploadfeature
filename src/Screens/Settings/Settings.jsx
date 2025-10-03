@@ -4,8 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../Context/AuthContext';
 
+
 const Settings = () => {
-  const { teacherProfile } = useContext(AuthContext);
+  const { teacherProfile, logout } = useContext(AuthContext);
   const navigation = useNavigation();
 
   return (
@@ -23,13 +24,13 @@ const Settings = () => {
           <Text className="mt-3 text-lg font-bold text-[#454F5B]">
             {teacherProfile?.name || 'Teacher'}
           </Text>
-          <Text className="text-[#637381] text-sm">
+          {/* <Text className="text-[#637381] text-sm">
             Your Adaptmate rank is 16/36
-          </Text>
+          </Text> */}
         </View>
 
         {/* Account Details */}
-        <View className="mt-6">
+        {/* <View className="mt-6">
           <Text className="text-xs text-gray-400 mb-2">ACCOUNT DETAILS</Text>
 
           <TouchableOpacity className="bg-gray-50 rounded-xl p-4 mb-3 flex-row justify-between items-center">
@@ -41,10 +42,10 @@ const Settings = () => {
             <Text className="text-[#454F5B]">Professional Details</Text>
             <Text className="text-[#637381]">{'>'}</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {/* Help & Support */}
-        <View className="mt-6">
+        {/* <View className="mt-6">
           <Text className="text-xs text-gray-400 mb-2">HELP AND SUPPORT</Text>
 
           <TouchableOpacity className="bg-gray-50 rounded-xl p-4 mb-3 flex-row justify-between items-center">
@@ -61,10 +62,11 @@ const Settings = () => {
             <Text className="text-[#454F5B]">Feedback</Text>
             <Text className="text-[#637381]">{'>'}</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {/* Logout */}
-        <TouchableOpacity className="bg-red-50 rounded-xl p-4 mt-6 flex-row justify-center">
+        <TouchableOpacity onPress={logout}
+        className="bg-red-50 rounded-xl p-4 mt-6 flex-row justify-center">
           <Text className="text-red-500 font-bold">Log Out</Text>
         </TouchableOpacity>
       </ScrollView>

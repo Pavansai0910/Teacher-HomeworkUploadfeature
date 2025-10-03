@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     await AsyncStorage.removeItem('teacherCount');
     await AsyncStorage.removeItem('loginDate');
     setTeacherProfile(null);
-    dispatch(resetAssignment()); // ✅ reset properly
+    dispatch(resetAssignment()); 
   };
 
   return (

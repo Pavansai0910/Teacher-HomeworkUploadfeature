@@ -93,7 +93,7 @@ function MainTabNavigator() {
           setShowUpdatePopup(false)
         }
       } catch (error) {
-        // setShowUpdatePopup(true)
+        setShowUpdatePopup(true)
       }
     };
 

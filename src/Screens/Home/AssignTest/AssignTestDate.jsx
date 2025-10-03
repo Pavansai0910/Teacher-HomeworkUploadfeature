@@ -93,18 +93,19 @@ const AssignTestDate = ({ route }) => {
     }
   };
 
-
-  const handleExamDownload = async (questionPaperCode) => {
+  const handleExamDownload = async questionPaperCode => {
     setDownloadLoader(true);
     // 1. Permission Check
-    const hasPermission = await requestStoragePermission()
+    const hasPermission = await requestStoragePermission();
     if (!hasPermission) {
       setDownloadLoader(false);
       return;
     }
 
     try {
-      const response = await downloadExam({ questionPaperCode: questionPaperCode });
+      const response = await downloadExam({
+        questionPaperCode: questionPaperCode,
+      });
 
       const base64Data = await new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -131,12 +132,12 @@ const AssignTestDate = ({ route }) => {
       });
       setDownloadLoader(false);
     } catch (error) {
-      console.error("RNFS Write Error:", error);
+      console.error('RNFS Write Error:', error);
       setDownloadLoader(false);
       Toast.show({
         type: 'error',
-        text1: "Download Failed",
-        text2: "Could not save file. Check permissions or internal file error.",
+        text1: 'Download Failed',
+        text2: 'Could not save file. Check permissions or internal file error.',
       });
     } finally {
       setDownloadLoader(false);
@@ -154,7 +155,8 @@ const AssignTestDate = ({ route }) => {
             <View className="flex-row justify-between items-center mb-1">
               <Text
                 style={{ fontSize: GetFontSize(18) }}
-                className="text-[#1A1A1A] font-inter700">
+                className="text-[#1A1A1A] font-inter700"
+              >
                 Assign Test
               </Text>
               <TouchableOpacity
@@ -171,7 +173,11 @@ const AssignTestDate = ({ route }) => {
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
                 <Text
-                  style={{ lineHeight: 24, textAlign: 'center', fontSize: GetFontSize(14) }}
+                  style={{
+                    lineHeight: 24,
+                    textAlign: 'center',
+                    fontSize: GetFontSize(14),
+                  }}
                   className="text-white font-inter700"
                 >
                   X
@@ -180,7 +186,8 @@ const AssignTestDate = ({ route }) => {
             </View>
             <Text
               style={{ fontSize: GetFontSize(13) }}
-              className="text-[#6B5D4F] font-inter500">
+              className="text-[#6B5D4F] font-inter500"
+            >
               Boost your students' progress in{'\n'}just a few taps!
             </Text>
           </View>
@@ -189,7 +196,6 @@ const AssignTestDate = ({ route }) => {
 
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={{ paddingBottom: 120 }}>
-
         <NavHeader />
 
         {/* Progress Steps */}
@@ -203,7 +209,10 @@ const AssignTestDate = ({ route }) => {
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
                   <Text
                     style={{ fontSize: GetFontSize(12) }}
-                    className="font-inter600">1</Text>
+                    className="font-inter600"
+                  >
+                    1
+                  </Text>
                 </View>
               </View>
             </View>
@@ -213,7 +222,10 @@ const AssignTestDate = ({ route }) => {
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
                   <Text
                     style={{ fontSize: GetFontSize(12) }}
-                    className="font-inter600">2</Text>
+                    className="font-inter600"
+                  >
+                    2
+                  </Text>
                 </View>
               </View>
             </View>
@@ -223,13 +235,15 @@ const AssignTestDate = ({ route }) => {
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
                   <Text
                     style={{ fontSize: GetFontSize(12) }}
-                    className="text-[#212B36] font-inter600">
+                    className="text-[#212B36] font-inter600"
+                  >
                     3
                   </Text>
                 </View>
-                <Text 
-                style={{fontSize: GetFontSize(12)}}
-                className="text-white font-inter600">
+                <Text
+                  style={{ fontSize: GetFontSize(12) }}
+                  className="text-white font-inter600"
+                >
                   Generate Plan
                 </Text>
               </View>
@@ -237,24 +251,26 @@ const AssignTestDate = ({ route }) => {
           </View>
 
           <View
-            className="flex-1 h-0 border-t-2 border-[#F7F7F5]"
+            className="flex-1 h-0 border-t-2 mt-8 border-[#F7F7F5]"
             style={{ borderStyle: 'dashed' }}
           />
 
           {/* Content */}
-          <View className="rounded-xl mb-6">
+          <View className="rounded-xl mb-6 mt-4">
             <View className="items-center mb-5">
               <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
                 <Document />
               </View>
-              <Text 
-              style={{fontSize: GetFontSize(16)}}
-              className="text-[#8B6914] font-inter700 mb-2 text-center">
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
+                className="text-[#8B6914] font-inter700 mb-2 text-center"
+              >
                 Ready to plan smarter?
               </Text>
-              <Text 
-              style={{fontSize: GetFontSize(13)}}
-              className="text-[#8B6914] text-center font-inter500">
+              <Text
+                style={{ fontSize: GetFontSize(13) }}
+                className="text-[#8B6914] text-center font-inter500"
+              >
                 Just select a deadline for your students, and{'\n'}you're good
                 to go!
               </Text>
@@ -264,8 +280,9 @@ const AssignTestDate = ({ route }) => {
           {/* Due Date Input */}
           <View className="mb-6 items-center">
             <Text
-            style={{fontSize: GetFontSize(13)}}
-            className="text-[#5FCC3D] mb-2 font-inter500 self-start">
+              style={{ fontSize: GetFontSize(13) }}
+              className="text-[#5FCC3D] mb-2 font-inter500 self-start"
+            >
               Select Due Date <Text className="text-[#E74C3C]">*</Text>
             </Text>
             <TouchableOpacity
@@ -285,9 +302,10 @@ const AssignTestDate = ({ route }) => {
                 setShowPicker(true);
               }}
             >
-              <Text 
-              style={{fontSize: GetFontSize(15)}}
-              className="text-[#FFB84D] font-inter500">
+              <Text
+                style={{ fontSize: GetFontSize(15) }}
+                className="text-[#FFB84D] font-inter500"
+              >
                 {dueDate ? formatDate(dueDate) : 'dd\\mm\\yyyy'}
               </Text>
             </TouchableOpacity>
@@ -296,9 +314,10 @@ const AssignTestDate = ({ route }) => {
           {/* Selected Topics */}
           <View className="bg-white rounded-xl p-4">
             <View className="flex-row justify-between items-start mb-3">
-              <Text 
-              style={{fontSize: GetFontSize(14)}}
-              className="text-[#1A1A1A] font-inter600 flex-1">
+              <Text
+                style={{ fontSize: GetFontSize(14) }}
+                className="text-[#1A1A1A] font-inter600 flex-1"
+              >
                 {questionPaper.questionPaperTitle}
               </Text>
               <View
@@ -312,9 +331,10 @@ const AssignTestDate = ({ route }) => {
                   borderColor: '#DFAF02',
                 }}
               >
-                <Text 
-                style={{fontSize: GetFontSize(11)}}
-                className="text-[#FFB84D] font-inter600">
+                <Text
+                  style={{ fontSize: GetFontSize(11) }}
+                  className="text-[#FFB84D] font-inter600"
+                >
                   Pending
                 </Text>
               </View>
@@ -329,14 +349,17 @@ const AssignTestDate = ({ route }) => {
                   borderBottomWidth: 3,
                   borderColor: '#63738140',
                 }}
-                onPress={() => handleExamDownload(questionPaper.questionPaperCode)}
+                onPress={() =>
+                  handleExamDownload(questionPaper.questionPaperCode)
+                }
               >
                 {downloadLoader ? (
                   <ActivityIndicator size="small" color="#FFB84D" />
                 ) : (
-                  <Text 
-                  style={{fontSize: GetFontSize(13)}}
-                  className="text-[#FFB84D] font-inter600">
+                  <Text
+                    style={{ fontSize: GetFontSize(13) }}
+                    className="text-[#FFB84D] font-inter600"
+                  >
                     Download LGA
                   </Text>
                 )}
@@ -360,38 +383,41 @@ const AssignTestDate = ({ route }) => {
       </ScrollView>
 
       {/* Fixed Bottom Buttons */}
-      <View className="absolute bottom-0 left-0 right-0 bg-[#F5F5F0] p-4 flex-row gap-3">
-        <TouchableOpacity
-          className="border-2 border-[#E5E5E5] bg-white rounded-xl px-6 py-3 flex-row items-center justify-center"
-          onPress={() => navigation.goBack()}
-        >
-          <LeftArrow color="#FFB84D" />
-          <Text
-          style={{fontSize: GetFontSize(15)}}
-          className="text-[#FFB84D] font-inter600 ml-1">
-            back
-          </Text>
-        </TouchableOpacity>
+      <View className="px-6 pb-6 pt-2 bg-white border-t border-gray-200">
+        <View className="flex-row gap-2">
+          <TouchableOpacity
+            className="border-2 border-[#E5E5E5] bg-white rounded-xl px-6 py-3 flex-row items-center justify-center"
+            onPress={() => navigation.goBack()}
+          >
+            <LeftArrow color="#FFB84D" />
+            <Text
+              style={{ fontSize: GetFontSize(15) }}
+              className="text-[#FFB84D] font-inter600 ml-1"
+            >
+              back
+            </Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity
-          className={`flex-1 rounded-xl py-3 flex-row justify-center items-center border-2 ${dueDate ? 'bg-[#FED570] border-[#FEC107]' : 'bg-gray-300 border-gray-600'}`}
-          onPress={() => handleAssign(questionPaper)}
-          disabled={!dueDate}
-        >
-          {showLoader ? (
-            <ActivityIndicator size="small" color="#FFB84D" />
-          ) : (
-            <View className="flex-row items-center">
-              <Text
-              style={{fontSize: GetFontSize(15)}}
-                className={`font-inter600 mr-1 ${dueDate ? 'text-[#8B6914]' : 'text-[#999999]'}`}
-              >
-                Continue
-              </Text>
-              <RightArrow color={dueDate ? '#8B6914' : '#999999'} />
-            </View>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity
+            className={`flex-1 rounded-xl py-3 flex-row justify-center items-center border-2 ${dueDate ? 'bg-[#FED570] border-[#FEC107]' : 'bg-gray-300 border-gray-600'}`}
+            onPress={() => handleAssign(questionPaper)}
+            disabled={!dueDate}
+          >
+            {showLoader ? (
+              <ActivityIndicator size="small" color="#FFB84D" />
+            ) : (
+              <View className="flex-row items-center">
+                <Text
+                  style={{ fontSize: GetFontSize(15) }}
+                  className={`font-inter600 mr-1 ${dueDate ? 'text-[#8B6914]' : 'text-[#999999]'}`}
+                >
+                  Continue
+                </Text>
+                <RightArrow color={dueDate ? '#8B6914' : '#999999'} />
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Date Picker */}

@@ -82,7 +82,7 @@ function GetStartedScreen() {
       <View className="absolute bottom-[2%] w-screen items-center">
         <Text
           style={{ fontSize: GetFontSize(10) }}
-          className="text-white text-center">Version 1.0.0</Text>
+          className="text-white text-center">Version {process.env.APP_VERSION}</Text>
       </View>
 
     </SafeAreaView>

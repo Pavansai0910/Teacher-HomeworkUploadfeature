@@ -36,12 +36,12 @@ const Home = () => {
 
   const gradientBackgrounds = [
     // ['#FFFFFF', '#BBF192'],
-    ['#FFFFFF', '#93D8FB'],
+    // ['#FFFFFF', '#93D8FB'],
     ['#FFFFFF', '#FEDB85'],
   ];
 
   const cardWidth = width * 0.7;
-  const cardSpacing = 1;
+  // const cardSpacing = 1;
 
   const handleScroll = event => {
     const contentOffset = event.nativeEvent.contentOffset;
@@ -50,21 +50,31 @@ const Home = () => {
   };
 
   // Get classes with combined class and section data
-  const classes = teacherProfile?.assignments?.map(a => ({
-    classId: a.classId,
-    sectionId: a.sectionId,
-    displayName: `${a.classId?.className || 'Class'} - ${a.sectionId?.sectionName || 'Section'}`
-  })) || [];
+const classes =
+  teacherProfile?.assignments
+    ?.reduce((acc, a) => {
+      const key = `${a.classId?._id}-${a.sectionId?._id}`;
+      if (!acc.some(item => item.key === key)) {
+        acc.push({
+          key,
+          classId: a.classId,
+          sectionId: a.sectionId,
+          displayName: `${a.classId?.className || 'Class'} - ${a.sectionId?.sectionName || 'Section'}`,
+        });
+      }
+      return acc;
+    }, []) || [];
 
   // Get subjects based on selected class
   const subjects = selectedClass
     ? teacherProfile?.assignments
-        ?.filter(a => 
-          a.classId?._id === selectedClass.classId?._id && 
-          a.sectionId?._id === selectedClass.sectionId?._id
+        ?.filter(
+          a =>
+            a.classId?._id === selectedClass.classId?._id &&
+            a.sectionId?._id === selectedClass.sectionId?._id,
         )
         .map(a => a.subjectId)
-        .filter(Boolean) 
+        .filter(Boolean)
     : [];
 
   const selectedAssignment = useSelector(
@@ -76,7 +86,7 @@ const Home = () => {
     if (selectedAssignment) {
       setSelectedClass({
         classId: selectedAssignment.classId,
-        sectionId: selectedAssignment.sectionId
+        sectionId: selectedAssignment.sectionId,
       });
       setSelectedSubject(selectedAssignment.subjectId);
     }
@@ -121,25 +131,31 @@ const Home = () => {
           onPress={() => navigation.navigate('Settings')}
         >
           <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
-            <Text style={{fontSize: GetFontSize(16)}}
-            className="text-white font-poppins400">
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="text-white font-poppins400"
+            >
               {teacherProfile?.name?.[0] || 'T'}
             </Text>
           </View>
           <View>
-            <Text style={{fontSize: GetFontSize(16)}}
-            className="text-[#454F5B] font-inter700">
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="text-[#454F5B] font-inter700"
+            >
               {teacherProfile?.name}
             </Text>
-            <Text style={{fontSize: GetFontSize(14)}}
-            className="text-[#637381] font-inter400">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#637381] font-inter400"
+            >
               Welcome to Adaptmate
             </Text>
           </View>
         </TouchableOpacity>
 
         <TouchableOpacity className="w-9 h-9 rounded-full bg-blue-50 items-center justify-center">
-          <NotificationIcon />
+          {/* <NotificationIcon /> */}
         </TouchableOpacity>
       </View>
 
@@ -165,8 +181,10 @@ const Home = () => {
             }}
             onPress={() => setClassModalVisible(true)}
           >
-            <Text style={{fontSize: GetFontSize(16)}}
-            className="text-[#DC9047] font-inter700">
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="text-[#DC9047] font-inter700"
+            >
               Class: {getClassDisplayText()}
             </Text>
             <Text className="text-[#DC9047] text-lg">▼</Text>
@@ -192,8 +210,10 @@ const Home = () => {
             }}
             disabled={!selectedClass && !selectedAssignment}
           >
-            <Text style={{fontSize: GetFontSize(16)}}
-            className="text-[#DC9047] font-inter700">
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="text-[#DC9047] font-inter700"
+            >
               {getSubjectDisplayText()}
             </Text>
             <Text className="text-[#DC9047] text-lg">▼</Text>
@@ -204,12 +224,16 @@ const Home = () => {
         <Modal visible={classModalVisible} transparent animationType="fade">
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white w-3/4 rounded-lg p-4 max-h-80">
-              <Text style={{fontSize: GetFontSize(16)}}
-              className="font-inter700 mb-4">Select Class & Section</Text>
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
+                className="font-inter700 mb-4"
+              >
+                Select Class & Section
+              </Text>
               <FlatList
                 data={classes}
                 keyExtractor={(item, index) =>
-                  `${item.classId?._id}-${item.sectionId?._id}` || index.toString()
+                  `${item.classId?._id || 'class'}-${item.sectionId?._id || 'section'}-${index}`
                 }
                 renderItem={({ item }) => (
                   <TouchableOpacity
@@ -217,31 +241,40 @@ const Home = () => {
                     onPress={() => {
                       setSelectedClass({
                         classId: item.classId,
-                        sectionId: item.sectionId
+                        sectionId: item.sectionId,
                       });
-                      setSelectedSubject(null); 
+                      setSelectedSubject(null);
                       setClassModalVisible(false);
                     }}
                   >
-                    <Text style={{fontSize: GetFontSize(16)}}
-                    className="text-[#454F5B] font-inter700">
+                    <Text
+                      style={{ fontSize: GetFontSize(16) }}
+                      className="text-[#454F5B] font-inter700"
+                    >
                       {item.displayName}
                     </Text>
                   </TouchableOpacity>
                 )}
                 ListEmptyComponent={
-                  <Text style={{fontSize: GetFontSize(16)}}
-                  className="text-center font-inter700 py-4">
+                  <Text
+                    style={{ fontSize: GetFontSize(16) }}
+                    className="text-center font-inter700 py-4"
+                  >
                     No classes available
                   </Text>
                 }
               />
+
               <TouchableOpacity
                 className="mt-4 bg-red-500 py-2 rounded-lg"
                 onPress={() => setClassModalVisible(false)}
               >
-                <Text style={{fontSize: GetFontSize(16)}}
-                className="text-white text-center font-inter700">Close</Text>
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-white text-center font-inter700"
+                >
+                  Close
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -251,12 +284,16 @@ const Home = () => {
         <Modal visible={subjectModalVisible} transparent animationType="fade">
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white w-3/4 rounded-lg p-4 max-h-80">
-              <Text style={{fontSize: GetFontSize(16)}}
-              className="font-inter700 mb-4 text-center">Select Subject</Text>
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
+                className="font-inter700 mb-4 text-center"
+              >
+                Select Subject
+              </Text>
               <FlatList
                 data={subjects}
                 keyExtractor={(item, index) =>
-                  item?._id || index.toString()
+                  `${item?._id || 'subject'}-${index}`
                 }
                 renderItem={({ item }) => (
                   <TouchableOpacity
@@ -277,12 +314,17 @@ const Home = () => {
                   </Text>
                 }
               />
+
               <TouchableOpacity
                 className="mt-4 bg-red-500 py-2 rounded-lg"
                 onPress={() => setSubjectModalVisible(false)}
               >
-                <Text style={{fontSize: GetFontSize(16)}}
-                className="text-white text-center font-inter700">Close</Text>
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-white text-center font-inter700"
+                >
+                  Close
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -297,7 +339,7 @@ const Home = () => {
             showsHorizontalScrollIndicator={false}
             onScroll={handleScroll}
             scrollEventThrottle={16}
-            snapToInterval={cardWidth + cardSpacing}
+            // snapToInterval={cardWidth + cardSpacing}
             decelerationRate="fast"
             contentContainerStyle={{
               paddingHorizontal: width * 0.15,
@@ -310,22 +352,22 @@ const Home = () => {
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             /> */}
-            <LessonPlannerCard
+            {/* <LessonPlannerCard
               onPress={() => navigation.navigate('LessonPlanner')}
               isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
-            />
+            /> */}
             <AssignTestCard
               onPress={() => navigation.navigate('AssignTest')}
               isActive={currentIndex === 1}
               cardWidth={cardWidth}
-              cardSpacing={cardSpacing}
+              // cardSpacing={cardSpacing}
             />
           </ScrollView>
 
           {/* Pagination Dots */}
-          <View className="flex-row justify-center items-center mt-5 mb-8">
+          {/* <View className="flex-row justify-center items-center mt-5 mb-8">
             {gradientBackgrounds.map((_, index) => {
               let dotColor = '#FFFFFF';
               if (currentIndex === index) {
@@ -345,7 +387,7 @@ const Home = () => {
                 />
               );
             })}
-          </View>
+          </View> */}
         </View>
       </LinearGradient>
     </SafeAreaView>
