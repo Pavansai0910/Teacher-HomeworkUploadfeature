@@ -12,26 +12,27 @@ import { useSelector } from 'react-redux';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
-import { getAllTopics } from '../../../Services/teacherAPIV1';
+import { getAllTopics, getExamsByClassAndSubject } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import Home from '../Home'
+import Toast from 'react-native-toast-message';
 
 const AssignTestTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
+  const chapterName = route.params.chapterName;
   const { teacherProfile } = useContext(AuthContext);
 
   const selectedAssignment = useSelector(
     state => state.assignment.selectedAssignment,
   );
 
-  const [topics, setTopics] = useState([]);
+  const [examData, setExamData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedTopics, setSelectedTopics] = useState([]);
+  const [selectedTopic, setSelectedTopic] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
-  const [chapterName, setChapterName] = useState('Selected Chapter');
 
   // Prepare class and subject display
   const classDisplay = selectedAssignment
@@ -46,104 +47,82 @@ const AssignTestTopics = ({ route }) => {
   const classSubjectDisplay = `${selectedAssignment?.classId?.className || 'Class'}-${selectedAssignment?.sectionId?.sectionName || 'Section'} - ${capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Subject'}`;
 
   useEffect(() => {
-    const fetchTopics = async () => {
-      if (!chapterId) {
-        console.warn('Chapter ID is missing');
-        return;
-      }
+    getData();
+  }, [])
 
-      const classId = selectedAssignment?.classId?._id;
-      const subjectId = selectedAssignment?.subjectId?._id;
-      const boardId = teacherProfile?.schoolId?.boardId;
-
-      if (!classId || !subjectId || !boardId) {
-        console.error('Missing required parameters for fetching topics:', {
-          classId,
-          subjectId,
-          boardId,
-          chapterId,
-        });
-        setTopics([]);
-        setLoading(false);
-        return;
-      }
-
+  const getData = async () => {
+    if (!chapterId) {
+      return;
+    }
+    try {
       setLoading(true);
-      try {
-        console.log('Fetching topics with params:', {
-          classId,
-          subjectId,
-          boardId,
-          chapterId,
+      setExamData(null);
+      const response = await getExamsByClassAndSubject({
+        subjectId: selectedAssignment?.subjectId?._id,
+        classId: selectedAssignment?.classId?._id,
+        sectionId: selectedAssignment?.sectionId?._id,
+        teacherId: teacherProfile?._id,
+        chapterId: chapterId,
+        boardId: teacherProfile?.schoolId?.boardId,
+      });
+      setExamData(response.data?.questionPapers);
+      setLoading(false);
+    } catch (error) {
+      if (error.response.status !== 404 && error.response.status !== 400) {
+        Toast.show({
+          type: 'error',
+          text1: `Failed to fetch exam data`,
         });
-        const response = await getAllTopics({
-          classId,
-          subjectId,
-          boardId,
-          chapterId,
-        });
-
-        console.log('API Response:', response.data);
-
-        // Extract chapter name from API response
-        if (response.data?.chapterName) {
-          setChapterName(response.data.chapterName);
-        } else if (response.data?.chapter?.name) {
-          setChapterName(response.data.chapter.name);
-        }
-
-        const topicData =
-          response.data?.topics?.map(t => ({
-            id: t.id || t._id,
-            name: t.name,
-            status: t.status || 'pending',
-          })) || [];
-
-        console.log('Processed topics:', topicData);
-        setTopics(topicData);
-      } catch (err) {
-        console.error(
-          'Failed to fetch topics',
-          err.response?.data || err.message,
-          err,
-        );
-        setTopics([]);
-      } finally {
         setLoading(false);
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchTopics();
-  }, [chapterId, selectedAssignment, teacherProfile]);
 
-  const handleTopicToggle = topic => {
-    const isSelected = selectedTopics.some(t => t.id === topic.id);
-    if (isSelected) {
-      setSelectedTopics(selectedTopics.filter(t => t.id !== topic.id));
+  // single selection toggle
+  // single selection toggle
+  const handlePaperToggle = (paper) => {
+    if (paper.isAssigned) {
+      return Toast.show({
+        type: 'error',
+        text1: 'This paper is already assigned',
+      });
+    }
+
+    if (selectedTopic?._id === paper._id) {
+      // unselect if same paper clicked again
+      setSelectedTopic(null);
     } else {
-      setSelectedTopics([...selectedTopics, topic]);
+      setSelectedTopic(paper);
     }
   };
 
   const handleContinue = () => {
-    if (selectedTopics.length === 0) {
-      console.log('No topics selected');
-      return;
-    }
-
-    const payload = { chapterId, selectedTopics };
-    navigation.navigate('AssignTestDate', payload);
+    if (!selectedTopic) return;
+    const payload = { questionPaper: selectedTopic };
+    navigation.navigate("AssignTestDate", payload);
   };
 
-  const getFilteredTopics = () => {
-    if (activeFilter === 'all') return topics;
-    return topics.filter(t => t.status === activeFilter);
+  const getFilteredExamData = () => {
+    if (activeFilter === 'all') return examData;
+    return examData.filter(t => t.status === activeFilter);
   };
 
-  const getStatusCount = status => {
-    if (status === 'all') return topics.length;
-    return topics.filter(t => t.status === status).length;
+  // Status counts directly from examData
+  const statusCounts = {
+    pending: examData?.filter(
+      (paper) => !paper.isAssigned && !paper.lastAttempted
+    ).length,
+    assigned: examData?.filter(
+      (paper) => paper.isAssigned && !paper.lastAttempted
+    ).length,
+    completed: examData?.filter(
+      (paper) => paper.isAssigned && paper.lastAttempted
+    ).length,
   };
+
 
   const getStatusBadge = status => {
     switch (status) {
@@ -170,12 +149,12 @@ const AssignTestTopics = ({ route }) => {
         return {
           bg: '#F3F4F6',
           text: '#6B7280',
-          label: 'Unknown',
+          label: 'Pending',
         };
     }
   };
 
-  const filteredTopics = getFilteredTopics();
+  const getFilteredExam = getFilteredExamData();
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -187,7 +166,7 @@ const AssignTestTopics = ({ route }) => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-center">
-              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
+              <Text className="text-[#212B36] font-poppins600 text-[18px] flex-shrink">
                 Assign Test
               </Text>
               <TouchableOpacity
@@ -297,59 +276,53 @@ const AssignTestTopics = ({ route }) => {
             >
               <View className="flex-row gap-2">
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${
-                    activeFilter === 'all'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                  }`}
+                  className={`px-4 py-2 rounded-full ${activeFilter === 'all'
+                    ? 'bg-white border-2 border-[#FED570]'
+                    : 'bg-white'
+                    }`}
                   onPress={() => setActiveFilter('all')}
                 >
                   <Text
-                    className={`text-[13px] font-semibold ${
-                      activeFilter === 'all'
-                        ? 'text-[#B68201]'
-                        : 'text-[#6B7280]'
-                    }`}
+                    className={`text-[13px] font-semibold ${activeFilter === 'all'
+                      ? 'text-[#B68201]'
+                      : 'text-[#6B7280]'
+                      }`}
                   >
-                    All Tests ({getStatusCount('all')})
+                    All Tests ({statusCounts.all})
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${
-                    activeFilter === 'pending'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                  }`}
+                  className={`px-4 py-2 rounded-full ${activeFilter === 'pending'
+                    ? 'bg-white border-2 border-[#FED570]'
+                    : 'bg-white'
+                    }`}
                   onPress={() => setActiveFilter('pending')}
                 >
                   <Text
-                    className={`text-[13px] font-semibold ${
-                      activeFilter === 'pending'
-                        ? 'text-[#B68201]'
-                        : 'text-[#6B7280]'
-                    }`}
+                    className={`text-[13px] font-semibold ${activeFilter === 'pending'
+                      ? 'text-[#B68201]'
+                      : 'text-[#6B7280]'
+                      }`}
                   >
-                    Pending Test ({getStatusCount('pending')})
+                    Pending Test ({statusCounts.pending})
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-4 py-2 rounded-full ${
-                    activeFilter === 'assigned'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                  }`}
+                  className={`px-4 py-2 rounded-full ${activeFilter === 'assigned'
+                    ? 'bg-white border-2 border-[#FED570]'
+                    : 'bg-white'
+                    }`}
                   onPress={() => setActiveFilter('assigned')}
                 >
                   <Text
-                    className={`text-[13px] font-semibold ${
-                      activeFilter === 'assigned'
-                        ? 'text-[#B68201]'
-                        : 'text-[#6B7280]'
-                    }`}
+                    className={`text-[13px] font-semibold ${activeFilter === 'assigned'
+                      ? 'text-[#B68201]'
+                      : 'text-[#6B7280]'
+                      }`}
                   >
-                    Assigned ({getStatusCount('assigned')})
+                    Assigned ({statusCounts.assigned})
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -360,41 +333,58 @@ const AssignTestTopics = ({ route }) => {
               <View className="py-8">
                 <ActivityIndicator size="large" color="#B68201" />
               </View>
-            ) : topics.length === 0 ? (
+            ) : !examData || examData.length === 0 ? (
               <View className="py-8">
                 <Text className="text-center text-[#B68201] text-[14px]">
-                  No topics available. Please check console for errors.
+                  No exams available.
                 </Text>
               </View>
             ) : (
               <View className="gap-3 items-center">
-                {filteredTopics.map(topic => {
-                  const isSelected = selectedTopics.some(
-                    t => t.id === topic.id,
-                  );
-                  const statusBadge = getStatusBadge(topic.status);
-                  const hasBorder = topic.status === 'pending';
+                {getFilteredExam.map((paper) => {
+                  const isSelected = selectedTopic?._id === paper._id;  // single select check
+
+                  // status logic (like web)
+                  let status;
+                  if (paper.isAssigned && paper.lastAttempted) {
+                    status = "completed";
+                  } else if (paper.isAssigned) {
+                    status = "assigned";
+                  }
+
+                  const statusBadge = getStatusBadge(status);
+                  const hasBorder = status === "pending";
 
                   return (
                     <TouchableOpacity
-                      key={topic.id}
-                      className={`w-[311px] h-[52px] justify-between opacity-100 rounded-[16px] pr-[14px] pl-[14px] border-t-[1.5px] border-r-[2.5px] border-b-[4px] border-l-[2.5px] border-[#DC9047] ${isSelected ? 'bg-[#F59E0B]' : 'bg-white'} flex-row items-center`}
-                      onPress={() => handleTopicToggle(topic)}
+                      key={paper._id}
+                      className={`w-[311px] h-[52px] justify-between rounded-[16px] px-[14px] border-t-[1.5px] border-r-[2.5px] border-b-[4px] border-l-[2.5px] border-[#DC9047] ${isSelected ? "bg-[#F59E0B]" : "bg-white"
+                        } flex-row items-center`}
+                      onPress={() => handlePaperToggle(paper)}
                       activeOpacity={0.7}
                     >
                       <Text
-                        className={`flex-1 font-semibold text-[14px] ${
-                          isSelected ? 'text-white' : 'text-[#212B36]'
-                        }`}
+                        className={`flex-1 font-semibold text-[14px] ${isSelected ? "text-white" : "text-[#212B36]"
+                          }`}
                         numberOfLines={2}
                       >
-                        {topic.name}
+                        {paper.questionPaperTitle}
                       </Text>
+
+                      {/* Status badge */}
                       <View
-                        className={`ml-3 w-[75px] h-[27px] opacity-100 rounded-full pt-[2px] pr-[10px] pb-[2px] pl-[10px] ${hasBorder ? 'border-t-[0.5px] border-r-[1px] border-b-[2px] border-l-[1px]' : ''} bg-[${statusBadge.bg}] border-[${statusBadge.borderColor || statusBadge.text}] flex-row items-center justify-center`}
+                        className={`ml-3 w-[75px] h-[27px] rounded-full px-[10px] justify-center items-center ${hasBorder
+                          ? "border-t-[0.5px] border-r-[1px] border-b-[2px] border-l-[1px]"
+                          : ""
+                          }`}
+                        style={{
+                          backgroundColor: statusBadge.bg,
+                          borderColor: statusBadge.borderColor || statusBadge.text,
+                        }}
                       >
                         <Text
-                          className={`text-[12px] font-semibold text-[${statusBadge.text}]`}
+                          className="text-[12px] font-semibold"
+                          style={{ color: statusBadge.text }}
                           numberOfLines={1}
                         >
                           {statusBadge.label}
@@ -404,15 +394,17 @@ const AssignTestTopics = ({ route }) => {
                   );
                 })}
 
-                {filteredTopics.length === 0 && topics.length > 0 && (
+                {/* Empty filter case */}
+                {getFilteredExam?.length === 0 && (
                   <View className="py-8">
                     <Text className="text-center text-[#B68201] text-[14px]">
-                      No topics found for this filter
+                      No exams found for this filter.
                     </Text>
                   </View>
                 )}
               </View>
             )}
+
           </View>
         </View>
 
@@ -437,23 +429,20 @@ const AssignTestTopics = ({ route }) => {
               <Text className="text-[#FED570] font-semibold">Back</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
-                selectedTopics.length > 0
-                  ? 'bg-[#FED570] border-[#FEC107]'
-                  : 'bg-gray-300 border-gray-300'
-              }`}
+              className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopic ? "bg-[#FED570] border-[#FEC107]" : "bg-gray-300 border-gray-300"
+                }`}
               onPress={handleContinue}
-              disabled={selectedTopics.length === 0}
+              disabled={!selectedTopic}
             >
               <Text
-                className={`font-semibold ${
-                  selectedTopics.length > 0 ? 'text-[#B68201]' : 'text-gray-600'
-                }`}
+                className={`font-semibold ${selectedTopic ? "text-[#B68201]" : "text-gray-600"
+                  }`}
               >
                 Continue
               </Text>
-              {selectedTopics.length > 0 && <RightArrow color="#B68201" />}
+              {selectedTopic && <RightArrow color="#B68201" />}
             </TouchableOpacity>
+
           </View>
         </View>
       </ScrollView>

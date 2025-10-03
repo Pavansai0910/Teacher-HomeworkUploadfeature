@@ -57,3 +57,45 @@ export const createLessonPlan = async payload => {
     headers,
   );
 };
+
+export const getExamsByClassAndSubject = async ({
+  classId,
+  subjectId,
+  sectionId,
+  teacherId,
+  chapterId,
+  boardId,
+}) => {
+  const headers = await getAuthHeader();
+  return apiConnector(
+    "GET",
+    `/v1/teacher/get-question-paper?classId=${classId}&subjectId=${subjectId}&sectionId=${sectionId}&teacherId=${teacherId}&chapterId=${chapterId}&boardId=${boardId}`,
+    null,
+    headers
+  );
+};
+
+export const assignExam = async ({
+  teacherId,
+  classIds,
+  subjectIds,
+  chapterId,
+  questionPaperIds,
+  sectionIds,
+  deadline,
+  boardId,
+}) => {
+  const headers = await getAuthHeader();
+  const requestBody = {
+    teacherId,
+    classIds,
+    subjectIds,
+    chapterId,
+    questionPaperIds,
+    sectionIds,
+    deadline,
+    boardId,
+  };
+  console.log(requestBody, 'requestBody');
+  return apiConnector("POST", "/v1/exam/create-exam", requestBody, headers);
+};

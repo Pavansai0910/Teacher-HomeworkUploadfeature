@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -9,42 +9,29 @@ import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
+import { assignExam } from '../../../Services/teacherAPIV1';
+import Toast from 'react-native-toast-message';
+import { AuthContext } from '../../../Context/AuthContext';
 
-
-const AssignTestDate = () => {
+const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
-  const route = useRoute();
-  const { chapterId, selectedTopics } = route.params;
-
+  // const { chapterId, selectedTopics } = route.params;
+  const questionPaper = route.params.questionPaper
   const selectedAssignment = useSelector(
     state => state.assignment.selectedAssignment,
   );
+  const { teacherProfile } = useContext(AuthContext);
 
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
   const [pickerTarget, setPickerTarget] = useState(null);
   const [showLoader, setShowLoader] = useState(false);
-
   const classDisplay = selectedAssignment
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
     : 'Not selected';
 
   const subjectDisplay =
     capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
-
-  const handleGenerate = () => {
-    if (!dueDate) return;
-    setShowLoader(true);
-    console.log('Final Payload:', {
-      chapterId,
-      selectedTopics,
-      dueDate,
-    });
-  };
-
-  const handleLoaderComplete = () => {
-    setShowLoader(false);
-  };
 
   const formatDate = date => {
     const d = new Date(date);
@@ -58,10 +45,54 @@ const AssignTestDate = () => {
     setShowPicker(false);
     if (event.type === 'set' && selectedDate) {
       if (pickerTarget === 'due') {
-        setDueDate(formatDate(selectedDate));
+        setDueDate(selectedDate); // save Date, not string
       }
     }
   };
+
+  const handleAssign = async (questionPaper) => {
+
+    setShowLoader(true);
+
+    // Create a new Date object from the selected deadline.
+    const selectedDate = new Date(dueDate);
+
+    // Set the time to 18:29 UTC, which is 11:59 PM in IST (UTC+5:30).
+    selectedDate.setUTCHours(18, 29, 59, 999);
+
+    try {
+      const classId = selectedAssignment?.classId?._id;
+      const subjectId = selectedAssignment?.subjectId?._id;
+      const sectionId = selectedAssignment?.sectionId?._id;
+
+      const payload = {
+        boardId: teacherProfile?.schoolId?.boardId,
+        teacherId: teacherProfile?._id,
+        classIds: [classId],
+        sectionIds: [sectionId],
+        subjectIds: [subjectId],
+        chapterId: questionPaper.chapterId,
+        questionPaperIds: [questionPaper._id],
+        deadline: selectedDate.toISOString(), // ✅ send ISO string
+      };
+
+      await assignExam(payload);
+      setShowLoader(false);
+      Toast.show({
+        type: 'success',
+        text1: 'Yeah! You assigned test',
+      })
+      navigation.goBack();
+    } catch (error) {
+      setShowLoader(false);
+      console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: "Failed to assign the exam"
+      });
+    }
+  };
+
 
   return (
     <SafeAreaView className="flex-1 bg-[#F5F5F0]">
@@ -199,7 +230,7 @@ const AssignTestDate = () => {
               }}
             >
               <Text className="text-[#FFB84D] font-medium text-[15px]">
-                {dueDate || 'dd\\mm\\yyyy'}
+                {dueDate ? formatDate(dueDate) : 'dd\\mm\\yyyy'}
               </Text>
               <Text className="text-[#FFB84D] text-[18px]"></Text>
             </TouchableOpacity>
@@ -209,9 +240,10 @@ const AssignTestDate = () => {
           <View className="bg-white rounded-xl p-4">
             <View className="flex-row justify-between items-start mb-3">
               <Text className="text-[#1A1A1A] font-semibold text-[14px] flex-1">
-                {selectedTopics.map(t => t.name).join(', ')}
+                {questionPaper.questionPaperTitle
+                }
               </Text>
-              <View 
+              <View
                 className="px-3 py-1 rounded-full ml-2"
                 style={{
                   backgroundColor: '#FEF6EB',
@@ -228,7 +260,7 @@ const AssignTestDate = () => {
               </View>
             </View>
             <View className="flex-row items-center justify-between">
-              <TouchableOpacity 
+              <TouchableOpacity
                 className="flex-1 bg-[#FFF6E0] rounded-xl py-2 mr-2 flex-row justify-center items-center"
                 style={{
                   borderTopWidth: 1,
@@ -243,7 +275,7 @@ const AssignTestDate = () => {
                   View test
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity 
+              <TouchableOpacity
                 className="w-10 h-10 rounded-xl justify-center items-center"
                 style={{
                   backgroundColor: '#FFFFFF',
@@ -269,20 +301,24 @@ const AssignTestDate = () => {
             <LeftArrow color="#FED570" />
             <Text className="text-[#FFB84D] font-semibold text-[15px] ml-1">back</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
-            className={`flex-1 rounded-xl py-3 flex-row justify-center items-center ${
-              dueDate ? 'bg-[#FFD699]' : 'bg-[#E5E5E5]'
-            }`}
-            onPress={handleGenerate}
+            className={`flex-1 rounded-xl py-3 flex-row justify-center items-center ${dueDate ? 'bg-[#FFD699]' : 'bg-[#E5E5E5]'
+              }`}
+            onPress={() => handleAssign(questionPaper)}
             disabled={!dueDate}
           >
-            <Text className={`font-semibold text-[15px] mr-1 ${
-              dueDate ? 'text-[#8B6914]' : 'text-[#999999]'
-            }`}>
+            {showLoader ? (
+              <ActivityIndicator size="small" color="#FFB84D" />
+            ):(
+              <View className="flex-row items-center">
+              <Text className={`font-semibold text-[15px] mr-1 ${dueDate ? 'text-[#8B6914]' : 'text-[#999999]'
+                }`}>
               Continue
             </Text>
             <RightArrow />
+                  </View>
+              )}
           </TouchableOpacity>
         </View>
       </ScrollView>

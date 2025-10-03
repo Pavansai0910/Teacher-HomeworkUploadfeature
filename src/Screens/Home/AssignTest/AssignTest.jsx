@@ -165,6 +165,7 @@ const AssignTest = () => {
             onPress={() =>
               navigation.navigate('AssignTestTopics', {
                 chapterId: selectedChapterId,
+                chapterName: selectedChapterName,
               })
             }
             className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
