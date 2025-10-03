@@ -309,7 +309,7 @@ const AssignTestDate = ({ route }) => {
                   <ActivityIndicator size="small" color="#FFB84D" />
                 ):(  
                   <Text className="text-[#FFB84D] font-semibold text-[13px]">
-                  View test
+                  Download LGA
                 </Text>
                 )}
               </TouchableOpacity>

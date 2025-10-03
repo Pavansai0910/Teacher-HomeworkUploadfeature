@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import PenIcon from '../../../Images/AssignTestCard/PenIcon';
 import ParaIcon from '../../../Images/AssignTestCard/ParaIcon';
+import GetFontSize from '../../../Commons/GetFontSize';
 
 const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
   const cardHeight = isActive ? 432 : 380;
@@ -35,10 +36,12 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
 
       <View className="bg-white flex-1 px-6 py-6 rounded-b-3xl">
         <View className="flex-1 justify-center">
-          <Text className="text-[#212B36] text-[19px] font-bold text-center mb-3">
+          <Text style={{fontSize: GetFontSize(19)}}
+          className="text-[#212B36] font-inter600 text-center mb-3">
             Assign Test
           </Text>
-          <Text className="text-[#454F5B] text-[13px] text-center leading-6">
+          <Text style={{fontSize: GetFontSize(13)}}
+          className="text-[#454F5B] font-inter400 text-center leading-6">
             Generate comprehensive lesson plans with objectives and activities
           </Text>
         </View>
@@ -53,7 +56,8 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
           }}
           className="bg-white rounded-xl border-[#E4E4E2] shadow-sm self-center mt-4"
         >
-          <Text className="text-[#FEC434] text-sm font-semibold py-3 px-16 text-center">
+          <Text style={{fontSize: GetFontSize(14)}}
+          className="text-[#FEC434] font-inter700 py-3 px-16 text-center">
             Assign Test
           </Text>
         </TouchableOpacity>

@@ -17,7 +17,7 @@ const Settings = () => {
             <Text className="text-white text-2xl font-bold">
               {teacherProfile?.name
                 ? teacherProfile.name.charAt(0)
-                : 'A'}
+                : 'Section'}
             </Text>
           </View>
           <Text className="mt-3 text-lg font-bold text-[#454F5B]">
