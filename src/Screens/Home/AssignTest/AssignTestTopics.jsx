@@ -108,18 +108,33 @@ const AssignTestTopics = ({ route }) => {
   const getStatusBadge = status => {
     switch (status) {
       case 'assigned':
-        return { bg: '#E0F2FE', text: '#0369A1', label: 'Assigned' };
+        return { 
+          bg: '#E6EFFA', 
+          text: '#025ECA', 
+          label: 'Assigned',
+          borderColor: '#025ECA'
+        };
       case 'completed':
-        return { bg: '#D1FAE5', text: '#047857', label: 'Completed' };
+        return { 
+          bg: '#E9FBF3', 
+          text: '#189F3F', 
+          label: 'Completed',
+          borderColor: '#189F3F'
+        };
       case 'pending':
         return {
-          bg: 'white',
-          text: '#B68201',
+          bg: '#FEF6EB',
+          text: '#FFC466',
           label: 'Pending',
-          borderColor: '#B68201',
+          borderColor: '#FFC466',
         };
       default:
-        return { bg: '#F3F4F6', text: '#6B7280', label: 'Pending' };
+        return { 
+          bg: '#F3F4F6', 
+          text: '#6B7280', 
+          label: 'Pending',
+          borderColor: '#FFC466'
+        };
     }
   };
 
@@ -128,40 +143,33 @@ const AssignTestTopics = ({ route }) => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#FEF3C7] px-6 py-6">
-        <View className="flex-row items-center">
-          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg mr-3 justify-center items-center">
-            <AssignTestDoc />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-center">
-              <Text
-                style={{ fontSize: GetFontSize(18) }}
-                className="text-[#212B36] font-poppins600 flex-shrink"
-              >
-                Assign Test
-              </Text>
-              <TouchableOpacity
-                className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
-              >
-                <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white"
-                >
-                  ✕
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B]"
-            >
-              Assign tests to your students{'\n'}quickly and easily
-            </Text>
-          </View>
-        </View>
-      </View>
+      <View className="bg-[#FFF3D6]" style={{ minHeight: 159, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
+             <View className="flex-row items-center" style={{ height: 85, gap: 12, marginTop: 13 }}>
+               <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
+                 <AssignTestDoc />
+               </View>
+               <View className="flex-1">
+                 <View className="flex-row justify-between items-center mb-1">
+                   <Text style={{ fontSize: GetFontSize(18) }}
+                     className="text-[#212B36] font-inter600 flex-shrink">
+                     Assign Test
+                   </Text>
+                   <TouchableOpacity
+                     className="w-7 h-7 justify-center items-center border-2 border-[#FDCA0C] rounded-full"
+                     onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
+                   >
+                     <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+                       <Text className="text-white font-inter400">✕</Text>
+                     </View>
+                   </TouchableOpacity> 
+                 </View>
+                 <Text style={{ fontSize: GetFontSize(14) }}
+                   className="text-[#454F5B] font-inter400">
+                   Boost your students's progress in{'\n'}just few taps!
+                 </Text>
+               </View>
+             </View>
+           </View>
 
       {/* Class-Section-Subject Display */}
       <NavHeader />
@@ -233,17 +241,17 @@ const AssignTestTopics = ({ route }) => {
               </View>
               <Text
                 style={{ fontSize: GetFontSize(16) }}
-                className="text-[#B68201] font-inter700 mb-1 text-center"
+                className="text-[#B68201] font-inter600 mb-1 text-center"
               >
                 Zoom in and pick your focus!
               </Text>
               <Text
-                style={{ fontSize: GetFontSize(12) }}
-                className="text-[#B68201] text-center font-inter700 px-4"
-              >
-                Here is the list of topics from {chapterName}.{'\n'}
-                Select a topic you want to assign a test for.
-              </Text>
+               style={{ fontSize: GetFontSize(12) }}
+                className="text-[#B68201] text-center font-inter500">
+                 Here is the list of topics from{' '}
+            <Text className="font-inter700">{chapterName}</Text>
+             .{'\n'}Select a topic you want to assign a test for.
+             </Text>
             </View>
 
             {/* Filter Tabs */}
@@ -306,6 +314,24 @@ const AssignTestTopics = ({ route }) => {
                     Assigned ({statusCounts.assigned})
                   </Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity
+                  className={`px-3 py-2 rounded-full ${activeFilter === 'completed'
+                      ? 'bg-white border-2 border-[#FED570]'
+                      : 'bg-white'
+                    }`}
+                  onPress={() => setActiveFilter('completed')}
+                >
+                  <Text
+                    style={{ fontSize: GetFontSize(13) }}
+                    className={`font-inter600 ${activeFilter === 'completed'
+                        ? 'text-[#B68201]'
+                        : 'text-[#6B7280]'
+                      }`}
+                  >
+                    Completed ({statusCounts.completed})
+                  </Text>
+                </TouchableOpacity>
               </View>
             </ScrollView>
 
@@ -338,7 +364,15 @@ const AssignTestTopics = ({ route }) => {
                   return (
                     <TouchableOpacity
                       key={paper._id}
-                      className={`w-[94%] py-3 justify-between rounded-[16px] px-[14px] border-t-[1.5px] border-r-[2.5px] border-b-[4px] border-l-[2.5px] border-[#DC9047] ${isSelected ? 'bg-[#F59E0B]' : 'bg-white'} flex-row items-center`}
+                      className={`w-[94%] py-3 justify-between rounded-[16px] px-[14px] ${isSelected ? 'bg-[#F59E0B]' : 'bg-white'} flex-row items-center`}
+                      style={{
+                        borderTopWidth: 0.5,
+                        borderRightWidth: 1,
+                        borderBottomWidth: 2,
+                        borderLeftWidth: 1,
+                        borderColor: isSelected ? '#DC9047' : '#DC9047',
+                        borderStyle: 'solid'
+                      }}
                       onPress={() => handlePaperToggle(paper)}
                       activeOpacity={0.7}
                     >
@@ -351,12 +385,15 @@ const AssignTestTopics = ({ route }) => {
                       </Text>
 
                       <View
-                        className={`ml-3 w-[75px] h-[27px] rounded-full px-[10px] justify-center items-center`}
+                        className={`ml-3 h-[27px] rounded-full px-[10px] justify-center items-center`}
                         style={{
                           backgroundColor: statusBadge.bg,
-                          borderColor:
-                            statusBadge.borderColor || statusBadge.text,
-                          borderWidth: statusBadge.borderColor ? 1 : 0,
+                          borderTopWidth: 0.5,
+                          borderRightWidth: 1,
+                          borderBottomWidth: 2,
+                          borderLeftWidth: 1,
+                          borderColor: statusBadge.borderColor,
+                          borderStyle: 'solid'
                         }}
                       >
                         <Text

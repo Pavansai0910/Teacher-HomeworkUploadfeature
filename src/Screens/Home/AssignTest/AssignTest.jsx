@@ -58,7 +58,7 @@ const AssignTest = () => {
     if (selectedChapterName && allChapters.length > 0) {
       const chapterObject = allChapters.find(c => c.name === selectedChapterName);
       if (chapterObject) {
-        setSelectedChapterId(chapterObject.id || chapterObject._id); // handle both id/_id
+        setSelectedChapterId(chapterObject.id || chapterObject._id);
       } else {
         setSelectedChapterId(null);
       }
@@ -71,7 +71,6 @@ const AssignTest = () => {
 
   const renderHeader = () => (
     <View>
-
       <NavHeader />
 
       <View className="px-4 mt-6">
@@ -128,17 +127,32 @@ const AssignTest = () => {
           {/* Content Box */}
           <View className="rounded-xl mt-3">
             <View className="items-center mb-6">
-              <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
+              <View 
+                className="justify-center items-center mb-2"
+                style={{ width: 27.43, height: 41.71 }}
+              >
                 <Document />
               </View>
 
-              <Text style={{ fontSize: GetFontSize(16) }}
+              <Text 
+                style={{ 
+                  fontSize: 16,
+                  lineHeight: 16 * 1.35,
+                  letterSpacing: -0.32,
+                  fontWeight: '700'
+                }}
                 className="text-[#B68201] font-inter700 mb-2 text-center">
                 Ready to plan smarter?
               </Text>
 
-              <Text style={{ fontSize: GetFontSize(13) }}
-                className="text-[#B68201] font-inter500 px-2">
+              <Text 
+                style={{ 
+                  fontSize: 13,
+                  lineHeight: 13 * 1.35,
+                  letterSpacing: -0.26,
+                  fontWeight: '500'
+                }}
+                className="text-[#B68201] font-inter500 px-2 text-center">
                 Select a chapter for which you want to assign a test.
               </Text>
             </View>
@@ -160,16 +174,6 @@ const AssignTest = () => {
         </View>
       </View>
 
-      {/* Pro Tip 
-      <View className="px-6 mt-4">
-        <Text style={{fontSize: GetFontSize(13)}}
-        className="text-gray-600 font-inter500 bg-[#F5F0FD] px-2 py-4 rounded-lg">
-          <Text style={{fontSize: GetFontSize(14)}}
-          className="font-inter600">Pro Tip:</Text> Regular testing
-          improves retention by 40%!
-        </Text>
-      </View> */}
-
       <View className="h-[2px] bg-[#DFE3E8] mt-4" />
     </View>
   );
@@ -177,27 +181,29 @@ const AssignTest = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#FFF3D6] px-6 py-6">
-        <View className="flex-row items-center">
-          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg mr-3 justify-center items-center">
+      <View className="bg-[#FFF3D6]" style={{ minHeight: 159, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
+        <View className="flex-row items-center" style={{ height: 85, gap: 12, marginTop: 13 }}>
+          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
             <AssignTestDoc />
           </View>
           <View className="flex-1">
-            <View className="flex-row justify-between items-start">
+            <View className="flex-row justify-between items-center mb-1">
               <Text style={{ fontSize: GetFontSize(18) }}
                 className="text-[#212B36] font-inter600 flex-shrink">
                 Assign Test
               </Text>
               <TouchableOpacity
-                className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center"
+                className="w-7 h-7 justify-center items-center border-2 border-[#FDCA0C] rounded-full"
                 onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
               >
-                <Text className="text-white font-inter400">✕</Text>
-              </TouchableOpacity>
+                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+                  <Text className="text-white font-inter400">✕</Text>
+                </View>
+              </TouchableOpacity> 
             </View>
             <Text style={{ fontSize: GetFontSize(14) }}
               className="text-[#454F5B] font-inter400">
-              Boost your students's progress in{'\n'} just few taps!
+              Boost your students's progress in{'\n'}just few taps!
             </Text>
           </View>
         </View>
