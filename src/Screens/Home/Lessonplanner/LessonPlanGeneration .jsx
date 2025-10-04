@@ -173,8 +173,8 @@ const LessonPlanGeneration = () => {
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
               <Text
-                style={{ fontSize: GetFontSize(13) }}
-                className="text-[#212B36] font-inter600 "
+                style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-inter600 flex-shrink"
               >
                 Create Lesson Plan
               </Text>

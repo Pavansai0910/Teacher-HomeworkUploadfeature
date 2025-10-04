@@ -173,14 +173,10 @@ const AssignTestDate = ({ route }) => {
                 onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
               >
                 <Text
-                  style={{
-                    lineHeight: 24,
-                    textAlign: 'center',
-                    fontSize: GetFontSize(14),
-                  }}
-                  className="text-white font-inter700"
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-white"
                 >
-                  X
+                  ✕
                 </Text>
               </TouchableOpacity>
             </View>
