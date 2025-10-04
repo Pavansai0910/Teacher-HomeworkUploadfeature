@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Document from '../../../Images/LessonPlan/Document';
@@ -14,10 +14,12 @@ import { AuthContext } from '../../../Context/AuthContext';
 import Calendar from '../../../Images/LessonPlan/Calendar';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 import GetFontSize from '../../../Commons/GetFontSize';
+import { setLessonPlanner } from '../../../store/Slices/lessonPlannerSlice'; // ADDED
 
 const LessonPlanGeneration = () => {
   const navigation = useNavigation();
   const route = useRoute();
+  const dispatch = useDispatch(); // ADDED
   const { chapterId, selectedTopics } = route.params;
   const { teacherProfile } = useContext(AuthContext);
 
@@ -46,7 +48,6 @@ const LessonPlanGeneration = () => {
     setShowLoader(true);
 
     try {
-      // Build payload with better validation
       const payload = {
         boardId:
           teacherProfile?.schoolId?.boardId || selectedAssignment?.boardId,
@@ -66,7 +67,6 @@ const LessonPlanGeneration = () => {
         },
       };
 
-      // Validate required fields
       const requiredFields = [
         'boardId',
         'teacherId',
@@ -85,10 +85,24 @@ const LessonPlanGeneration = () => {
         throw new Error('No topics selected');
       }
 
-      // Call the API
       const response = await createLessonPlan(payload);
 
       if (response?.data) {
+        // SHAPE DATA FOR REDUX AND SAVING
+        const lessonPlanForRedux = {
+          lessonPlanRequestId: response.data.lessonPlanRequestId,
+          grade: selectedAssignment?.classId?.className,
+          subject: selectedAssignment?.subjectId?.subjectName,
+          topicId: selectedTopics.map(topic => topic._id || topic.id || topic),
+          topicNames: Array.isArray(response.data.topic)
+            ? response.data.topic
+            : [response.data.topic],
+          generatedContent: response.data.generatedContent,
+          chapter: response.data.chapter,
+          topic: response.data.topic, // include if needed for display
+        };
+        dispatch(setLessonPlanner(lessonPlanForRedux)); // STORE IN REDUX
+
         setLessonPlanData(response.data);
         setTimeout(() => {
           handleLoaderComplete(response.data);
@@ -100,7 +114,6 @@ const LessonPlanGeneration = () => {
       console.error('Error generating lesson plan:', error);
       setShowLoader(false);
 
-      // Show detailed error message
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
@@ -123,7 +136,6 @@ const LessonPlanGeneration = () => {
     });
   };
 
-  // Convert DD/MM/YYYY to DD-MM-YYYY format for API
   const convertDateFormat = dateString => {
     return dateString.replace(/\//g, '-');
   };
@@ -147,17 +159,13 @@ const LessonPlanGeneration = () => {
     }
   };
 
-  // Validate dates (end date should be after start date)
   const isValidDateRange = () => {
     if (!startDate || !endDate) return false;
-
     const start = new Date(startDate.split('/').reverse().join('-'));
     const end = new Date(endDate.split('/').reverse().join('-'));
-
     return end >= start;
   };
 
-  // Show loader if it's visible
   if (showLoader) {
     return <Loader isVisible={showLoader} onClose={() => {}} />;
   }

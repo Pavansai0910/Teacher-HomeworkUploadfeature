@@ -1,10 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
-  Alert,
   ActivityIndicator,
   PermissionsAndroid,
   Platform,
@@ -17,13 +17,21 @@ import Download from '../../../Images/LessonPlan/Download';
 import LinearGradient from 'react-native-linear-gradient';
 import ScrollUpArrow from '../../../Images/LessonPlan/ScrollUpArrow';
 import RNFS, { DownloadDirectoryPath } from 'react-native-fs';
+import GetFontSize from '../../../Commons/GetFontSize';
+import { saveLessonPlan } from '../../../Services/teacherAPIV2';
 import Toast from 'react-native-toast-message';
- import GetFontSize from '../../../Commons/GetFontSize';// Ensure you have installed react-native-toast-message
+import { AuthContext } from '../../../Context/AuthContext';
 
 const GeneratedLessonPlan = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
+  const { teacherProfile } = useContext(AuthContext);
+
+  const lessonPlanner = useSelector(
+    state => state.lessonPlanner?.lessonPlannerData,
+  );
+  console.log('Redux lessonPlannerData:', lessonPlanner);
 
   const {
     lessonPlanData,
@@ -36,6 +44,7 @@ const GeneratedLessonPlan = () => {
   } = route.params;
 
   const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false); // Track if already saved
   const [activeSection, setActiveSection] = useState(null);
   const [downloadingHomework, setDownloadingHomework] = useState([]);
 
@@ -43,8 +52,9 @@ const GeneratedLessonPlan = () => {
   const topicName =
     lessonPlanData?.topic ||
     selectedTopics?.map(t => t.name || t.topicName || 'Topic').join(', ') ||
+    lessonPlanner?.topicNames?.join(', ') ||
     'Topic';
-  const chapterName = lessonPlanData?.chapter || 'Chapter';
+  const chapterName = lessonPlanData?.chapter || lessonPlanner?.chapter || 'Chapter';
 
   const scrollToSection = sectionName => {
     setActiveSection(sectionName);
@@ -53,13 +63,61 @@ const GeneratedLessonPlan = () => {
     }
   };
 
-  const handleSaveLessonPlan = async () => {
+  const handleSaveDoc = async () => {
+    // Check if already saved
+    if (isSaved) {
+      Toast.show({
+        type: 'info',
+        text1: 'Already Saved',
+        text2: 'This lesson plan has already been saved!',
+        position: 'bottom',
+        visibilityTime: 3000,
+      });
+      return;
+    }
+
     setIsSaving(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      Alert.alert('Success', 'Lesson plan saved successfully!');
+      const boardId = teacherProfile?.schoolId?.boardId;
+      const payload = {
+        ...lessonPlanner,
+        boardId,
+      };
+      const response = await saveLessonPlan(payload);
+
+      // Mark as saved on success
+      setIsSaved(true);
+      Toast.show({
+        type: 'success',
+        text1: 'Success',
+        text2: response.data.message || 'Lesson Plan Saved Successfully!',
+        position: 'bottom',
+        visibilityTime: 3000,
+      });
     } catch (error) {
-      Alert.alert('Error', 'Failed to save lesson plan');
+      console.error('Error while saving lesson plan:', error);
+      
+      // Handle 409 conflict (already exists)
+      if (error.response?.status === 409) {
+        setIsSaved(true); // Mark as saved since it exists on server
+        Toast.show({
+          type: 'info',
+          text1: 'Already Saved',
+          text2: error.response.data?.message || 'This lesson plan has already been saved!',
+          position: 'bottom',
+          visibilityTime: 3000,
+        });
+      } else {
+        // Handle other errors
+        const errorMessage = error.response?.data?.message || 'Unable to save lesson plan. Please try again.';
+        Toast.show({
+          type: 'error',
+          text1: 'Save Failed',
+          text2: errorMessage,
+          position: 'bottom',
+          visibilityTime: 4000,
+        });
+      }
     } finally {
       setIsSaving(false);
     }
@@ -86,7 +144,7 @@ const GeneratedLessonPlan = () => {
     }
   };
 
-  const handleHomeworkDownload = async (homeworkId) => {
+  const handleHomeworkDownload = async homeworkId => {
     setDownloadingHomework(prev => [...prev, homeworkId]);
 
     const hasPermission = await requestStoragePermission();
@@ -120,14 +178,17 @@ const GeneratedLessonPlan = () => {
 
       Toast.show({
         type: 'success',
-        text1: 'Saved in Download/Adaptmate Learner App',
+        text1: 'Downloaded',
+        text2: 'Saved in Download/Adaptmate Learner App',
+        position: 'bottom',
       });
     } catch (error) {
-      console.error("RNFS Write Error:", error);
+      console.error('RNFS Write Error:', error);
       Toast.show({
         type: 'error',
-        text1: "Download Failed",
-        text2: "Could not save file. Check permissions or internal file error.",
+        text1: 'Download Failed',
+        text2: 'Could not save file. Check permissions or internal file error.',
+        position: 'bottom',
       });
     } finally {
       setDownloadingHomework(prev => prev.filter(id => id !== homeworkId));
@@ -135,7 +196,9 @@ const GeneratedLessonPlan = () => {
   };
 
   const SectionHeader = ({ title }) => (
-    <Text className="text-[16px] font-semibold text-[#212B36] mt-4">{title}</Text>
+    <Text className="text-[16px] font-semibold text-[#212B36] mt-4">
+      {title}
+    </Text>
   );
 
   const BulletList = ({ items }) => (
@@ -158,17 +221,28 @@ const GeneratedLessonPlan = () => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
-              <Text  style={{fontSize: GetFontSize(18)}}className="text-[#212B36] font-inter600 flex-shrink">
+              <Text
+                style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-inter600 flex-shrink"
+              >
                 Lesson Plan
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
-                <Text style={{fontSize: GetFontSize(14)}} className="text-white ">✕</Text>
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-white "
+                >
+                  ✕
+                </Text>
               </TouchableOpacity>
             </View>
-            <Text  style={{fontSize: GetFontSize(14)}}className="text-[#454F5B] ">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B] "
+            >
               Generate a comprehensive lesson{'\n'} plan in seconds
             </Text>
           </View>
@@ -189,10 +263,16 @@ const GeneratedLessonPlan = () => {
         >
           {/* Topic Header */}
           <View className="">
-            <Text  style={{fontSize: GetFontSize(18)}}className=" font-inter600 text-[#212B36] mb-1">
+            <Text
+              style={{ fontSize: GetFontSize(18) }}
+              className=" font-inter600 text-[#212B36] mb-1"
+            >
               {topicName}
             </Text>
-            <Text style={{fontSize: GetFontSize(14)}} className=" font-inter400 text-[#454F5B] mb-5">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className=" font-inter400 text-[#454F5B] mb-5"
+            >
               Chapter :- {chapterName}
             </Text>
           </View>
@@ -201,8 +281,10 @@ const GeneratedLessonPlan = () => {
           <View className="border border-[#E5E5E3] rounded-xl p-4">
             <View className="flex-row items-center ">
               <TouchableOpacity
-                className="bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1 mr-3 shadow-lg shadow-red-500/25"
-                onPress={handleSaveLessonPlan}
+                className={`bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1 mr-3 shadow-lg shadow-red-500/25 ${
+                  isSaved ? 'opacity-75' : ''
+                }`}
+                onPress={handleSaveDoc}
                 disabled={isSaving}
                 style={{
                   borderRightWidth: 2,
@@ -214,12 +296,15 @@ const GeneratedLessonPlan = () => {
                 {isSaving ? (
                   <ActivityIndicator
                     size="small"
-                    color="#FFFFFF"
+                    color="#1EAFF7"
                     style={{ marginRight: 8 }}
                   />
                 ) : (
-                  <Text style={{fontSize: GetFontSize(14)}}className="text-[#1EAFF7]  font-inter500 justify-center items-center">
-                    Save Lesson Plan
+                  <Text
+                    style={{ fontSize: GetFontSize(14) }}
+                    className="text-[#1EAFF7] font-inter500 justify-center items-center"
+                  >
+                    {isSaved ? 'Saved ✓' : 'Save Lesson Plan'}
                   </Text>
                 )}
                 <View className="ml-2">
@@ -230,7 +315,7 @@ const GeneratedLessonPlan = () => {
               {/* Download Icon */}
               <TouchableOpacity
                 className="bg-white justify-center items-center"
-                onPress={() => handleHomeworkDownload(chapterId)} 
+                onPress={() => handleHomeworkDownload(chapterId)}
               >
                 <View
                   className="justify-center items-center rounded-lg border border-[#E1F4FE] p-3"
@@ -415,11 +500,17 @@ const GeneratedLessonPlan = () => {
             colors={['#9C7B5B', '#E7B686']}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={{ borderRadius: 24, padding: 2 }} 
+            style={{ borderRadius: 24, padding: 2 }}
           >
             <TouchableOpacity
               className="bg-white py-4 px-5 rounded-3xl items-center flex-row justify-center"
-              style={{ borderLeftWidth : 2, borderRightWidth: 2, borderTopWidth: 1, borderBottomWidth: 3, borderColor: '#E7B686' }}
+              style={{
+                borderLeftWidth: 2,
+                borderRightWidth: 2,
+                borderTopWidth: 1,
+                borderBottomWidth: 3,
+                borderColor: '#E7B686',
+              }}
               onPress={() => scrollToSection('sections')}
             >
               <Text className="text-[#DC9047] text-[16px] font-bold mr-2">

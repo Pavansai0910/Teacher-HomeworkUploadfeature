@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { combineReducers } from 'redux';
 import assignmentReducer from './Slices/assignment';
 import chapterReducer from './Slices/chapterSlice';
+import lessonPlannerReducer from './Slices/lessonPlannerSlice';
 
 const persistConfig = {
   key: 'root',
@@ -13,6 +14,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   chapters: chapterReducer,
   assignment: assignmentReducer,  
+  lessonPlanner: lessonPlannerReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

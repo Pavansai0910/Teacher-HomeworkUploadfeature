@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import GetFontSize from './GetFontSize';
+import TopArrow from '../Images/LessonPlan/TopArrow';
 
 const TopicDropdown = ({
   topics,
@@ -10,7 +11,7 @@ const TopicDropdown = ({
 }) => {
   const [showSavedPlans, setShowSavedPlans] = useState(false);
 
-  const handleTopicToggle = (topic) => {
+  const handleTopicToggle = topic => {
     const isSelected = selectedTopics.some(t => t.id === topic.id);
     if (isSelected) {
       onTopicsSelect(selectedTopics.filter(t => t.id !== topic.id));
@@ -33,10 +34,15 @@ const TopicDropdown = ({
         }}
         onPress={() => setShowSavedPlans(!showSavedPlans)}
       >
-        <Text style={{fontSize: GetFontSize(14)}}
-        className="text-[#1EAFF7] text-center font-inter600">
-          Saved Lesson plans
-        </Text>
+        <View className="flex-row justify-center items-center gap-2">
+          <Text
+            style={{ fontSize: GetFontSize(14) }}
+            className="text-[#1EAFF7] font-inter600"
+          >
+            Saved Lesson plans
+          </Text>
+          <TopArrow color="#1EAFF7" />
+        </View>
       </TouchableOpacity>
 
       {/* Topics List */}
@@ -58,7 +64,8 @@ const TopicDropdown = ({
               }}
             >
               {/* Topic Name */}
-              <Text style={{fontSize: GetFontSize(16)}}
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
                 className={`flex-1 font-inter700 ${
                   isSelected ? 'text-[#DC9047]' : 'text-[#637381]'
                 }`}
