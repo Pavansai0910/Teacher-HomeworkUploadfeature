@@ -17,7 +17,8 @@ import Download from '../../../Images/LessonPlan/Download';
 import LinearGradient from 'react-native-linear-gradient';
 import ScrollUpArrow from '../../../Images/LessonPlan/ScrollUpArrow';
 import RNFS, { DownloadDirectoryPath } from 'react-native-fs';
-import Toast from 'react-native-toast-message'; // Ensure you have installed react-native-toast-message
+import Toast from 'react-native-toast-message';
+ import GetFontSize from '../../../Commons/GetFontSize';// Ensure you have installed react-native-toast-message
 
 const GeneratedLessonPlan = () => {
   const route = useRoute();
@@ -157,17 +158,17 @@ const GeneratedLessonPlan = () => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
-              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
+              <Text  style={{fontSize: GetFontSize(18)}}className="text-[#212B36] font-inter600 flex-shrink">
                 Lesson Plan
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
-                <Text className="text-white text-[14px]">✕</Text>
+                <Text style={{fontSize: GetFontSize(14)}} className="text-white ">✕</Text>
               </TouchableOpacity>
             </View>
-            <Text className="text-[#454F5B] text-[14px]">
+            <Text  style={{fontSize: GetFontSize(14)}}className="text-[#454F5B] ">
               Generate a comprehensive lesson{'\n'} plan in seconds
             </Text>
           </View>
@@ -188,10 +189,10 @@ const GeneratedLessonPlan = () => {
         >
           {/* Topic Header */}
           <View className="">
-            <Text className="text-[18px] font-semibold text-black mb-1">
+            <Text  style={{fontSize: GetFontSize(18)}}className=" font-inter600 text-[#212B36] mb-1">
               {topicName}
             </Text>
-            <Text className="text-[14px] font-medium text-[#454F5B] mb-5">
+            <Text style={{fontSize: GetFontSize(14)}} className=" font-inter400 text-[#454F5B] mb-5">
               Chapter :- {chapterName}
             </Text>
           </View>
@@ -217,7 +218,7 @@ const GeneratedLessonPlan = () => {
                     style={{ marginRight: 8 }}
                   />
                 ) : (
-                  <Text className="text-[#1EAFF7] text-[14px] font-medium justify-center items-center">
+                  <Text style={{fontSize: GetFontSize(14)}}className="text-[#1EAFF7]  font-inter500 justify-center items-center">
                     Save Lesson Plan
                   </Text>
                 )}
