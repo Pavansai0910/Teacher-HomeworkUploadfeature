@@ -347,17 +347,17 @@ const GeneratedLessonPlan = () => {
                   {lessonPlanDetails.preRequisite.map((prereq, index) => (
                     <View key={index} className="">
                       {prereq.priorKnowledge && (
-                        <Text className="text-sm leading-6 mb-2 text-gray-700">
+                        <Text style={{fontSize: GetFontSize(15)}}className="font-inter500 leading-6 mb-2 text-gray-700">
                           • Prior Knowledge: {prereq.priorKnowledge}
                         </Text>
                       )}
                       {prereq.warmUp && (
-                        <Text className="text-sm leading-6 mb-2 text-gray-700">
+                        <Text style={{fontSize: GetFontSize(15)}} className="font-inter500 leading-6 mb-2 text-gray-700">
                           • Warm Up: {prereq.warmUp}
                         </Text>
                       )}
                       {prereq.quickConnect && (
-                        <Text className="text-sm leading-6 mb-2 text-gray-700">
+                        <Text  style={{fontSize: GetFontSize(15)}} className="font-inter500 leading-6 mb-2 text-gray-700">
                           • Quick Connect: {prereq.quickConnect}
                         </Text>
                       )}
@@ -388,10 +388,10 @@ const GeneratedLessonPlan = () => {
                 <SectionHeader title="Suggested Flow" />
                 {lessonPlanDetails.suggestedFlow.map((flow, index) => (
                   <View key={index} className="mb-4">
-                    <Text className="text-base font-semibold text-[#0976A9] mb-1">
+                    <Text style={{fontSize: GetFontSize(18)}}className="text-base font-inter600 text-[#0976A9] mb-1">
                       {flow.phase} ({flow.duration})
                     </Text>
-                    <Text className="text-sm text-gray-700 leading-6 ml-2">
+                    <Text style={{fontSize: GetFontSize(15)}} className="font-inter500 text-gray-700 leading-6 ml-2">
                       {flow.description}
                     </Text>
                   </View>
@@ -406,7 +406,7 @@ const GeneratedLessonPlan = () => {
                 {Object.entries(lessonPlanDetails.learningFlow).map(
                   ([phase, items]) => (
                     <View key={phase} className="mb-4">
-                      <Text className="text-base font-semibold text-[#212B36] mb-2 capitalize">
+                      <Text style={{fontSize: GetFontSize(15)}} className=" font-inter500 text-[#212B36] mb-2 capitalize">
                         {phase}:
                       </Text>
                       <BulletList items={items} />
@@ -428,7 +428,7 @@ const GeneratedLessonPlan = () => {
             {lessonPlanDetails.activityDescription && (
               <>
                 <SectionHeader title="Activity Description" />
-                <Text className="text-sm leading-6 text-gray-700 mb-4">
+                <Text  style={{fontSize: GetFontSize(15)}}className="font-inter500 leading-6 text-[#637381] mb-4">
                   {lessonPlanDetails.activityDescription}
                 </Text>
               </>
@@ -438,7 +438,7 @@ const GeneratedLessonPlan = () => {
             {lessonPlanDetails.practiceWork && (
               <>
                 <SectionHeader title="Practice Work" />
-                <Text className="text-sm leading-6 text-gray-700 mb-4">
+                <Text style={{fontSize:GetFontSize(15)}} className="font-inter500 leading-6 text-[#637381] mb-4">
                   {lessonPlanDetails.practiceWork}
                 </Text>
               </>
@@ -458,10 +458,10 @@ const GeneratedLessonPlan = () => {
                 <SectionHeader title="Quick Assessments" />
                 {lessonPlanDetails.quickAssessments.map((assessment, index) => (
                   <View key={index} className="mb-3">
-                    <Text className="text-sm font-medium text-gray-700 mb-1">
+                    <Text  style={{fontSize:GetFontSize(15)}} className=" font-500 text-[#637381] mb-1">
                       • {assessment.question}
                     </Text>
-                    <Text className="text-xs text-gray-500 ml-4">
+                    <Text style={{fontSize:GetFontSize(16)}} className="font-600 text-[#6B7280] ml-4">
                       Cognitive Level: {assessment.cognitiveLevel}
                     </Text>
                   </View>
@@ -513,7 +513,7 @@ const GeneratedLessonPlan = () => {
               }}
               onPress={() => scrollToSection('sections')}
             >
-              <Text className="text-[#DC9047] text-[16px] font-bold mr-2">
+              <Text  style={{fontSize: GetFontSize(18)}}className="text-[#DC9047]  font-inter700 mr-2">
                 Lesson plan Sections
               </Text>
               <ScrollUpArrow Width={12} Height={12} color="#DC9047" />
