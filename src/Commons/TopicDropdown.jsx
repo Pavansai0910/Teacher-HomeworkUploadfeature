@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import GetFontSize from './GetFontSize';
 
 const TopicDropdown = ({
   topics,
@@ -32,7 +33,8 @@ const TopicDropdown = ({
         }}
         onPress={() => setShowSavedPlans(!showSavedPlans)}
       >
-        <Text className="text-[#1EAFF7] text-center text-[14px]">
+        <Text style={{fontSize: GetFontSize(14)}}
+        className="text-[#1EAFF7] text-center font-inter600">
           Saved Lesson plans
         </Text>
       </TouchableOpacity>
@@ -56,8 +58,8 @@ const TopicDropdown = ({
               }}
             >
               {/* Topic Name */}
-              <Text
-                className={`flex-1 font-semibold ${
+              <Text style={{fontSize: GetFontSize(16)}}
+                className={`flex-1 font-inter700 ${
                   isSelected ? 'text-[#DC9047]' : 'text-[#637381]'
                 }`}
                 numberOfLines={1}

@@ -15,6 +15,7 @@ import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import GetFontSize from '../../../Commons/GetFontSize';
 
 const LessonPlanner = () => {
   const navigation = useNavigation();
@@ -64,17 +65,28 @@ const LessonPlanner = () => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
-              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
+              <Text
+                style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-inter600 flex-shrink"
+              >
                 Create Lesson Plan
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
-                <Text className="text-white text-[14px]">✕</Text>
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-white "
+                >
+                  ✕
+                </Text>
               </TouchableOpacity>
             </View>
-            <Text className="text-[#454F5B] text-[14px]">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B] font-inter400"
+            >
               Generate a comprehensive lesson{'\n'} plan in seconds
             </Text>
           </View>
@@ -86,9 +98,15 @@ const LessonPlanner = () => {
         <View className="mt-6 px-6 bg-white">
           <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
             <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-              <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
               <Text
-                className="text-gray-800 font-semibold"
+                style={{ fontSize: GetFontSize(12) }}
+                className="text-[#637381] font-inter400 mb-1"
+              >
+                Selected Class
+              </Text>
+              <Text
+                style={{ fontSize: GetFontSize(14) }}
+                className="text-[#212B36] font-inter500"
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -96,9 +114,15 @@ const LessonPlanner = () => {
               </Text>
             </View>
             <View className="flex-[1] ml-2">
-              <Text className="text-gray-500 text-xs mb-1">Subject</Text>
               <Text
-                className="text-gray-800 font-semibold"
+                style={{ fontSize: GetFontSize(12) }}
+                className="text-[#637381] font-inter400 mb-1"
+              >
+                Subject
+              </Text>
+              <Text
+                style={{ fontSize: GetFontSize(14) }}
+                className="text-[#212B36] font-inter500"
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -117,11 +141,17 @@ const LessonPlanner = () => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                    <Text className="text-[#212B36] font-semibold text-[12px]">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-[#212B36] font-inter600"
+                    >
                       1
                     </Text>
                   </View>
-                  <Text className="text-white text-[12px] font-semibold">
+                  <Text
+                    style={{ fontSize: GetFontSize(12) }}
+                    className="text-white font-inter600"
+                  >
                     Choose Chapter
                   </Text>
                 </View>
@@ -131,7 +161,10 @@ const LessonPlanner = () => {
               <View className="items-center">
                 <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text className="text-white font-semibold text-[12px]">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
                       2
                     </Text>
                   </View>
@@ -142,7 +175,10 @@ const LessonPlanner = () => {
               <View className="items-center">
                 <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text className="text-white font-semibold text-[12px]">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
                       3
                     </Text>
                   </View>
@@ -161,10 +197,16 @@ const LessonPlanner = () => {
                 <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
                   <Document />
                 </View>
-                <Text className="text-white font-semibold text-[16px] mb-2 text-center">
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-white font-inter600mb-2 text-center"
+                >
                   Ready to plan smarter?
                 </Text>
-                <Text className="text-white text-center text-[13px] leading-5 px-2">
+                <Text
+                  style={{ fontSize: GetFontSize(13) }}
+                  className="text-white font-inter400 leading-5 px-2"
+                >
                   Select a chapter for which you want to generate a lesson plan
                   or quickly view your saved plans for this class.
                 </Text>
@@ -179,7 +221,7 @@ const LessonPlanner = () => {
                 <LessonPlanDropdown
                   placeholder="Choose a chapter to get started..."
                   options={chapterOptions}
-                  onSelect={handleChapterSelect} 
+                  onSelect={handleChapterSelect}
                   selectedValue={selectedChapterName}
                 />
               )}
@@ -189,49 +231,61 @@ const LessonPlanner = () => {
 
         {/* Pro Tip */}
         <View className="px-6 mt-4">
-          <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
-            <Text className="font-semibold">Pro Tip:</Text> Regular testing
-            improves retention by 40%!
+          <Text
+            style={{ fontSize: GetFontSize(14) }}
+            className="text-[#454F5B] font-inter600 bg-[#F5F0FD] px-2 py-4 rounded-lg"
+          >
+            <Text
+              style={{ fontSize: GetFontSize(13) }}
+              className="font-inter500"
+            >
+              Pro Tip:
+            </Text>{' '}
+            Regular testing improves retention by 40%!
           </Text>
         </View>
 
-        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-14" />
-
-        {/* Navigation Buttons */}
-        <View className="px-6 mt-2">
-          <View className="flex-row gap-2">
-            <TouchableOpacity
-              className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
-              onPress={() => navigation.goBack()}
-            >
-              <LeftArrow color="#1EAFF7" />
-              <Text className="text-[#1EAFF7] font-semibold">Back</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              disabled={!selectedChapterId} 
-              onPress={() =>
-                navigation.navigate('LessonPlanTopics', {
-                  chapterId: selectedChapterId,
-                })
-              }
-              className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
-                selectedChapterId
-                  ? 'bg-[#1EAFF7] border-[#0786C5]'
-                  : 'bg-gray-300 border-gray-300' 
-              }`}
-            >
-              <Text
-                className={`font-semibold ${
-                  selectedChapterId ? 'text-white' : 'text-gray-600'
-                }`}
-              >
-                Continue
-              </Text>
-              {selectedChapterId && <RightArrow />}
-            </TouchableOpacity>
-          </View>
-        </View>
+        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" />
       </ScrollView>
+
+      {/* Navigation Buttons */}
+      <View className="px-6 mb-4">
+        <View className="flex-row gap-2">
+          <TouchableOpacity
+            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
+            onPress={() => navigation.goBack()}
+          >
+            <LeftArrow color="#1EAFF7" />
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="text-[#1EAFF7] font-inter600"
+            >
+              Back
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            disabled={!selectedChapterId}
+            onPress={() =>
+              navigation.navigate('LessonPlanTopics', {
+                chapterId: selectedChapterId,
+              })
+            }
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
+              selectedChapterId
+                ? 'bg-[#1EAFF7] border-[#0786C5]'
+                : 'bg-gray-300 border-gray-300'
+            }`}
+          >
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className={'font-inter600 text-white'}
+            >
+              Continue
+            </Text>
+            <RightArrow color="#FFFFFF" />
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };

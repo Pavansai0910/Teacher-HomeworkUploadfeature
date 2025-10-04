@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import PageIcon from '../../../Images/LessonPlanCard/Page';
+import GetFontSize from '../../../Commons/GetFontSize';
 
 const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
   const cardHeight = isActive ? 432 : 380;
@@ -30,17 +31,21 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
             <PageIcon />
           </View>
           <View>
-            <Text className="text-white text-[14px] font-semibold">Save 2+ hours</Text>
-            <Text className="text-white text-[12px] opacity-90">Daily planning</Text>
+            <Text style={{fontSize: GetFontSize(14)}}
+            className="text-white font-inter600">Save 2+ hours</Text>
+            <Text style={{fontSize: GetFontSize(12)}}
+            className="text-white opacity-90 font-inter400">Daily planning</Text>
           </View>
         </View>
 
         {/* Title + Description */}
         <View className="flex-1 items-center justify-center px-2 mt-32">
-          <Text className="text-white text-[19px] font-bold text-center mb-3">
+          <Text style={{fontSize: GetFontSize(19)}}
+          className="text-white font-inter700 text-center mb-3">
             Create Lesson Plan
           </Text>
-          <Text className="text-white text-[13px] text-center leading-6">
+          <Text style={{fontSize: GetFontSize(13)}}
+          className="text-white font-inter400 text-center leading-6">
             Generate comprehensive lesson plans with objectives and activities
           </Text>
         </View>
@@ -56,7 +61,8 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
           }}
           className="bg-white rounded-xl border-[#89D5FB] shadow-sm self-center"
         >
-          <Text className="text-[#1EAFF7] text-sm font-semibold py-3 px-10 text-center">
+          <Text style={{fontSize: GetFontSize(14)}}
+          className="text-[#1EAFF7] font-inter700 py-3 px-10 text-center">
             Create Lesson Plan
           </Text>
         </TouchableOpacity>

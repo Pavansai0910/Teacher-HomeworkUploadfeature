@@ -7,6 +7,7 @@ import {
   Dimensions,
   FlatList,
   Modal,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -19,14 +20,15 @@ import NotificationIcon from '../../Images/Home/NotificationIcon';
 import capitalizeSubject from '../../Utils/CapitalizeSubject';
 import GetFontSize from '../../Commons/GetFontSize';
 import { useSelector, useDispatch } from 'react-redux';
-const { width } = Dimensions.get('window');
 import { setAssignment } from '../../store/Slices/assignment';
+
 const Home = () => {
   const { teacherProfile } = useContext(AuthContext);
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const dispatch = useDispatch();
+  const { width, height } = useWindowDimensions('screen');
 
   // Dropdown states
   const [selectedClass, setSelectedClass] = useState(null);
@@ -35,46 +37,44 @@ const Home = () => {
   const [subjectModalVisible, setSubjectModalVisible] = useState(false);
 
   const gradientBackgrounds = [
-    // ['#FFFFFF', '#BBF192'],
-    // ['#FFFFFF', '#93D8FB'],
+    ['#FFFFFF', '#93D8FB'],
     ['#FFFFFF', '#FEDB85'],
   ];
 
-  const cardWidth = width * 0.7;
-  // const cardSpacing = 1;
+  const cardWidth = width * 0.8;
+  const cardSpacing = 20;
 
   const handleScroll = event => {
-    const contentOffset = event.nativeEvent.contentOffset;
-    const index = Math.round(contentOffset.x / cardWidth);
+    const contentOffset = event.nativeEvent.contentOffset.x;
+    const index = Math.round(contentOffset / (cardWidth + cardSpacing));
     setCurrentIndex(index);
   };
 
   // Get classes with combined class and section data
   const classes =
-    teacherProfile?.assignments
-      ?.reduce((acc, a) => {
-        const key = `${a.classId?._id}-${a.sectionId?._id}`;
-        if (!acc.some(item => item.key === key)) {
-          acc.push({
-            key,
-            classId: a.classId,
-            sectionId: a.sectionId,
-            displayName: `${a.classId?.className || 'Class'} - ${a.sectionId?.sectionName || 'Section'}`,
-          });
-        }
-        return acc;
-      }, []) || [];
+    teacherProfile?.assignments?.reduce((acc, a) => {
+      const key = `${a.classId?._id}-${a.sectionId?._id}`;
+      if (!acc.some(item => item.key === key)) {
+        acc.push({
+          key,
+          classId: a.classId,
+          sectionId: a.sectionId,
+          displayName: `${a.classId?.className || 'Class'} - ${a.sectionId?.sectionName || 'Section'}`,
+        });
+      }
+      return acc;
+    }, []) || [];
 
   // Get subjects based on selected class
   const subjects = selectedClass
     ? teacherProfile?.assignments
-      ?.filter(
-        a =>
-          a.classId?._id === selectedClass.classId?._id &&
-          a.sectionId?._id === selectedClass.sectionId?._id,
-      )
-      .map(a => a.subjectId)
-      .filter(Boolean)
+        ?.filter(
+          a =>
+            a.classId?._id === selectedClass.classId?._id &&
+            a.sectionId?._id === selectedClass.sectionId?._id,
+        )
+        .map(a => a.subjectId)
+        .filter(Boolean)
     : [];
 
   const selectedAssignment = useSelector(
@@ -143,7 +143,13 @@ const Home = () => {
               style={{ fontSize: GetFontSize(16) }}
               className="text-[#454F5B] font-inter700"
             >
-              {teacherProfile?.name}
+              {teacherProfile?.name
+                ?.split(' ')
+                .map(
+                  word =>
+                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+                )
+                .join(' ')}
             </Text>
             <Text
               style={{ fontSize: GetFontSize(14) }}
@@ -153,10 +159,6 @@ const Home = () => {
             </Text>
           </View>
         </TouchableOpacity>
-
-        {/* <TouchableOpacity className="w-9 h-9 rounded-full bg-blue-50 items-center justify-center">
-          <NotificationIcon />
-        </TouchableOpacity> */}
       </View>
 
       {/* Gradient Background */}
@@ -213,6 +215,8 @@ const Home = () => {
             <Text
               style={{ fontSize: GetFontSize(16) }}
               className="text-[#DC9047] font-inter700"
+              numberOfLines={1}
+              ellipsizeMode="tail"
             >
               {getSubjectDisplayText()}
             </Text>
@@ -240,7 +244,7 @@ const Home = () => {
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
                       const updatedAssignment = {
-                        ...selectedAssignment, // keep existing values
+                        ...selectedAssignment, 
                         classId: item.classId,
                         sectionId: item.sectionId,
                       };
@@ -261,7 +265,7 @@ const Home = () => {
                       style={{ fontSize: GetFontSize(16) }}
                       className="text-[#454F5B] font-inter700"
                     >
-                      {item.displayName}
+                      Class: {item.displayName}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -290,7 +294,7 @@ const Home = () => {
           </View>
         </Modal>
 
-        {/* Subject Modal - Remove the duplicate one */}
+        {/* Subject Modal */}
         <Modal visible={subjectModalVisible} transparent animationType="fade">
           <View className="flex-1 justify-center items-center bg-black/50">
             <View className="bg-white w-3/4 rounded-lg p-4 max-h-80">
@@ -308,20 +312,19 @@ const Home = () => {
                 renderItem={({ item }) => (
                   <TouchableOpacity
                     className="py-3 border-b border-gray-200"
-                   onPress={() => {
-  const updatedAssignment = {
-    ...selectedAssignment, // keep classId & sectionId as is
-    subjectId: item,
-  };
+                    onPress={() => {
+                      const updatedAssignment = {
+                        ...selectedAssignment, // keep classId & sectionId as is
+                        subjectId: item,
+                      };
 
-  setSelectedSubject(item);
+                      setSelectedSubject(item);
 
-  // update redux
-  dispatch(setAssignment(updatedAssignment));
+                      // update redux
+                      dispatch(setAssignment(updatedAssignment));
 
-  setSubjectModalVisible(false);
-}}
-
+                      setSubjectModalVisible(false);
+                    }}
                   >
                     <Text className="text-[#454F5B] text-base font-semibold">
                       {capitalizeSubject(item?.subjectName)}
@@ -352,48 +355,40 @@ const Home = () => {
 
         {/* Cards */}
         <View className="flex-1 justify-center items-center">
-          {/* <ScrollView
+          <ScrollView
             ref={scrollViewRef}
             horizontal
-            pagingEnabled={false}
+            pagingEnabled
             showsHorizontalScrollIndicator={false}
             onScroll={handleScroll}
             scrollEventThrottle={16}
-            // snapToInterval={cardWidth + cardSpacing}
+            snapToInterval={cardWidth + cardSpacing}
             decelerationRate="fast"
             contentContainerStyle={{
-              paddingHorizontal: width * 0.15,
-              alignItems: 'center',
+              paddingHorizontal: (width - cardWidth) / 2,
             }}
-          > */}
-          {/* <StudentsInsightsCard
-              onPress={() => navigation.navigate('StudentsInsights')}
-              isActive={currentIndex === 0}
-              cardWidth={cardWidth}
-              cardSpacing={cardSpacing}
-            /> */}
-          {/* <LessonPlannerCard
+          >
+            <LessonPlannerCard
               onPress={() => navigation.navigate('LessonPlanner')}
               isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
-            /> */}
-          <AssignTestCard
-            onPress={() => navigation.navigate('AssignTest')}
-            isActive={currentIndex === 1}
-            cardWidth={cardWidth}
-          // cardSpacing={cardSpacing}
-          />
-          {/* </ScrollView> */}
+            />
+            <AssignTestCard
+              onPress={() => navigation.navigate('AssignTest')}
+              isActive={currentIndex === 1}
+              cardWidth={cardWidth}
+              cardSpacing={cardSpacing}
+            />
+          </ScrollView>
 
           {/* Pagination Dots */}
-          {/* <View className="flex-row justify-center items-center mt-5 mb-8">
+          <View className="flex-row justify-center items-center mt-5 mb-8">
             {gradientBackgrounds.map((_, index) => {
               let dotColor = '#FFFFFF';
               if (currentIndex === index) {
-                if (index === 0) dotColor = '#A5ED6F';
-                else if (index === 1) dotColor = '#1EAFF7';
-                else if (index === 2) dotColor = '#FED570';
+                if (index === 0) dotColor = '#1EAFF7';
+                else if (index === 1) dotColor = '#FED570';
               }
               return (
                 <View
@@ -407,7 +402,7 @@ const Home = () => {
                 />
               );
             })}
-          </View> */}
+          </View>
         </View>
       </LinearGradient>
     </SafeAreaView>

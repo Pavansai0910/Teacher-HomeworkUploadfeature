@@ -17,6 +17,7 @@ import { getAllTopics } from '../../../Services/teacherAPIV1';
 import TopicDropdown from '../../../Commons/TopicDropdown';
 import { AuthContext } from '../../../Context/AuthContext';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import GetFontSize from '../../../Commons/GetFontSize';
 
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -37,7 +38,8 @@ const LessonPlanTopics = ({ route }) => {
     : 'Not selected';
 
   const subjectDisplay =
-  capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
+    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    'Not selected';
 
   useEffect(() => {
     const fetchTopics = async () => {
@@ -102,17 +104,28 @@ const LessonPlanTopics = ({ route }) => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
-              <Text className="text-[#212B36] font-semibold text-[18px] flex-shrink">
+              <Text
+                style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-inter600 flex-shrink"
+              >
                 Create Lesson Plan
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
-                <Text className="text-white text-[14px]">✕</Text>
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-white "
+                >
+                  ✕
+                </Text>
               </TouchableOpacity>
             </View>
-            <Text className="text-[#454F5B] text-[14px]">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B] font-inter400"
+            >
               Generate a comprehensive lesson{'\n'} plan in seconds
             </Text>
           </View>
@@ -124,9 +137,15 @@ const LessonPlanTopics = ({ route }) => {
         <View className="mt-6 px-6 bg-white">
           <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
             <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-              <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
               <Text
-                className="text-gray-800 font-semibold"
+                style={{ fontSize: GetFontSize(12) }}
+                className="text-[#637381] font-inter400 mb-1"
+              >
+                Selected Class
+              </Text>
+              <Text
+                style={{ fontSize: GetFontSize(14) }}
+                className="text-[#212B36] font-inter500"
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -134,9 +153,15 @@ const LessonPlanTopics = ({ route }) => {
               </Text>
             </View>
             <View className="flex-[1] ml-2">
-              <Text className="text-gray-500 text-xs mb-1">Subject</Text>
               <Text
-                className="text-gray-800 font-semibold"
+                style={{ fontSize: GetFontSize(12) }}
+                className="text-[#637381] font-inter400 mb-1"
+              >
+                Subject
+              </Text>
+              <Text
+                style={{ fontSize: GetFontSize(14) }}
+                className="text-[#212B36] font-inter500"
                 numberOfLines={1}
                 ellipsizeMode="tail"
               >
@@ -154,7 +179,12 @@ const LessonPlanTopics = ({ route }) => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                    <Text className="font-semibold text-[12px]">1</Text>
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="font-inter600"
+                    >
+                      1
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -163,11 +193,17 @@ const LessonPlanTopics = ({ route }) => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                    <Text className="text-[#212B36] font-semibold text-[12px]">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-[#212B36] font-inter600"
+                    >
                       2
                     </Text>
                   </View>
-                  <Text className="text-white text-[12px] font-semibold">
+                  <Text
+                    style={{ fontSize: GetFontSize(12) }}
+                    className="text-white font-inter600"
+                  >
                     Select Topics
                   </Text>
                 </View>
@@ -178,7 +214,10 @@ const LessonPlanTopics = ({ route }) => {
               <View className="items-center">
                 <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text className="text-white font-semibold text-[12px]">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
                       3
                     </Text>
                   </View>
@@ -197,10 +236,16 @@ const LessonPlanTopics = ({ route }) => {
                 <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
                   <Document />
                 </View>
-                <Text className="text-white font-semibold text-[16px] mb-2 text-center">
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-white font-inter600 mb-2 text-center"
+                >
                   Pick the topics you want to cover!
                 </Text>
-                <Text className="text-white text-center text-[13px] leading-5 px-2">
+                <Text
+                  style={{ fontSize: GetFontSize(13) }}
+                  className="text-white font-inter400 leading-5 px-2"
+                >
                   Select one or more topics from the list to generate a
                   comprehensive lesson plan.
                 </Text>
@@ -225,39 +270,57 @@ const LessonPlanTopics = ({ route }) => {
 
         {/* Pro Tip */}
         <View className="px-6 mt-4">
-          <Text className="text-gray-600 text-sm bg-[#F5F0FD] px-2 py-4 rounded-lg">
-            <Text className="font-semibold">Pro Tip:</Text> Select multiple
-            topics to create a comprehensive lesson plan!
+          <Text
+            style={{ fontSize: GetFontSize(14) }}
+            className="text-[#454F5B] font-inter600 bg-[#F5F0FD] px-2 py-4 rounded-lg"
+          >
+            <Text
+              style={{ fontSize: GetFontSize(13) }}
+              className="font-inter500"
+            >
+              Pro Tip:
+            </Text>{' '}
+            Select multiple topics to create a comprehensive lesson plan!
           </Text>
         </View>
 
-        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-8" />
-
-        {/* Navigation Buttons */}
-        <View className="px-6 mt-2 pb-6">
-          <View className="flex-row gap-2">
-            <TouchableOpacity
-              className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
-              onPress={() => navigation.goBack()}
-            >
-              <LeftArrow color="#1EAFF7" />
-              <Text className="text-[#1EAFF7] font-semibold">Back</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
-                selectedTopics.length > 0
-                  ? 'bg-[#1EAFF7] border-[#0786C5]'
-                  : 'bg-gray-400 border-gray-400'
-              }`}
-              onPress={handleContinue}
-              disabled={selectedTopics.length === 0}
-            >
-              <Text className="text-white font-semibold">Continue</Text>
-              <RightArrow />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" />
       </ScrollView>
+
+      {/* Navigation Buttons */}
+      <View className="px-6 mb-4">
+        <View className="flex-row gap-2">
+          <TouchableOpacity
+            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
+            onPress={() => navigation.goBack()}
+          >
+            <LeftArrow color="#1EAFF7" />
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="text-[#1EAFF7] font-inter600"
+            >
+              Back
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
+              selectedTopics.length > 0
+                ? 'bg-[#1EAFF7] border-[#0786C5]'
+                : 'bg-gray-400 border-gray-400'
+            }`}
+            onPress={handleContinue}
+            disabled={selectedTopics.length === 0}
+          >
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="text-white font-inter600"
+            >
+              Continue
+            </Text>
+            <RightArrow />
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };

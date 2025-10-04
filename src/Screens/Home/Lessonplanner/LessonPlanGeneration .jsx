@@ -36,7 +36,9 @@ const LessonPlanGeneration = () => {
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
     : 'Not selected';
 
-  const subjectDisplay = capitalizeSubject(selectedAssignment?.subjectId?.subjectName) || 'Not selected';
+  const subjectDisplay =
+    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    'Not selected';
 
   const handleGenerate = async () => {
     if (!startDate || !endDate) return;
@@ -170,17 +172,28 @@ const LessonPlanGeneration = () => {
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
-              <Text  style={{ fontSize: GetFontSize(13) }} className="text-[#212B36] font-inter600 ">
+              <Text
+                style={{ fontSize: GetFontSize(13) }}
+                className="text-[#212B36] font-inter600 "
+              >
                 Create Lesson Plan
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
-                <Text style={{ fontSize: GetFontSize(14) }} className="text-white ">✕</Text>
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-white "
+                >
+                  ✕
+                </Text>
               </TouchableOpacity>
             </View>
-            <Text  style={{ fontSize: GetFontSize(14) }} className="text-[#454F5B] ">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B] "
+            >
               Generate a comprehensive lesson{'\n'} plan in seconds
             </Text>
           </View>
@@ -192,9 +205,14 @@ const LessonPlanGeneration = () => {
         <View className="mt-6 px-6 bg-white">
           <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
             <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-              <Text   style={{ fontSize: GetFontSize(12) }}
-               className="text-[#637381] font-inter400 mb-1">Selected Class</Text>
-              <Text style={{ fontSize: GetFontSize(14) }}
+              <Text
+                style={{ fontSize: GetFontSize(12) }}
+                className="text-[#637381] font-inter400 mb-1"
+              >
+                Selected Class
+              </Text>
+              <Text
+                style={{ fontSize: GetFontSize(14) }}
                 className="text-[#212B36] font-inter500"
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -203,9 +221,14 @@ const LessonPlanGeneration = () => {
               </Text>
             </View>
             <View className="flex-[1] ml-2">
-              <Text  style={{ fontSize: GetFontSize(12) }}
-              className="text-[#637381]  font-inter400 mb-1">Subject</Text>
-              <Text style={{ fontSize: GetFontSize(14) }}
+              <Text
+                style={{ fontSize: GetFontSize(12) }}
+                className="text-[#637381]  font-inter400 mb-1"
+              >
+                Subject
+              </Text>
+              <Text
+                style={{ fontSize: GetFontSize(14) }}
                 className="text-[#212B36] font-inter500"
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -224,8 +247,12 @@ const LessonPlanGeneration = () => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                    <Text style={{ fontSize: GetFontSize(12) }}
-                    className="font-inter600 ">1</Text>
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="font-inter600 "
+                    >
+                      1
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -234,8 +261,12 @@ const LessonPlanGeneration = () => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                    <Text style={{ fontSize: GetFontSize(12) }} 
-                    className="font-inter600 ">2</Text>
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="font-inter600 "
+                    >
+                      2
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -245,13 +276,17 @@ const LessonPlanGeneration = () => {
               <View className="items-center">
                 <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                    <Text style={{ fontSize: GetFontSize(12) }} 
-                    className="text-[#212B36] font-inter600 ">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-[#212B36] font-inter600 "
+                    >
                       3
                     </Text>
                   </View>
-                  <Text  style={{ fontSize: GetFontSize(12) }} 
-                  className="text-[#FFFFFF]  font-inter600">
+                  <Text
+                    style={{ fontSize: GetFontSize(12) }}
+                    className="text-[#FFFFFF]  font-inter600"
+                  >
                     Generate Plan
                   </Text>
                 </View>
@@ -269,11 +304,17 @@ const LessonPlanGeneration = () => {
                 <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
                   <Document />
                 </View>
-                <Text  style={{ fontSize: GetFontSize(16) }}  className="text-[#FFFFFF] font-inter600 mb-2 text-center">
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-[#FFFFFF] font-inter600 mb-2 text-center"
+                >
                   Your tailored lesson plan is almost ready!
-                </Text>  style={{ fontSize: GetFontSize(13) }} 
-                <Text className="text-[#FFFFFF] text-center  leading-5 px-2">
-                  You selected{' '}
+                </Text>
+                <Text
+                  style={{ fontSize: GetFontSize(13) }}
+                  className="text-[#FFFFFF] text-center  leading-5 px-2"
+                >
+                  You selected
                   {selectedTopics
                     ?.map(t => t.name || t.topicName || 'Topic')
                     .join(', ')}
@@ -302,8 +343,10 @@ const LessonPlanGeneration = () => {
                   setShowPicker(true);
                 }}
               >
-                <Text  style={{ fontSize: GetFontSize(16) }}
-                className="text-[#DC9047] font-inter600">
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-[#DC9047] font-inter600"
+                >
                   {startDate || 'dd/mm/yyyy'}
                 </Text>
                 <Calendar width={20} height={20} color="#DC9047" />
@@ -326,8 +369,10 @@ const LessonPlanGeneration = () => {
                   setShowPicker(true);
                 }}
               >
-                <Text 
-                style={{ fontSize: GetFontSize(13) }} className="text-[#DC9047] font-inter600 text-">
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-[#DC9047] font-inter600 text-"
+                >
                   {endDate || 'dd/mm/yyyy'}
                 </Text>
                 <Calendar width={20} height={20} color="#DC9047" />
@@ -335,7 +380,10 @@ const LessonPlanGeneration = () => {
 
               {/* Date validation error */}
               {startDate && endDate && !isValidDateRange() && (
-                <Text  style={{ fontSize: GetFontSize(12) }}className="text-red-200 text-inter400 mt-2">
+                <Text
+                  style={{ fontSize: GetFontSize(12) }}
+                  className="text-red-200 text-inter400 mt-2"
+                >
                   End date should be after or same as start date
                 </Text>
               )}
@@ -343,36 +391,45 @@ const LessonPlanGeneration = () => {
           </View>
         </View>
 
-        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2" />
+        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" />
+        </ScrollView>
 
         {/* Navigation Buttons */}
-        <View className="px-6 mt-4">
+        <View className="px-6 mb-4">
           <View className="flex-row gap-2">
             <TouchableOpacity
               className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
               onPress={() => navigation.goBack()}
             >
               <LeftArrow color="#1EAFF7" />
-              <Text  style={{ fontSize: GetFontSize(16) }}className="text-[#1EAFF7] font-inter600">Back</Text>
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
+                className="text-[#1EAFF7] font-inter600"
+              >
+                Back
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
                 startDate && endDate && isValidDateRange()
                   ? 'bg-[#1EAFF7] border-[#0786C5]'
-                  : 'bg-[#1EAFF7] border-[#0786C5]'
+                  : 'bg-gray-400 border-gray-400'
               }`}
               onPress={handleGenerate}
               disabled={!startDate || !endDate || !isValidDateRange()}
             >
-              <Text style={{  fontSize: GetFontSize(16)}} className="text-white font-inter400">
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
+                className="text-white font-inter400"
+              >
                 Generate Lesson Plan
               </Text>
               <RightArrow />
             </TouchableOpacity>
           </View>
         </View>
-      </ScrollView>
+      
 
       {/* Date Picker */}
       {showPicker && (
