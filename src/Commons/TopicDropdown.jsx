@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import GetFontSize from './GetFontSize';
 import TopArrow from '../Images/LessonPlan/TopArrow';
+import { useNavigation } from '@react-navigation/native';
 
 const TopicDropdown = ({
   topics,
@@ -9,7 +10,7 @@ const TopicDropdown = ({
   onTopicsSelect,
   placeholder,
 }) => {
-  const [showSavedPlans, setShowSavedPlans] = useState(false);
+  const navigation = useNavigation();
 
   const handleTopicToggle = topic => {
     const isSelected = selectedTopics.some(t => t.id === topic.id);
@@ -32,7 +33,7 @@ const TopicDropdown = ({
           borderBottomWidth: 4,
           borderColor: '#89D5FB',
         }}
-        onPress={() => setShowSavedPlans(!showSavedPlans)}
+        onPress={() => navigation.navigate('LessonPlanHistory')}
       >
         <View className="flex-row justify-center items-center gap-2">
           <Text

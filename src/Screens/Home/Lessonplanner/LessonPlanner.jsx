@@ -230,7 +230,7 @@ const LessonPlanner = () => {
         </View>
 
         {/* Pro Tip */}
-        <View className="px-6 mt-4">
+        {/* <View className="px-6 mt-4">
           <Text
             style={{ fontSize: GetFontSize(14) }}
             className="text-[#454F5B] font-inter600 bg-[#F5F0FD] px-2 py-4 rounded-lg"
@@ -243,7 +243,7 @@ const LessonPlanner = () => {
             </Text>{' '}
             Regular testing improves retention by 40%!
           </Text>
-        </View>
+        </View> */}
 
         <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" />
       </ScrollView>

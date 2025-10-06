@@ -8,6 +8,7 @@ import {
   FlatList,
   Modal,
   useWindowDimensions,
+  StyleSheet,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -21,6 +22,7 @@ import capitalizeSubject from '../../Utils/CapitalizeSubject';
 import GetFontSize from '../../Commons/GetFontSize';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAssignment } from '../../store/Slices/assignment';
+import DropdownArrow from '../../Images/LessonPlan/DropdownArrow';
 
 const Home = () => {
   const { teacherProfile } = useContext(AuthContext);
@@ -122,6 +124,17 @@ const Home = () => {
     return 'Select Subject';
   };
 
+  const styles = StyleSheet.create({
+  shadowContainer: {
+    backgroundColor: '#FFF',
+    shadowColor: '#025ECA',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+});
+
   return (
     <SafeAreaView className="flex-1 mt-6">
       {/* Header */}
@@ -180,7 +193,8 @@ const Home = () => {
               borderBottomWidth: 6,
               borderLeftWidth: 3,
               borderColor: '#A17F5E',
-            }}
+            }
+          }
             onPress={() => setClassModalVisible(true)}
           >
             <Text
@@ -189,7 +203,7 @@ const Home = () => {
             >
               Class: {getClassDisplayText()}
             </Text>
-            <Text className="text-[#DC9047] text-lg">▼</Text>
+            <DropdownArrow color="#DC9047" />
           </TouchableOpacity>
 
           {/* Subject Dropdown */}
@@ -220,7 +234,7 @@ const Home = () => {
             >
               {getSubjectDisplayText()}
             </Text>
-            <Text className="text-[#DC9047] text-lg">▼</Text>
+            <DropdownArrow color="#DC9047" />
           </TouchableOpacity>
         </View>
 
@@ -244,7 +258,7 @@ const Home = () => {
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
                       const updatedAssignment = {
-                        ...selectedAssignment, 
+                        ...selectedAssignment,
                         classId: item.classId,
                         sectionId: item.sectionId,
                       };

@@ -14,3 +14,9 @@ const headers = await getAuthHeader()
     const requestBody = payload
     return apiConnector('POST', `/v2/teacher/lessonplan/save?boardId=${boardId}`, requestBody, headers)
 }
+
+// LessonPlan/history
+export const getGeneratedLessonPlan  = async ({ teacherId }) => {
+    const headers = await getAuthHeader()
+    return apiConnector('GET', `/v2/teacher/get-generated-lesson-plans/${teacherId}`, null, headers)
+}
