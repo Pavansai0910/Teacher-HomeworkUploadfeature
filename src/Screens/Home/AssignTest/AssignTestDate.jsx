@@ -146,8 +146,8 @@ const AssignTestDate = ({ route }) => {
   return (
     <SafeAreaView className="flex-1 bg-[#FFFFFF]">
       {/* Header */}
-       <View className="bg-[#FFF3D6]" style={{ minHeight: 159, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-        <View className="flex-row items-center" style={{ height: 85, gap: 12, marginTop: 13 }}>
+       <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
+        <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
           <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
             <AssignTestDoc />
           </View>
@@ -235,7 +235,7 @@ const AssignTestDate = ({ route }) => {
           />
 
           {/* Content */}
-          <View className="rounded-xl mb-6 mt-4">
+          <View className="rounded-xl mb-6 mt-8">
             <View className="items-center mb-5">
               <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
                 <Document />
@@ -362,7 +362,7 @@ const AssignTestDate = ({ route }) => {
       </ScrollView>
 
       {/* Fixed Bottom Buttons */}
-      <View className="px-6 pb-6 pt-2 bg-white border-t border-gray-200">
+      <View className="px-6 pb-6 pt-5 bg-white border-t border-gray-200">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="border-2 border-[#E5E5E5] bg-white rounded-xl px-6 py-3 flex-row items-center justify-center"
@@ -379,7 +379,7 @@ const AssignTestDate = ({ route }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`flex-1 rounded-xl py-3 flex-row justify-center items-center border-2 ${dueDate ? 'bg-[#FED570] border-[#FEC107]' : 'bg-gray-300 border-gray-600'}`}
+            className={`flex-1 rounded-xl py-3 flex-row justify-center items-center border-2 ${dueDate ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
             onPress={() => handleAssign(questionPaper)}
             disabled={!dueDate || showLoader}
           >
@@ -392,7 +392,7 @@ const AssignTestDate = ({ route }) => {
               <View className="flex-row items-center">
                 <Text
                   style={{ fontSize: GetFontSize(15) }}
-                  className={`font-inter600 mr-1 ${dueDate ? 'text-[#8B6914]' : 'text-[#999999]'}`}
+                  className={`font-inter600 mr-1 ${dueDate ? 'text-[#B68201]' : 'text-[#DFAF02]'}`}
                 >
                   Assign Test
                 </Text>
