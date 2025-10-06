@@ -370,7 +370,7 @@ const AssignTestTopics = ({ route }) => {
                         borderRightWidth: 1,
                         borderBottomWidth: 2,
                         borderLeftWidth: 1,
-                        borderColor: isSelected ? '#DC9047' : '#DC9047',
+                        borderColor: '#DC9047',
                         borderStyle: 'solid'
                       }}
                       onPress={() => handlePaperToggle(paper)}
@@ -434,7 +434,7 @@ const AssignTestTopics = ({ route }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopic ? 'bg-[#FED570] border-[#FEC107]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopic ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
             onPress={handleContinue}
             disabled={!selectedTopic}
           >
