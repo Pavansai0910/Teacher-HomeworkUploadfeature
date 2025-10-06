@@ -10,7 +10,7 @@ import {
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const Loader = ({ isVisible, onClose }) => {
+const TestLoader = ({ isVisible, onClose }) => {
   const [progress, setProgress] = useState(0);
   const [completedTopics, setCompletedTopics] = useState(new Set());
   const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
@@ -21,15 +21,15 @@ const Loader = ({ isVisible, onClose }) => {
   const progressAnim = useRef(new Animated.Value(0)).current;
   const rotationAnim = useRef(new Animated.Value(0)).current;
 
-  const topics = [
-    { number: 1, text: 'Analyzing curriculum standards...' },
-    { number: 2, text: 'Adding learning objectives...' },
-    { number: 3, text: 'Selecting teaching methodologies...' },
-    { number: 4, text: 'Adding interactive activities...' },
-    { number: 5, text: 'Preparing assessment strategies...' },
-    { number: 6, text: 'Adding teaching aids & resources..' },
-    { number: 7, text: 'Finalizing lesson structure...' },
-  ];
+const topics = [
+  { number: 1, text: 'Selecting the subject and topic...' },
+  { number: 2, text: 'Choosing the test type and duration...' },
+  { number: 3, text: 'Adding questions to the test...' },
+  { number: 4, text: 'Setting difficulty levels...' },
+  { number: 5, text: 'Reviewing and finalizing the test...' },
+  { number: 6, text: 'Assigning test to students...' },
+  { number: 7, text: 'Generating test summary...' },
+];
 
   // Spinner animation
   useEffect(() => {
@@ -56,7 +56,7 @@ const Loader = ({ isVisible, onClose }) => {
     setProgress(0);
     progressAnim.setValue(0);
 
-    const processTopic = index => {
+    const processTopic = (index) => {
       if (index >= topics.length) {
         setCurrentTopicIndex(-1);
         setTimeout(onClose, 1000);
@@ -66,7 +66,7 @@ const Loader = ({ isVisible, onClose }) => {
       setCurrentTopicIndex(index);
 
       setTimeout(() => {
-        setCompletedTopics(prev => {
+        setCompletedTopics((prev) => {
           const newCompleted = new Set(prev);
           newCompleted.add(index);
           return newCompleted;
@@ -112,7 +112,7 @@ const Loader = ({ isVisible, onClose }) => {
         {/* Header */}
         <View className="p-5 bg-white">
           <Text className="text-[#212B36] font-semibold text-lg text-center mb-1">
-            Assigning Test
+            Assigning the test
           </Text>
           <Text className="text-[#637381] text-sm text-center mb-4">
             AI is preparing and assigning the test to selected students
@@ -177,7 +177,7 @@ const Loader = ({ isVisible, onClose }) => {
           style={{ width: Math.min(330, screenWidth - 32) }}
         >
           <Text className="text-[#212B36] font-semibold text-base text-center mb-4">
-            Preparing Your Perfect Test
+             Crafting Your Perfect Test
           </Text>
 
           <View className="gap-2">
@@ -241,4 +241,4 @@ const Loader = ({ isVisible, onClose }) => {
   );
 };
 
-export default Loader;
+export default TestLoader;

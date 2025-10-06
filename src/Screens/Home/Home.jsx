@@ -208,7 +208,7 @@ const Home = () => {
 
           {/* Subject Dropdown */}
           <TouchableOpacity
-            className="flex-1 mr-2 rounded-[16px] py-3 px-4 flex-row justify-between items-center shadow-sm"
+            className="flex-1 rounded-[16px] py-3 px-6 flex-row"
             style={{
               backgroundColor: '#FFF',
               borderTopWidth: 3,

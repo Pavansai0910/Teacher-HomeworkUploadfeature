@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +25,9 @@ import { requestStoragePermission } from '../../../Permission/StoragePermission'
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
 
+import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader'; // Make sure the import path is correct
+import AssignSuccessScreen from './AssignSuccessScreen'; // Make sure the import path is correct
+
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
   const questionPaper = route.params.questionPaper;
@@ -37,6 +41,10 @@ const AssignTestDate = ({ route }) => {
   const [pickerTarget, setPickerTarget] = useState(null);
   const [showLoader, setShowLoader] = useState(false);
   const [downloadLoader, setDownloadLoader] = useState(false);
+
+  // NEW STATE
+  const [showTestLoader, setShowTestLoader] = useState(false);
+  const [showSuccessScreen, setShowSuccessScreen] = useState(false);
 
   const classDisplay = selectedAssignment
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
@@ -61,10 +69,11 @@ const AssignTestDate = ({ route }) => {
     }
   };
 
-  const handleAssign = async questionPaper => {
+  // Assign test after loader finishes
+  const assignTestAfterLoader = async () => {
     setShowLoader(true);
-    const selectedDate = new Date(dueDate);
-    selectedDate.setUTCHours(18, 29, 59, 999);
+    const selectedDateObj = new Date(dueDate);
+    selectedDateObj.setUTCHours(18, 29, 59, 999);
 
     try {
       const classId = selectedAssignment?.classId?._id;
@@ -79,34 +88,36 @@ const AssignTestDate = ({ route }) => {
         subjectIds: [subjectId],
         chapterId: questionPaper.chapterId,
         questionPaperIds: [questionPaper._id],
-        deadline: selectedDate.toISOString(),
+        deadline: selectedDateObj.toISOString(),
       };
 
       await assignExam(payload);
       setShowLoader(false);
-      Toast.show({ type: 'success', text1: 'Yeah! You assigned test' });
-      navigation.navigate("MainTabNavigator", { screen: 'Home' });
+      setShowTestLoader(false);
+      setShowSuccessScreen(true);
     } catch (error) {
       setShowLoader(false);
-      console.error(error);
+      setShowTestLoader(false);
       Toast.show({ type: 'error', text1: 'Failed to assign the exam' });
     }
   };
 
+  // When user clicks Assign Test button
+  const handleAssign = () => {
+    setShowTestLoader(true);
+  };
+
   const handleExamDownload = async questionPaperCode => {
     setDownloadLoader(true);
-    // 1. Permission Check
     const hasPermission = await requestStoragePermission();
     if (!hasPermission) {
       setDownloadLoader(false);
       return;
     }
-
     try {
       const response = await downloadExam({
         questionPaperCode: questionPaperCode,
       });
-
       const base64Data = await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(response.data);
@@ -116,16 +127,13 @@ const AssignTestDate = ({ route }) => {
         };
         reader.onerror = reject;
       });
-
       const directoryPath = `${DownloadDirectoryPath}/Adaptmate Educator App`;
       const checkDirectory = await RNFS.exists(directoryPath);
       if (!checkDirectory) {
         await RNFS.mkdir(directoryPath);
       }
-
       const path = `${directoryPath}/LGA_${Date.now()}.pdf`;
       await RNFS.writeFile(path, base64Data, 'base64');
-
       Toast.show({
         type: 'success',
         text1: `Saved in Download/Adaptmate Educator App`,
@@ -143,31 +151,62 @@ const AssignTestDate = ({ route }) => {
       setDownloadLoader(false);
     }
   };
+
+  // Success screen actions
+  const handleViewAssignedTests = () => {
+    setShowSuccessScreen(false);
+    navigation.navigate('AssignedTests'); // Change to your Assigned Tests screen name
+  };
+
+  const handleCloseSuccess = () => {
+    setShowSuccessScreen(false);
+    navigation.navigate('MainTabNavigator', { screen: 'Home' });
+  };
+
   return (
     <SafeAreaView className="flex-1 bg-[#FFFFFF]">
       {/* Header */}
-       <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-        <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
+      <View
+        className="bg-[#FFF3D6]"
+        style={{
+          minHeight: 149,
+          paddingTop: 20,
+          paddingRight: 24,
+          paddingBottom: 20,
+          paddingLeft: 24,
+          justifyContent: 'flex-end',
+        }}
+      >
+        <View
+          className="flex-row items-center"
+          style={{ height: 80, gap: 12, marginTop: 13 }}
+        >
           <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
             <AssignTestDoc />
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-center mb-1">
-              <Text style={{ fontSize: GetFontSize(18) }}
-                className="text-[#212B36] font-inter600 flex-shrink">
+              <Text
+                style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-inter600 flex-shrink"
+              >
                 Assign Test
               </Text>
               <TouchableOpacity
                 className="w-7 h-7 justify-center items-center border-2 border-[#FDCA0C] rounded-full"
-                onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
+                onPress={() =>
+                  navigation.navigate('MainTabNavigator', { screen: 'Home' })
+                }
               >
                 <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
                   <Text className="text-white font-inter400">✕</Text>
                 </View>
-              </TouchableOpacity> 
+              </TouchableOpacity>
             </View>
-            <Text style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400">
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B] font-inter400"
+            >
               Boost your students's progress in{'\n'}just few taps!
             </Text>
           </View>
@@ -343,19 +382,6 @@ const AssignTestDate = ({ route }) => {
                   </Text>
                 )}
               </TouchableOpacity>
-              {/* <TouchableOpacity
-                className="w-10 h-10 rounded-xl justify-center items-center"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderTopWidth: 1,
-                  borderLeftWidth: 2,
-                  borderRightWidth: 2,
-                  borderBottomWidth: 3,
-                  borderColor: '#DFAF02',
-                }}
-              >
-                <Text className="text-[#FFB84D] text-[18px]">⬇</Text>
-              </TouchableOpacity> */}
             </View>
           </View>
         </View>
@@ -380,13 +406,13 @@ const AssignTestDate = ({ route }) => {
 
           <TouchableOpacity
             className={`flex-1 rounded-xl py-3 flex-row justify-center items-center border-2 ${dueDate ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
-            onPress={() => handleAssign(questionPaper)}
+            onPress={handleAssign}
             disabled={!dueDate || showLoader}
           >
             {showLoader ? (
               <View className="flex-row items-center">
                 <Text className="text-[#8B6914]">Assigning Test</Text>
-              <ActivityIndicator size="small" color="#FFB84D" />
+                <ActivityIndicator size="small" color="#FFB84D" />
               </View>
             ) : (
               <View className="flex-row items-center">
@@ -396,7 +422,6 @@ const AssignTestDate = ({ route }) => {
                 >
                   Assign Test
                 </Text>
-                {/* <RightArrow color={dueDate ? '#8B6914' : '#999999'} /> */}
               </View>
             )}
           </TouchableOpacity>
@@ -412,6 +437,24 @@ const AssignTestDate = ({ route }) => {
           onChange={handleDateChange}
         />
       )}
+
+      {/* Loader Modal */}
+      <Modal visible={showTestLoader} transparent animationType="fade">
+        <TestLoader
+          isVisible={showTestLoader}
+          onClose={assignTestAfterLoader}
+        />
+      </Modal>
+
+      {/* Success Modal */}
+      <Modal visible={showSuccessScreen} transparent animationType="fade">
+        <AssignSuccessScreen
+          topic={questionPaper.questionPaperTitle}
+          classDisplay={classDisplay}
+          onViewAssignedTests={handleViewAssignedTests}
+          onClose={handleCloseSuccess}
+        />
+      </Modal>
     </SafeAreaView>
   );
 };
