@@ -125,7 +125,7 @@ const AssignTest = () => {
           />
 
           {/* Content Box */}
-          <View className="rounded-xl mt-3">
+          <View className="rounded-xl mt-8">
             <View className="items-center mb-6">
               <View 
                 className="justify-center items-center mb-2"
@@ -173,16 +173,14 @@ const AssignTest = () => {
           </View>
         </View>
       </View>
-
-      <View className="h-[2px] bg-[#DFE3E8] mt-4" />
     </View>
   );
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#FFF3D6]" style={{ minHeight: 159, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-        <View className="flex-row items-center" style={{ height: 85, gap: 12, marginTop: 13 }}>
+      <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
+        <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
           <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
             <AssignTestDoc />
           </View>
@@ -218,43 +216,45 @@ const AssignTest = () => {
       />
 
       {/* Fixed Bottom Buttons */}
-      <View className="px-6 py-4 bg-white">
-        <View className="flex-row gap-2">
-          <TouchableOpacity
-            style={{ fontSize: GetFontSize(16) }}
-            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3 font-inter600"
-            onPress={() => navigation.goBack()}
-          >
-            <LeftArrow color="#FED570" />
-            <Text
-              style={{ fontSize: GetFontSize(16) }}
-              className="font-inter600 text-[#FED570] ">Back</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ fontSize: GetFontSize(13) }}
-            disabled={!selectedChapterId}
-            onPress={() =>
-              navigation.navigate('AssignTestTopics', {
-                chapterId: selectedChapterId,
-                chapterName: selectedChapterName,
-              })
-            }
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
-                ? 'bg-[#FED570] border-[#FEC107]'
-                : 'bg-gray-300 border-gray-300'
-              }`}
-          >
-            <Text
-              style={{ fontSize: GetFontSize(16) }}
-              className={`font-inter600 ${selectedChapterId ? 'text-[#B68201]' : 'text-gray-600'
-                }`}
-            >
-              Continue
-            </Text>
-            {selectedChapterId && <RightArrow color="#B68201" />}
-          </TouchableOpacity>
-        </View>
-      </View>
+   <View className="px-4 py-4 bg-white border-t border-[#DFE3E8]" style={{ height: 92, gap: 12 }}>
+  <View className="flex-row gap-3">
+    <TouchableOpacity
+      style={{ fontSize: GetFontSize(16) }}
+      className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3 font-inter600"
+      onPress={() => navigation.goBack()}
+    >
+      <LeftArrow color="#FED570" />
+      <Text
+        style={{ fontSize: GetFontSize(16) }}
+        className="font-inter600 text-[#FED570] "
+      >
+        Back
+      </Text>
+    </TouchableOpacity>
+    <TouchableOpacity
+      style={{ fontSize: GetFontSize(13) }}
+      disabled={!selectedChapterId}
+      onPress={() =>
+        navigation.navigate('AssignTestTopics', {
+          chapterId: selectedChapterId,
+          chapterName: selectedChapterName,
+        })
+      }
+      className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
+        ? 'bg-[#FED570] border-[#DFAF02]'
+        : 'bg-[#FEDB85] border-[#DFAF02]'
+      }`}
+    >
+      <Text
+        style={{ fontSize: GetFontSize(16) }}
+        className={`font-inter600 ${selectedChapterId ? 'text-[#B68201]' : 'text-[#DFAF02]'}`}
+      >
+        Continue
+      </Text>
+      <RightArrow color={selectedChapterId ? "#B68201" : "#DFAF02"} />
+    </TouchableOpacity>
+  </View>
+</View>
     </SafeAreaView>
   );
 };

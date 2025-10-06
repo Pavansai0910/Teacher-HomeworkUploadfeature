@@ -143,8 +143,8 @@ const AssignTestTopics = ({ route }) => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#FFF3D6]" style={{ minHeight: 159, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-             <View className="flex-row items-center" style={{ height: 85, gap: 12, marginTop: 13 }}>
+      <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
+             <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
                <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
                  <AssignTestDoc />
                </View>
@@ -235,7 +235,7 @@ const AssignTestTopics = ({ route }) => {
               style={{ borderStyle: 'dashed' }}
             />
 
-            <View className="items-center mb-4">
+            <View className="items-center mb-4 mt-8">
               <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
                 <Document />
               </View>
@@ -418,7 +418,7 @@ const AssignTestTopics = ({ route }) => {
       </ScrollView>
 
       {/* Fixed Bottom Buttons */}
-      <View className="px-6 pb-6 pt-2 bg-white border-t border-gray-200">
+      <View className="px-6 pb-6 pt-5 bg-white border-t border-gray-200">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
@@ -434,17 +434,18 @@ const AssignTestTopics = ({ route }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopic ? 'bg-[#FED570] border-[#FEC107]' : 'bg-gray-300 border-gray-300'}`}
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopic ? 'bg-[#FED570] border-[#FEC107]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
             onPress={handleContinue}
             disabled={!selectedTopic}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}
-              className={`font-inter600 ${selectedTopic ? 'text-[#B68201]' : 'text-gray-600'}`}
+              className={`font-inter600 ${selectedTopic ? 'text-[#B68201]' : 'text-[#DFAF02]'}`}
             >
               Continue
             </Text>
-            {selectedTopic && <RightArrow color="#B68201" />}
+            <RightArrow color={selectedTopic ? "#B68201" : "#DFAF02"} />
+             
           </TouchableOpacity>
         </View>
       </View>
