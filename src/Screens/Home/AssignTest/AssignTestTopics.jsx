@@ -18,6 +18,7 @@ import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import Toast from 'react-native-toast-message';
 import GetFontSize from '../../../Commons/GetFontSize';
 import NavHeader from '../../NavHeader';
+import LinearGradient from 'react-native-linear-gradient';
 import TopicSelectionModal from './TopicSelectionModal';
 
 const AssignTestTopics = ({ route }) => {
@@ -86,8 +87,8 @@ const AssignTestTopics = ({ route }) => {
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-        <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
-          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
+        <View className="flex-row items-center" style={{ height: 65, gap: 12, marginTop: 13 }}>
+          <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center">
             <AssignTestDoc />
           </View>
           <View className="flex-1">
@@ -118,7 +119,7 @@ const AssignTestTopics = ({ route }) => {
 
       {/* Scrollable Content */}
       <ScrollView className="flex-1">
-        <View className="px-6 mt-6">
+        <View className="px-6 mt-3">
           <View className="bg-[#FED570] rounded-2xl px-3 py-6">
             {/* Content Header */}
             <View className="flex-row items-center justify-between mb-5">
@@ -178,7 +179,7 @@ const AssignTestTopics = ({ route }) => {
             />
 
             <View className="items-center mb-4 mt-8">
-              <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
+              <View className="w-16 h-16 rounded-xl justify-center items-center ">
                 <Document />
               </View>
               <Text
@@ -188,45 +189,64 @@ const AssignTestTopics = ({ route }) => {
                 Zoom in and pick your focus!
               </Text>
               <Text
-                style={{ fontSize: GetFontSize(12) }}
+                style={{ fontSize: GetFontSize(13) }}
                 className="text-[#B68201] text-center font-inter500 mb-6">
                 Here is the list of topics from{' '}
                 <Text className="font-inter700">{chapterName}</Text>.{'\n'}
+                {'\n'}
                 Select a topic you want to assign a test for.
               </Text>
 
               {/* Select Topics Button */}
-              <TouchableOpacity
-                className="bg-white rounded-xl px-6 py-4 flex-row items-center justify-between w-full"
-                style={{
-                  borderTopWidth: 0.5,
-                  borderRightWidth: 1,
-                  borderBottomWidth: 2,
-                  borderLeftWidth: 1,
-                  borderColor: '#DC9047',
-                }}
-                onPress={() => setShowModal(true)}
-              >
-                <View className="flex-1">
-                  <Text
-                    style={{ fontSize: GetFontSize(14) }}
-                    className="text-[#212B36] font-inter600 mb-1"
+              
+
+                <LinearGradient
+                  colors={['#E8B787', '#9B7A5A']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    borderRadius: 12,
+                    paddingTop: 3,
+                    paddingRight: 3,
+                    paddingBottom: 6,
+                    paddingLeft: 3,
+                  }}
+                >
+                  <TouchableOpacity
+                    className="bg-white rounded-xl px-6 py-4 flex-row items-center justify-between w-full"
+                    onPress={() => setShowModal(true)}
                   >
-                    {selectedTopic ? selectedTopic.questionPaperTitle : 'Select Topics'}
-                  </Text>
-                  {!selectedTopic && (
-                    <Text
-                      style={{ fontSize: GetFontSize(12) }}
-                      className="text-[#6B7280] font-inter400"
-                    >
-                      Tap to choose from available topics
-                    </Text>
-                  )}
-                </View>
-                <View className="ml-3">
-                  <Text className="text-[#B68201] text-xl">V</Text>
-                </View>
-              </TouchableOpacity>
+                    <View className="flex-1">
+                      <Text
+                        style={{ 
+                          fontSize: GetFontSize(16),
+                          color: '#DC9047',
+                          fontWeight: '700',
+                          lineHeight: GetFontSize(14) * 1.35,
+                          letterSpacing: GetFontSize(14) * -0.02
+                        }}
+                        className="font-inter700 mb-1"
+                      >
+                        {selectedTopic ? selectedTopic.questionPaperTitle : 'Select Topics'}
+                      </Text>
+                      {!selectedTopic && (
+                        <Text
+                          style={{ 
+                            fontSize: GetFontSize(12),
+                            color: '#DC9047',
+                            fontWeight: '400',
+                            lineHeight: GetFontSize(12) * 1.35,
+                            letterSpacing: GetFontSize(12) * -0.02
+                          }}
+                          className="font-inter400"
+                        >
+                          Tap to choose from available topics
+                        </Text>
+                      )}
+                    </View>
+                    
+                  </TouchableOpacity>
+                </LinearGradient>
             </View>
           </View>
         </View>

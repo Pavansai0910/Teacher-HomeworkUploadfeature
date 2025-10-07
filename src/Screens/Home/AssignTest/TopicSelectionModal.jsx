@@ -59,7 +59,7 @@ const TopicSelectionModal = ({
       case 'pending':
         return {
           bg: '#FEF6EB',
-          text: '#FFC466',
+          text: '#ffc466ff',
           label: 'Pending',
           borderColor: '#FFC466',
         };
@@ -82,7 +82,14 @@ const TopicSelectionModal = ({
       animationType="slide"
       onRequestClose={onClose}
     >
-      <View className="flex-1 bg-[#FED570]">
+      <View 
+        className="flex-1 bg-[#FEDB85]"
+        style={{
+          borderWidth: 2,
+          borderColor: '#DC9047',
+          borderStyle: 'solid'
+        }}
+      >
           {/* Modal Header */}
           <View className="px-6 pt-12 pb-4 border-b-2 border-[#F7F7F5]">
             <View className="flex-row justify-between items-center mb-3">
@@ -104,7 +111,7 @@ const TopicSelectionModal = ({
               className="text-[#B68201] font-inter500"
             >
               Here is the list of topics from{' '}
-              <Text className="font-inter700">{chapterName}</Text>.{'\n'}
+              <Text className="font-inter700">{chapterName}</Text>.{'\n'}{'\n'}
               Select a topic you want to assign a test for.
             </Text>
           </View>
@@ -118,80 +125,92 @@ const TopicSelectionModal = ({
             >
               <View className="flex-row gap-2">
                 <TouchableOpacity
-                  className={`px-3 py-2 rounded-full ${
-                    activeFilter === 'all'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                  }`}
+                  className="px-3 py-2 rounded-full border-2 flex items-center justify-center"
+                  style={{ 
+                    height: 36,
+                    backgroundColor: 'white',
+                    borderColor: activeFilter === 'all' ? '#A17F5E' : '#E5E5E5'
+                  }}
                   onPress={() => setActiveFilter('all')}
+                  activeOpacity={1}
                 >
                   <Text
                     style={{ fontSize: GetFontSize(13) }}
                     className={`font-inter600 ${
                       activeFilter === 'all'
-                        ? 'text-[#B68201]'
+                        ? 'text-[#A17F5E]'
                         : 'text-[#6B7280]'
                     }`}
+                    numberOfLines={1}
                   >
                     All Tests ({statusCounts.all})
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-3 py-2 rounded-full ${
-                    activeFilter === 'pending'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                  }`}
+                  className="px-3 py-2 rounded-full border-2 flex items-center justify-center"
+                  style={{ 
+                    height: 36,
+                    backgroundColor: 'white',
+                    borderColor: activeFilter === 'pending' ? '#A17F5E' : '#E5E5E5'
+                  }}
                   onPress={() => setActiveFilter('pending')}
+                  activeOpacity={1}
                 >
                   <Text
                     style={{ fontSize: GetFontSize(13) }}
                     className={`font-inter600 ${
                       activeFilter === 'pending'
-                        ? 'text-[#B68201]'
+                        ? 'text-[#A17F5E]'
                         : 'text-[#6B7280]'
                     }`}
+                    numberOfLines={1}
                   >
                     Pending ({statusCounts.pending})
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-3 py-2 rounded-full ${
-                    activeFilter === 'assigned'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                  }`}
+                  className="px-3 py-2 rounded-full border-2 flex items-center justify-center"
+                  style={{ 
+                    height: 36,
+                    backgroundColor: 'white',
+                    borderColor: activeFilter === 'assigned' ? '#A17F5E' : '#E5E5E5'
+                  }}
                   onPress={() => setActiveFilter('assigned')}
+                  activeOpacity={1}
                 >
                   <Text
                     style={{ fontSize: GetFontSize(13) }}
                     className={`font-inter600 ${
                       activeFilter === 'assigned'
-                        ? 'text-[#B68201]'
+                        ? 'text-[#A17F5E]'
                         : 'text-[#6B7280]'
                     }`}
+                    numberOfLines={1}
                   >
                     Assigned ({statusCounts.assigned})
                   </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                  className={`px-3 py-2 rounded-full ${
-                    activeFilter === 'completed'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                  }`}
+                  className="px-3 py-2 rounded-full border-2 flex items-center justify-center"
+                  style={{ 
+                    height: 36,
+                    backgroundColor: 'white',
+                    borderColor: activeFilter === 'completed' ? '#A17F5E' : '#E5E5E5'
+                  }}
                   onPress={() => setActiveFilter('completed')}
+                  activeOpacity={1}
                 >
                   <Text
                     style={{ fontSize: GetFontSize(13) }}
                     className={`font-inter600 ${
                       activeFilter === 'completed'
-                        ? 'text-[#B68201]'
+                        ? 'text-[#A17F5E]'
                         : 'text-[#6B7280]'
                     }`}
+                    numberOfLines={1}
                   >
                     Completed ({statusCounts.completed})
                   </Text>

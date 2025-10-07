@@ -1,19 +1,19 @@
-// AssignTest.js
-import { View, Text, TouchableOpacity, FlatList, Modal, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
+import { ActivityIndicator } from 'react-native';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
-import NavHeader from '../../NavHeader';
-import GetFontSize from '../../../Commons/GetFontSize';
 import { useState, useEffect, useContext } from 'react';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
+import NavHeader from '../../NavHeader';
+import GetFontSize from '../../../Commons/GetFontSize';
 import { getChapters } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import Toast from 'react-native-toast-message';
-import ChapterListModal from './ChapterListModal'; 
+import LinearGradient from 'react-native-linear-gradient';
 
 const AssignTest = () => {
   const navigation = useNavigation();
@@ -66,7 +66,7 @@ const AssignTest = () => {
     }
   }, [selectedChapterName, allChapters]);
 
-  const handleChapterSelect = (chapterName) => {
+  const handleChapterSelect = chapterName => {
     setSelectedChapterName(chapterName);
     setIsModalVisible(false);
   };
@@ -75,7 +75,7 @@ const AssignTest = () => {
     <View>
       <NavHeader />
 
-      <View className="px-4 mt-6">
+      <View className="px-4 mt-3">
         <View className="bg-[#FED570] rounded-2xl p-6">
           {/* Progress Steps */}
           <View className="flex-row items-center justify-between mb-5">
@@ -127,65 +127,75 @@ const AssignTest = () => {
           />
 
           {/* Content Box */}
-          <View className="rounded-xl mt-8">
-            <View className="items-center mb-6">
-              <View 
-                className="justify-center items-center mb-2"
-                style={{ width: 27.43, height: 41.71 }}
-              >
-                <Document />
-              </View>
+         <View className="rounded-xl mt-8">
+  <View className="items-center mb-4">
+    {/* Icon Section */}
+    <View className="justify-center items-center mb-2">
+      <View 
+        style={{ width: 27.43, height: 41.71 }}
+      >
+        <Document />
+      </View>
+    </View>
 
-              <Text 
-                style={{ 
-                  fontSize: 16,
-                  lineHeight: 16 * 1.35,
-                  letterSpacing: -0.32,
-                  fontWeight: '700'
-                }}
-                className="text-[#B68201] font-inter700 mb-2 text-center">
-                Ready to plan smarter?
-              </Text>
+    {/* Title Text Section */}
+    <View className="mb-2">
+      <Text 
+        style={{fontSize:GetFontSize(16)}}
+        className="text-[#B68201] font-inter700 text-center">
+        Ready to plan smarter?
+      </Text>
+    </View>
 
-              <Text 
-                style={{ 
-                  fontSize: 13,
-                  lineHeight: 13 * 1.35,
-                  letterSpacing: -0.26,
-                  fontWeight: '500'
-                }}
-                className="text-[#B68201] font-inter500 px-2 text-center">
-                Select a chapter for which you want to assign a test.
-              </Text>
-            </View>
-          </View>
-
+    {/* Subtitle Text Section */}
+    <View className="px-2">
+      <Text 
+      style={{fontSize:GetFontSize(13)}}
+        
+        className="text-[#B68201] font-inter500 text-center">
+        Select a chapter for which you want to assign a test.
+      </Text>
+    </View>
+  </View>
+</View>
           {/* Choose Chapter Button */}
           <View className="w-full">
-            {loading ? (
-              <ActivityIndicator size="large" color="#ffffff" />
-            ) : (
-              <TouchableOpacity 
-                onPress={() => setIsModalVisible(true)}
-                className="bg-white rounded-lg px-4 py-4"
-                style={{ 
-                  borderTopWidth: 1,
-                  borderRightWidth: 2,
-                  borderBottomWidth: 4,
-                  borderLeftWidth: 2,
-                  borderColor: '#AB6521',
-                  borderStyle: 'solid'
-                }}
-              >
-                <Text
-                  style={{ fontSize: GetFontSize(16), color: '#DC9047' }}
-                  className="font-inter500"
-                >
-                  {selectedChapterName || "Choose a chapter to get started..."}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
+  {loading ? (
+    <ActivityIndicator size="large" color="#ffffff" />
+  ) : (
+    <LinearGradient
+      colors={['#E8B787', '#9B7A5A']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{
+        borderRadius: 8,
+        paddingTop: 3,
+        paddingRight: 3,
+        paddingBottom: 6,
+        paddingLeft: 3,
+      }}
+    >
+      <TouchableOpacity 
+        onPress={() => setIsModalVisible(true)}
+        className="bg-white rounded-lg px-4 py-4"
+      >
+        <Text
+          style={{ 
+            fontSize: GetFontSize(16), 
+            color: '#DC9047',
+            fontFamily: 'Inter',
+            fontWeight: '700',
+            lineHeight: GetFontSize(16) * 1.35,
+            letterSpacing: GetFontSize(16) * -0.02  // -2% of fontSize
+          }}
+          className="font-inter700"
+        >
+          {selectedChapterName || "Choose a chapter to get started..."}
+        </Text>
+      </TouchableOpacity>
+    </LinearGradient>
+  )}
+</View>
         </View>
       </View>
     </View>
@@ -230,16 +240,121 @@ const AssignTest = () => {
         ListHeaderComponent={renderHeader}
       />
 
-      {/* Chapter Selection Modal */}
-      <ChapterListModal
+      {/* Full Page Modal for Chapter Selection */}
+      <Modal
         visible={isModalVisible}
-        onClose={() => setIsModalVisible(false)}
-        allChapters={allChapters}
-        selectedChapterName={selectedChapterName}
-        selectedChapterId={selectedChapterId}
-        onChapterSelect={handleChapterSelect}
-        navigation={navigation}
-      />
+        animationType="slide"
+        transparent={false}
+        onRequestClose={() => setIsModalVisible(false)}
+        statusBarTranslucent={true}
+      >
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF3D6' }}>
+            {/* Modal Header */}
+           <View className="px-4 pt-4 pb-4 border-b border-[#DFE3E8] flex-row justify-between items-center bg-[#FFF3D6]">
+  <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
+    Select Chapter
+  </Text>
+  <TouchableOpacity
+    onPress={() => setIsModalVisible(false)}
+    className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+  
+    <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+                  <Text className="text-white font-inter400">✕</Text>
+                </View>
+   
+  </TouchableOpacity>
+</View>
+
+            {/* Chapter List with ScrollView */}
+            <LinearGradient
+              colors={['#B8916B', '#E5D6C8']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{ flex: 1 }}
+            >
+              <ScrollView 
+                style={{ flex: 1 }}
+                contentContainerStyle={{ padding: 16 }}
+                showsVerticalScrollIndicator={true}
+              >
+                {allChapters.map((chapter, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => handleChapterSelect(chapter.name)}
+                    className={`p-4 mb-3 rounded-lg ${
+                      selectedChapterName === chapter.name
+                        ? 'bg-[#FFF9E6]'
+                        : 'bg-white'
+                    }`}
+                    style={{
+                      borderTopWidth: 1,
+                      borderRightWidth: 2,
+                      borderBottomWidth: 4,
+                      borderLeftWidth: 2,
+                      borderColor: selectedChapterName === chapter.name ? '#DC9047' : '#DFE3E8',
+                      borderStyle: 'solid'
+                    }}
+                  >
+                    <Text
+                      style={{ fontSize: GetFontSize(15) }}
+                      className={`font-inter500 ${
+                        selectedChapterName === chapter.name
+                          ? 'text-[#B68201]'
+                          : 'text-[#212B36]'
+                      }`}
+                    >
+                       {chapter.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </LinearGradient>
+
+            {/* Fixed Bottom Buttons in Modal */}
+            <View className="px-4 py-4 bg-white border-t border-[#DFE3E8]" style={{ height: 92, gap: 12 }}>
+              <View className="flex-row gap-3">
+                <TouchableOpacity
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3 font-inter600"
+                  onPress={() => setIsModalVisible(false)}
+                >
+                  <LeftArrow color="#FED570" />
+                  <Text
+                    style={{ fontSize: GetFontSize(16) }}
+                    className="font-inter600 text-[#FED570]"
+                  >
+                    Back
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{ fontSize: GetFontSize(13) }}
+                  disabled={!selectedChapterId}
+                  onPress={() => {
+                    setIsModalVisible(false);
+                    navigation.navigate('AssignTestTopics', {
+                      chapterId: selectedChapterId,
+                      chapterName: selectedChapterName,
+                    });
+                  }}
+                  className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
+                    ? 'bg-[#FED570] border-[#DFAF02]'
+                    : 'bg-[#FEDB85] border-[#DFAF02]'
+                  }`}
+                >
+                  <Text
+                    style={{ fontSize: GetFontSize(16) }}
+                    className={`font-inter600 ${selectedChapterId ? 'text-[#B68201]' : 'text-[#DFAF02]'}`}
+                  >
+                    Continue
+                  </Text>
+                  <RightArrow color={selectedChapterId ? "#B68201" : "#DFAF02"} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </SafeAreaView>
+        </View>
+      </Modal>
 
       {/* Fixed Bottom Buttons */}
       <View className="px-4 py-4 bg-white border-t border-[#DFE3E8]" style={{ height: 92, gap: 12 }}>

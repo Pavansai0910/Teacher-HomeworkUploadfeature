@@ -23,6 +23,7 @@ import { downloadExam } from '../../../Services/teacherAPIV1';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
+import LinearGradient from 'react-native-linear-gradient';
 
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
@@ -147,8 +148,8 @@ const AssignTestDate = ({ route }) => {
     <SafeAreaView className="flex-1 bg-[#FFFFFF]">
       {/* Header */}
        <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-        <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
-          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
+        <View className="flex-row items-center" style={{ height: 65, gap: 12, marginTop: 13 }}>
+          <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center">
             <AssignTestDoc />
           </View>
           <View className="flex-1">
@@ -179,7 +180,7 @@ const AssignTestDate = ({ route }) => {
 
         {/* Progress Steps */}
         <View
-          className="mt-4 bg-[#FED570] rounded-[20px] border-2 border-[#E5E5E5] mx-4"
+          className="mt-3 bg-[#FED570] rounded-[20px] border-2 border-[#E5E5E5] mx-4"
           style={{ padding: 24 }}
         >
           <View className="flex-row items-center justify-between">
@@ -242,13 +243,13 @@ const AssignTestDate = ({ route }) => {
               </View>
               <Text
                 style={{ fontSize: GetFontSize(16) }}
-                className="text-[#8B6914] font-inter700 mb-2 text-center"
+                className="text-[#B68201] font-inter700 mb-2 text-center"
               >
                 Ready to plan smarter?
               </Text>
               <Text
                 style={{ fontSize: GetFontSize(13) }}
-                className="text-[#8B6914] text-center font-inter500"
+                className="text-[#B68201] text-center font-inter500"
               >
                 Just select a deadline for your students, and{'\n'}you're good
                 to go!
@@ -264,30 +265,41 @@ const AssignTestDate = ({ route }) => {
             >
               Select Due Date <Text className="text-[#E74C3C]">*</Text>
             </Text>
-            <TouchableOpacity
-              className="bg-white rounded-xl flex-row justify-between items-center"
-              style={{
-                width: 311,
-                height: 56,
-                paddingHorizontal: 14,
-                borderTopWidth: 1.5,
-                borderLeftWidth: 2.5,
-                borderRightWidth: 2.5,
-                borderBottomWidth: 4,
-                borderColor: '#63738140',
-              }}
-              onPress={() => {
-                setPickerTarget('due');
-                setShowPicker(true);
-              }}
-            >
-              <Text
-                style={{ fontSize: GetFontSize(15) }}
-                className="text-[#FFB84D] font-inter500"
-              >
-                {dueDate ? formatDate(dueDate) : 'dd\\mm\\yyyy'}
-              </Text>
-            </TouchableOpacity>
+        
+
+<LinearGradient
+  colors={['#E8B787', '#9B7A5A']}
+  start={{ x: 0, y: 0 }}
+  end={{ x: 1, y: 1 }}
+  style={{
+    width: 311,
+    height: 56,
+    borderRadius: 12,
+    paddingTop: 1.5,
+    paddingLeft: 2.5,
+    paddingRight: 2.5,
+    paddingBottom: 4,
+  }}
+>
+  <TouchableOpacity
+    className="bg-white rounded-xl flex-row justify-between items-center"
+    style={{
+      flex: 1,
+      paddingHorizontal: 14,
+    }}
+    onPress={() => {
+      setPickerTarget('due');
+      setShowPicker(true);
+    }}
+  >
+    <Text
+      style={{ fontSize: GetFontSize(15) }}
+      className="text-[#FFB84D] font-inter500"
+    >
+      {dueDate ? formatDate(dueDate) : 'dd\\mm\\yyyy'}
+    </Text>
+  </TouchableOpacity>
+</LinearGradient>
           </View>
 
           {/* Selected Topics */}
@@ -307,12 +319,16 @@ const AssignTestDate = ({ route }) => {
                   borderLeftWidth: 2,
                   borderRightWidth: 2,
                   borderBottomWidth: 3,
-                  borderColor: '#DFAF02',
+                  borderColor: '#FFC466',
                 }}
               >
                 <Text
-                  style={{ fontSize: GetFontSize(11) }}
-                  className="text-[#FFB84D] font-inter600"
+                  style={{ 
+                    fontSize: GetFontSize(11),
+                    color: '#FFB133',
+                    
+                  }}
+                  className="font-inter600"
                 >
                   Pending
                 </Text>
@@ -326,7 +342,7 @@ const AssignTestDate = ({ route }) => {
                   borderLeftWidth: 2,
                   borderRightWidth: 2,
                   borderBottomWidth: 3,
-                  borderColor: '#63738140',
+                  borderColor: '#DFAF02',
                 }}
                 onPress={() =>
                   handleExamDownload(questionPaper.questionPaperCode)
@@ -336,10 +352,10 @@ const AssignTestDate = ({ route }) => {
                   <ActivityIndicator size="small" color="#FFB84D" />
                 ) : (
                   <Text
-                    style={{ fontSize: GetFontSize(13) }}
-                    className="text-[#FFB84D] font-inter600"
+                    style={{ fontSize: GetFontSize(13),color:'#CB9101' }}
+                    className=" font-inter600"
                   >
-                    Download LGA
+                    View test
                   </Text>
                 )}
               </TouchableOpacity>
