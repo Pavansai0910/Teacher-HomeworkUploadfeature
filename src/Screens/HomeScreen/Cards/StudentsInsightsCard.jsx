@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, useWindowDimensions } from 'react-native';
 import TrophyIcon from '../../../Images/StudentInsights/TrophyIcon';
 import StudentIcon from '../../../Images/StudentInsights/StudentIcon';
 import ChartIcon from '../../../Images/StudentInsights/ChartIcon';
@@ -10,14 +10,14 @@ const StudentsInsightsCard = ({
   cardWidth,
   cardSpacing,
 }) => {
-  const cardHeight = isActive ? 432 : 380;
   const scale = isActive ? 1 : 0.9;
+  const { width, height } = useWindowDimensions('screen');
 
   return (
     <View
       style={{
-        width: cardWidth,
-        height: cardHeight,
+        width: width * 0.8,
+        height: height * 0.58,
         transform: [{ scale }],
         marginRight: cardSpacing,
       }}

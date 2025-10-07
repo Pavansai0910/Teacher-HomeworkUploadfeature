@@ -14,7 +14,7 @@ import { AuthContext } from '../../../Context/AuthContext';
 import Calendar from '../../../Images/LessonPlan/Calendar';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 import GetFontSize from '../../../Commons/GetFontSize';
-import { setLessonPlanner } from '../../../store/Slices/lessonPlannerSlice'; // ADDED
+import { setLessonPlanner } from '../../../store/Slices/lessonPlannerSlice'; 
 
 const LessonPlanGeneration = () => {
   const navigation = useNavigation();

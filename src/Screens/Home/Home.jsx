@@ -39,12 +39,13 @@ const Home = () => {
   const [subjectModalVisible, setSubjectModalVisible] = useState(false);
 
   const gradientBackgrounds = [
+    ['#FFFFFF', '#BBF192'],
     ['#FFFFFF', '#93D8FB'],
     ['#FFFFFF', '#FEDB85'],
   ];
 
   const cardWidth = width * 0.8;
-  const cardSpacing = 20;
+  const cardSpacing = 2;
 
   const handleScroll = event => {
     const contentOffset = event.nativeEvent.contentOffset.x;
@@ -70,13 +71,13 @@ const Home = () => {
   // Get subjects based on selected class
   const subjects = selectedClass
     ? teacherProfile?.assignments
-        ?.filter(
-          a =>
-            a.classId?._id === selectedClass.classId?._id &&
-            a.sectionId?._id === selectedClass.sectionId?._id,
-        )
-        .map(a => a.subjectId)
-        .filter(Boolean)
+      ?.filter(
+        a =>
+          a.classId?._id === selectedClass.classId?._id &&
+          a.sectionId?._id === selectedClass.sectionId?._id,
+      )
+      .map(a => a.subjectId)
+      .filter(Boolean)
     : [];
 
   const selectedAssignment = useSelector(
@@ -125,15 +126,15 @@ const Home = () => {
   };
 
   const styles = StyleSheet.create({
-  shadowContainer: {
-    backgroundColor: '#FFF',
-    shadowColor: '#025ECA',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-});
+    shadowContainer: {
+      backgroundColor: '#FFF',
+      shadowColor: '#025ECA',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 4,
+      elevation: 5,
+    },
+  });
 
   return (
     <SafeAreaView className="flex-1 mt-6">
@@ -194,7 +195,7 @@ const Home = () => {
               borderLeftWidth: 3,
               borderColor: '#A17F5E',
             }
-          }
+            }
             onPress={() => setClassModalVisible(true)}
           >
             <Text
@@ -269,7 +270,6 @@ const Home = () => {
                       });
                       setSelectedSubject(null);
 
-                      // update redux
                       dispatch(setAssignment(updatedAssignment));
 
                       setClassModalVisible(false);
@@ -328,7 +328,7 @@ const Home = () => {
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
                       const updatedAssignment = {
-                        ...selectedAssignment, // keep classId & sectionId as is
+                        ...selectedAssignment,
                         subjectId: item,
                       };
 
@@ -382,17 +382,23 @@ const Home = () => {
               paddingHorizontal: (width - cardWidth) / 2,
             }}
           >
+            <StudentsInsightsCard
+              onPress={() => navigation.navigate('StudentsInsights')}
+              isActive={currentIndex === 0}
+              cardWidth={cardWidth}
+              cardSpacing={cardSpacing}
+            />
             <LessonPlannerCard
               onPress={() => navigation.navigate('LessonPlanner')}
-              isActive={currentIndex === 0}
+              isActive={currentIndex === 1}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             />
             <AssignTestCard
               onPress={() => navigation.navigate('AssignTest')}
-              isActive={currentIndex === 1}
+              isActive={currentIndex === 2}
               cardWidth={cardWidth}
-              cardSpacing={cardSpacing}
+              cardSpacing={0}
             />
           </ScrollView>
 
@@ -401,22 +407,25 @@ const Home = () => {
             {gradientBackgrounds.map((_, index) => {
               let dotColor = '#FFFFFF';
               if (currentIndex === index) {
-                if (index === 0) dotColor = '#1EAFF7';
-                else if (index === 1) dotColor = '#FED570';
+                if (index === 0) dotColor = '#A5ED6F';
+                else if (index === 1) dotColor = '#1EAFF7';
+                else if (index === 2) dotColor = '#FED570';
               }
               return (
                 <View
                   key={index}
-                  className="rounded-full mx-1"
                   style={{
                     width: 10,
                     height: 10,
+                    borderRadius: 5, 
                     backgroundColor: dotColor,
+                    marginHorizontal: 4, 
                   }}
                 />
               );
             })}
           </View>
+
         </View>
       </LinearGradient>
     </SafeAreaView>

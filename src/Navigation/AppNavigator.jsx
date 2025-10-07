@@ -19,6 +19,7 @@ import GeneratedLessonPlan from '../Screens/Home/Lessonplanner/GeneratedLessonPl
 import AssignTestTopics from '../Screens/Home/AssignTest/AssignTestTopics';
 import AssignTestDate from '../Screens/Home/AssignTest/AssignTestDate';
 import LessonPlanHistory from '../Screens/Home/Lessonplanner/LessonPlanHistory';
+import HistoryDetails from '../Screens/Home/Lessonplanner/HistoryDetails';
 
 
 const Stack = createNativeStackNavigator();
@@ -98,6 +99,7 @@ function AppNavigator() {
             />
             <Stack.Screen name="AssignTestDate" component={AssignTestDate} />
             <Stack.Screen name="LessonPlanHistory" component={LessonPlanHistory} />
+            <Stack.Screen name="HistoryDetails" component={HistoryDetails} />
           </>
         ) : (
           <>

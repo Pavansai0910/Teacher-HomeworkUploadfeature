@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import {
   View,
   Text,
@@ -6,12 +6,15 @@ import {
   ActivityIndicator,
   FlatList,
 } from 'react-native';
-import { useContext } from 'react';
 import { AuthContext } from '../../../Context/AuthContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { getGeneratedLessonPlan } from '../../../Services/teacherAPIV2'; // adjust path
-// import { ArrowLeft, ChevronRight } from 'lucide-react-native';
+import { getGeneratedLessonPlan, getAllLessonPlans } from '../../../Services/teacherAPIV2';
+import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
+import GetFontSize from '../../../Commons/GetFontSize';
+import RightArrowIcon from '../../../Images/LessonPlan/RightArrowIcon';
+import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
+import Toast from 'react-native-toast-message';
 
 const LessonPlanHistory = () => {
   const navigation = useNavigation();
@@ -25,16 +28,61 @@ const LessonPlanHistory = () => {
         teacherId: teacherProfile?._id,
       });
 
+      // Match the web structure exactly
       const plans = response?.data?.lessonPlans?.map(item => ({
-        id: item._id,
-        topic: item.topic,
+        id: item.lessonPlanId || item._id || item.id,
+        topic: item.topic || item.topicName?.[0],
         subject: item.subject,
-        date: new Date(item.generatedAt).toISOString().slice(0, 10),
+        date: new Date(item.generatedAt || item.metadata?.generatedAt).toISOString().slice(0, 10),
       }));
 
       setLessonPlans(plans || []);
+      console.log("Mapped lesson plans:", plans);
     } catch (error) {
       console.log('Error fetching lesson plans:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to load lesson plan history.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchLessonPlanDetails = async (lessonPlanId) => {
+    try {
+      setLoading(true);
+      console.log("Fetching details for:", lessonPlanId);
+      const response = await getAllLessonPlans({ lessonPlanId });
+
+      // Use the same structure as web
+      const lessonPlanData = response?.data?.lessonPlan;
+
+      if (lessonPlanData) {
+        console.log("Navigating to HistoryDetails with data");
+        navigation.navigate('HistoryDetails', {
+          lessonPlanData,
+          chapterId: lessonPlanData.chapterId || lessonPlanId,
+          selectedTopics: [{
+            name: lessonPlanData.topic || lessonPlanData.topicName?.[0]
+          }]
+        });
+      } else {
+        console.log('No lesson plan data found in response.data.lessonPlan');
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Could not load lesson plan details.',
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching lesson plan details:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Failed to fetch lesson plan details.',
+      });
     } finally {
       setLoading(false);
     }
@@ -45,35 +93,56 @@ const LessonPlanHistory = () => {
   }, []);
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity className="bg-white rounded-2xl py-3 px-4 mb-3 flex-row justify-between items-center border border-[#DDE9F3] shadow-sm">
-      <Text className="text-[#06286E] text-[15px] font-medium">
+    <TouchableOpacity
+      onPress={() => fetchLessonPlanDetails(item.id)}
+      className="bg-white rounded-2xl py-3 px-6 mb-3 flex-row justify-between items-center"
+      style={{
+        borderTopWidth: 1,
+        borderRightWidth: 2,
+        borderBottomWidth: 4,
+        borderLeftWidth: 2,
+        borderColor: '#DBE1E6',
+      }}
+    >
+      <Text
+        style={{ fontSize: GetFontSize(16) }}
+        className="text-[#637381] font-inter500"
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
         {item.topic}
       </Text>
-      {/* <ChevronRight color="#1EAFF7" size={18} /> */}
+      <RightArrowIcon color={"#1A9DDD"} />
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F9FAFB]">
+    <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#E1F4FF] flex-row items-center p-5 space-x-3">
-        <View className="w-12 h-12 bg-[#1EAFF7] rounded-xl" />
-        <View>
-          <Text className="text-[#06286E] text-[18px] font-bold">
-            Saved Lesson Plans
-          </Text>
-          <Text className="text-[#5B6474] text-[13px]">
-            Generate a comprehensive lesson plan in seconds
+      <View className="flex-row items-center p-6 bg-[#E0F5FF]">
+        <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
+          <Bluepage />
+        </View>
+        <View className="flex-1">
+          <View className="flex-row justify-between items-start">
+            <Text
+              style={{ fontSize: GetFontSize(18) }}
+              className="text-[#212B36] font-inter600 flex-shrink"
+            >
+              Saved Lesson Plans
+            </Text>
+          </View>
+          <Text
+            style={{ fontSize: GetFontSize(14) }}
+            className="text-[#454F5B] font-inter400"
+          >
+            Generate a comprehensive lesson {'\n'} plan in seconds
           </Text>
         </View>
       </View>
 
       {/* Lesson List */}
-      <View className="px-4 mt-5 flex-1">
-        {/* <Text className="text-[#1EAFF7] text-[16px] font-semibold mb-3">
-         Chapter name :
-        </Text> */}
-
+      <View className="px-7 mt-7 flex-1">
         {loading ? (
           <ActivityIndicator size="large" color="#1EAFF7" className="mt-6" />
         ) : lessonPlans.length > 0 ? (
@@ -86,20 +155,35 @@ const LessonPlanHistory = () => {
             showsVerticalScrollIndicator={false}
           />
         ) : (
-          <Text className="text-gray-500 text-center mt-6">
+          <Text style={{ fontSize: GetFontSize(14) }}
+            className="text-[#454F5B] text-center mt-6">
             No saved lesson plans found.
           </Text>
         )}
       </View>
 
+      <View className="h-[2px] border-t border-[#E3E8EE] my-4" />
+
       {/* Back Button */}
-      <View className="bg-white border-t border-gray-200 p-4">
+      <View className="bg-white px-6">
         <TouchableOpacity
           onPress={() => navigation.goBack()}
-          className="flex-row items-center space-x-2"
+          style={{
+            borderTopWidth: 1,
+            borderRightWidth: 2,
+            borderBottomWidth: 4,
+            borderLeftWidth: 2,
+            borderColor: '#DDE9F3',
+          }}
+          className="flex-row items-center justify-center rounded-xl py-2 px-3 bg-white"
         >
-          {/* <ArrowLeft color="#1EAFF7" size={18} /> */}
-          <Text className="text-[#1EAFF7] text-[15px] font-medium">back</Text>
+          <LeftArrow width={16} height={16} color="#1A9DDD" />
+          <Text
+            style={{ fontSize: GetFontSize(15) }}
+            className="text-[#1A9DDD] font-inter500 ml-1.5"
+          >
+            back
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -112,10 +112,10 @@ const Loader = ({ isVisible, onClose }) => {
         {/* Header */}
         <View className="p-5 bg-white">
           <Text className="text-[#212B36] font-semibold text-lg text-center mb-1">
-            Assigning Test
+            Generating Lesson Plan
           </Text>
           <Text className="text-[#637381] text-sm text-center mb-4">
-            AI is preparing and assigning the test to selected students
+            AI is analyzing best teaching practices for your topic
           </Text>
 
           {/* Circular Progress */}
@@ -177,7 +177,7 @@ const Loader = ({ isVisible, onClose }) => {
           style={{ width: Math.min(330, screenWidth - 32) }}
         >
           <Text className="text-[#212B36] font-semibold text-base text-center mb-4">
-            Preparing Your Perfect Test
+            Crafting Your Perfect Lesson
           </Text>
 
           <View className="gap-2">
