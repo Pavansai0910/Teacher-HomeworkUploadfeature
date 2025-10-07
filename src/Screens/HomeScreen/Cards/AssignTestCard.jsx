@@ -12,11 +12,11 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
     <View
       style={{
         width: width * 0.8,
-        height: height * 0.58,
+        height: height * 0.61,
         transform: [{ scale }],
         marginRight: cardSpacing,
       }}
-      className="rounded-3xl overflow-hidden shadow-lg"
+      className="rounded-3xl overflow-hidden"
     >
       <View
         style={{

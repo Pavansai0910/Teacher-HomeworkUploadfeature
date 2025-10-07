@@ -137,7 +137,7 @@ const Home = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 mt-6">
+    <SafeAreaView className="flex-1 mt-2">
       {/* Header */}
       <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white">
         <TouchableOpacity
@@ -178,7 +178,7 @@ const Home = () => {
       {/* Gradient Background */}
       <LinearGradient
         colors={gradientBackgrounds[currentIndex]}
-        style={{ flex: 1 }}
+        style={{ minHeight: height }}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
       >
@@ -209,7 +209,7 @@ const Home = () => {
 
           {/* Subject Dropdown */}
           <TouchableOpacity
-            className="flex-1 rounded-[16px] py-3 px-6 flex-row"
+            className="flex-1 rounded-[16px] py-3 px-4 flex-row justify-between items-center" 
             style={{
               backgroundColor: '#FFF',
               borderTopWidth: 3,
@@ -227,14 +227,16 @@ const Home = () => {
             }}
             disabled={!selectedClass && !selectedAssignment}
           >
-            <Text
-              style={{ fontSize: GetFontSize(16) }}
-              className="text-[#DC9047] font-inter700"
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {getSubjectDisplayText()}
-            </Text>
+            <View style={{ maxWidth: '80%' }}>
+              <Text
+                style={{ fontSize: GetFontSize(16) }}
+                className="text-[#DC9047] font-inter700"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {getSubjectDisplayText()}
+              </Text>
+            </View>
             <DropdownArrow color="#DC9047" />
           </TouchableOpacity>
         </View>
@@ -368,7 +370,7 @@ const Home = () => {
         </Modal>
 
         {/* Cards */}
-        <View className="flex-1 justify-center items-center">
+        <View className="justify-center items-center mt-2">
           <ScrollView
             ref={scrollViewRef}
             horizontal
@@ -403,7 +405,7 @@ const Home = () => {
           </ScrollView>
 
           {/* Pagination Dots */}
-          <View className="flex-row justify-center items-center mt-5 mb-8">
+          <View className="flex-row justify-center items-center mt-8">
             {gradientBackgrounds.map((_, index) => {
               let dotColor = '#FFFFFF';
               if (currentIndex === index) {
@@ -417,9 +419,9 @@ const Home = () => {
                   style={{
                     width: 10,
                     height: 10,
-                    borderRadius: 5, 
+                    borderRadius: 5,
                     backgroundColor: dotColor,
-                    marginHorizontal: 4, 
+                    marginHorizontal: 4,
                   }}
                 />
               );
