@@ -1,27 +1,28 @@
-import { View, Text, TouchableOpacity, FlatList } from 'react-native';
+// AssignTest.js
+import { View, Text, TouchableOpacity, FlatList, Modal, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import { ActivityIndicator } from 'react-native';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
-import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
-import { useState, useEffect, useContext } from 'react';
-import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
+import { useState, useEffect, useContext } from 'react';
+import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import { getChapters } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import Toast from 'react-native-toast-message';
+import ChapterListModal from './ChapterListModal'; 
 
 const AssignTest = () => {
   const navigation = useNavigation();
-  const { teacherProfile } = useContext(AuthContext)
+  const { teacherProfile } = useContext(AuthContext);
   const [selectedChapterName, setSelectedChapterName] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [allChapters, setAllChapters] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const selectedAssignment = useSelector(
     (state) => state.assignment.selectedAssignment
   );
@@ -35,11 +36,11 @@ const AssignTest = () => {
           boardId: teacherProfile?.schoolId?.boardId,
         });
         setAllChapters(response.data.chapters);
-        console.log(response.data.chapters)
+        console.log(response.data.chapters);
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        console.log(error)
+        console.log(error);
         if (error.response.status != 400 && error.response.status != 404) {
           Toast.show({
             type: 'error',
@@ -65,8 +66,9 @@ const AssignTest = () => {
     }
   }, [selectedChapterName, allChapters]);
 
-  const handleChapterSelect = chapterName => {
+  const handleChapterSelect = (chapterName) => {
     setSelectedChapterName(chapterName);
+    setIsModalVisible(false);
   };
 
   const renderHeader = () => (
@@ -163,12 +165,25 @@ const AssignTest = () => {
             {loading ? (
               <ActivityIndicator size="large" color="#ffffff" />
             ) : (
-              <LessonPlanDropdown
-                placeholder="Choose a chapter to get started..."
-                options={allChapters.map((chapter) => chapter.name)}
-                onSelect={handleChapterSelect}
-                selectedValue={selectedChapterName}
-              />
+              <TouchableOpacity 
+                onPress={() => setIsModalVisible(true)}
+                className="bg-white rounded-lg px-4 py-4"
+                style={{ 
+                  borderTopWidth: 1,
+                  borderRightWidth: 2,
+                  borderBottomWidth: 4,
+                  borderLeftWidth: 2,
+                  borderColor: '#AB6521',
+                  borderStyle: 'solid'
+                }}
+              >
+                <Text
+                  style={{ fontSize: GetFontSize(16), color: '#DC9047' }}
+                  className="font-inter500"
+                >
+                  {selectedChapterName || "Choose a chapter to get started..."}
+                </Text>
+              </TouchableOpacity>
             )}
           </View>
         </View>
@@ -180,8 +195,8 @@ const AssignTest = () => {
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-        <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
-          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
+        <View className="flex-row items-center" style={{ height: 65, gap: 12, marginTop: 13 }}>
+          <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center">
             <AssignTestDoc />
           </View>
           <View className="flex-1">
@@ -215,46 +230,57 @@ const AssignTest = () => {
         ListHeaderComponent={renderHeader}
       />
 
+      {/* Chapter Selection Modal */}
+      <ChapterListModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        allChapters={allChapters}
+        selectedChapterName={selectedChapterName}
+        selectedChapterId={selectedChapterId}
+        onChapterSelect={handleChapterSelect}
+        navigation={navigation}
+      />
+
       {/* Fixed Bottom Buttons */}
-   <View className="px-4 py-4 bg-white border-t border-[#DFE3E8]" style={{ height: 92, gap: 12 }}>
-  <View className="flex-row gap-3">
-    <TouchableOpacity
-      style={{ fontSize: GetFontSize(16) }}
-      className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3 font-inter600"
-      onPress={() => navigation.goBack()}
-    >
-      <LeftArrow color="#FED570" />
-      <Text
-        style={{ fontSize: GetFontSize(16) }}
-        className="font-inter600 text-[#FED570] "
-      >
-        Back
-      </Text>
-    </TouchableOpacity>
-    <TouchableOpacity
-      style={{ fontSize: GetFontSize(13) }}
-      disabled={!selectedChapterId}
-      onPress={() =>
-        navigation.navigate('AssignTestTopics', {
-          chapterId: selectedChapterId,
-          chapterName: selectedChapterName,
-        })
-      }
-      className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
-        ? 'bg-[#FED570] border-[#DFAF02]'
-        : 'bg-[#FEDB85] border-[#DFAF02]'
-      }`}
-    >
-      <Text
-        style={{ fontSize: GetFontSize(16) }}
-        className={`font-inter600 ${selectedChapterId ? 'text-[#B68201]' : 'text-[#DFAF02]'}`}
-      >
-        Continue
-      </Text>
-      <RightArrow color={selectedChapterId ? "#B68201" : "#DFAF02"} />
-    </TouchableOpacity>
-  </View>
-</View>
+      <View className="px-4 py-4 bg-white border-t border-[#DFE3E8]" style={{ height: 92, gap: 12 }}>
+        <View className="flex-row gap-3">
+          <TouchableOpacity
+            style={{ fontSize: GetFontSize(16) }}
+            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3 font-inter600"
+            onPress={() => navigation.goBack()}
+          >
+            <LeftArrow color="#FED570" />
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="font-inter600 text-[#FED570] "
+            >
+              Back
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ fontSize: GetFontSize(13) }}
+            disabled={!selectedChapterId}
+            onPress={() =>
+              navigation.navigate('AssignTestTopics', {
+                chapterId: selectedChapterId,
+                chapterName: selectedChapterName,
+              })
+            }
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
+              ? 'bg-[#FED570] border-[#DFAF02]'
+              : 'bg-[#FEDB85] border-[#DFAF02]'
+            }`}
+          >
+            <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className={`font-inter600 ${selectedChapterId ? 'text-[#B68201]' : 'text-[#DFAF02]'}`}
+            >
+              Continue
+            </Text>
+            <RightArrow color={selectedChapterId ? "#B68201" : "#DFAF02"} />
+          </TouchableOpacity>
+        </View>
+      </View>
     </SafeAreaView>
   );
 };

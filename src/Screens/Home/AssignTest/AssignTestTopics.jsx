@@ -14,11 +14,11 @@ import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import { getExamsByClassAndSubject } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
-import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import Toast from 'react-native-toast-message';
 import GetFontSize from '../../../Commons/GetFontSize';
 import NavHeader from '../../NavHeader';
+import TopicSelectionModal from './TopicSelectionModal';
 
 const AssignTestTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -34,6 +34,7 @@ const AssignTestTopics = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [activeFilter, setActiveFilter] = useState('all');
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     getData();
@@ -72,11 +73,7 @@ const AssignTestTopics = ({ route }) => {
         text1: 'This paper is already assigned',
       });
     }
-    if (selectedTopic?._id === paper._id) {
-      setSelectedTopic(null);
-    } else {
-      setSelectedTopic(paper);
-    }
+    setSelectedTopic(paper);
   };
 
   const handleContinue = () => {
@@ -85,91 +82,36 @@ const AssignTestTopics = ({ route }) => {
     navigation.navigate('AssignTestDate', payload);
   };
 
-  const getFilteredExamData = () => {
-    if (activeFilter === 'all') return examData;
-
-    return examData?.filter(paper => {
-      let status;
-      if (paper.isAssigned && paper.lastAttempted) status = 'completed';
-      else if (paper.isAssigned) status = 'assigned';
-      else status = 'pending';
-
-      return status === activeFilter;
-    });
-  };
-
-  const statusCounts = {
-    all: examData?.length || 0,
-    pending: examData?.filter(p => !p.isAssigned && !p.lastAttempted)?.length,
-    assigned: examData?.filter(p => p.isAssigned && !p.lastAttempted)?.length,
-    completed: examData?.filter(p => p.isAssigned && p.lastAttempted)?.length,
-  };
-
-  const getStatusBadge = status => {
-    switch (status) {
-      case 'assigned':
-        return { 
-          bg: '#E6EFFA', 
-          text: '#025ECA', 
-          label: 'Assigned',
-          borderColor: '#025ECA'
-        };
-      case 'completed':
-        return { 
-          bg: '#E9FBF3', 
-          text: '#189F3F', 
-          label: 'Completed',
-          borderColor: '#189F3F'
-        };
-      case 'pending':
-        return {
-          bg: '#FEF6EB',
-          text: '#FFC466',
-          label: 'Pending',
-          borderColor: '#FFC466',
-        };
-      default:
-        return { 
-          bg: '#F3F4F6', 
-          text: '#6B7280', 
-          label: 'Pending',
-          borderColor: '#FFC466'
-        };
-    }
-  };
-
-  const getFilteredExam = getFilteredExamData();
-
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
       <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-             <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
-               <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
-                 <AssignTestDoc />
-               </View>
-               <View className="flex-1">
-                 <View className="flex-row justify-between items-center mb-1">
-                   <Text style={{ fontSize: GetFontSize(18) }}
-                     className="text-[#212B36] font-inter600 flex-shrink">
-                     Assign Test
-                   </Text>
-                   <TouchableOpacity
-                     className="w-7 h-7 justify-center items-center border-2 border-[#FDCA0C] rounded-full"
-                     onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
-                   >
-                     <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-                       <Text className="text-white font-inter400">✕</Text>
-                     </View>
-                   </TouchableOpacity> 
-                 </View>
-                 <Text style={{ fontSize: GetFontSize(14) }}
-                   className="text-[#454F5B] font-inter400">
-                   Boost your students's progress in{'\n'}just few taps!
-                 </Text>
-               </View>
-             </View>
-           </View>
+        <View className="flex-row items-center" style={{ height: 80, gap: 12, marginTop: 13 }}>
+          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
+            <AssignTestDoc />
+          </View>
+          <View className="flex-1">
+            <View className="flex-row justify-between items-center mb-1">
+              <Text style={{ fontSize: GetFontSize(18) }}
+                className="text-[#212B36] font-inter600 flex-shrink">
+                Assign Test
+              </Text>
+              <TouchableOpacity
+                className="w-7 h-7 justify-center items-center border-2 border-[#FDCA0C] rounded-full"
+                onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
+              >
+                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+                  <Text className="text-white font-inter400">✕</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <Text style={{ fontSize: GetFontSize(14) }}
+              className="text-[#454F5B] font-inter400">
+              Boost your students's progress in{'\n'}just few taps!
+            </Text>
+          </View>
+        </View>
+      </View>
 
       {/* Class-Section-Subject Display */}
       <NavHeader />
@@ -193,10 +135,10 @@ const AssignTestTopics = ({ route }) => {
                 </View>
               </View>
 
-              <View className="flex-1 h-[2px] bg-[#F7F7F5] " />
+              <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
 
               <View className="items-center">
-                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center ">
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
                   <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
                     <Text
                       style={{ fontSize: GetFontSize(12) }}
@@ -246,175 +188,48 @@ const AssignTestTopics = ({ route }) => {
                 Zoom in and pick your focus!
               </Text>
               <Text
-               style={{ fontSize: GetFontSize(12) }}
-                className="text-[#B68201] text-center font-inter500">
-                 Here is the list of topics from{' '}
-            <Text className="font-inter700">{chapterName}</Text>
-             .{'\n'}Select a topic you want to assign a test for.
-             </Text>
-            </View>
+                style={{ fontSize: GetFontSize(12) }}
+                className="text-[#B68201] text-center font-inter500 mb-6">
+                Here is the list of topics from{' '}
+                <Text className="font-inter700">{chapterName}</Text>.{'\n'}
+                Select a topic you want to assign a test for.
+              </Text>
 
-            {/* Filter Tabs */}
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              className="mb-4"
-            >
-              <View className="flex-row gap-2">
-                <TouchableOpacity
-                  className={`px-3 py-2 rounded-full ${activeFilter === 'all'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                    }`}
-                  onPress={() => setActiveFilter('all')}
-                >
+              {/* Select Topics Button */}
+              <TouchableOpacity
+                className="bg-white rounded-xl px-6 py-4 flex-row items-center justify-between w-full"
+                style={{
+                  borderTopWidth: 0.5,
+                  borderRightWidth: 1,
+                  borderBottomWidth: 2,
+                  borderLeftWidth: 1,
+                  borderColor: '#DC9047',
+                }}
+                onPress={() => setShowModal(true)}
+              >
+                <View className="flex-1">
                   <Text
-                    style={{ fontSize: GetFontSize(13) }}
-                    className={`font-inter600 ${activeFilter === 'all'
-                        ? 'text-[#B68201]'
-                        : 'text-[#6B7280]'
-                      }`}
+                    style={{ fontSize: GetFontSize(14) }}
+                    className="text-[#212B36] font-inter600 mb-1"
                   >
-                    All Tests ({statusCounts.all})
+                    {selectedTopic ? selectedTopic.questionPaperTitle : 'Select Topics'}
                   </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  className={`px-3 py-2 rounded-full ${activeFilter === 'pending'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                    }`}
-                  onPress={() => setActiveFilter('pending')}
-                >
-                  <Text
-                    style={{ fontSize: GetFontSize(13) }}
-                    className={`font-inter600 ${activeFilter === 'pending'
-                        ? 'text-[#B68201]'
-                        : 'text-[#6B7280]'
-                      }`}
-                  >
-                    Pending ({statusCounts.pending})
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  className={`px-3 py-2 rounded-full ${activeFilter === 'assigned'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                    }`}
-                  onPress={() => setActiveFilter('assigned')}
-                >
-                  <Text
-                    style={{ fontSize: GetFontSize(13) }}
-                    className={`font-inter600 ${activeFilter === 'assigned'
-                        ? 'text-[#B68201]'
-                        : 'text-[#6B7280]'
-                      }`}
-                  >
-                    Assigned ({statusCounts.assigned})
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  className={`px-3 py-2 rounded-full ${activeFilter === 'completed'
-                      ? 'bg-white border-2 border-[#FED570]'
-                      : 'bg-white'
-                    }`}
-                  onPress={() => setActiveFilter('completed')}
-                >
-                  <Text
-                    style={{ fontSize: GetFontSize(13) }}
-                    className={`font-inter600 ${activeFilter === 'completed'
-                        ? 'text-[#B68201]'
-                        : 'text-[#6B7280]'
-                      }`}
-                  >
-                    Completed ({statusCounts.completed})
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-
-            {/* Topics List */}
-            {loading ? (
-              <View className="py-8">
-                <ActivityIndicator size="large" color="#B68201" />
-              </View>
-            ) : !examData || examData.length === 0 ? (
-              <View className="py-8">
-                <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-center text-[#B68201] font-inter500"
-                >
-                  No exams available.
-                </Text>
-              </View>
-            ) : (
-              <View className="gap-3 items-center">
-                {getFilteredExam.map(paper => {
-                  const isSelected = selectedTopic?._id === paper._id;
-                  let status;
-                  if (paper.isAssigned && paper.lastAttempted)
-                    status = 'completed';
-                  else if (paper.isAssigned) status = 'assigned';
-                  else status = 'pending';
-
-                  const statusBadge = getStatusBadge(status);
-
-                  return (
-                    <TouchableOpacity
-                      key={paper._id}
-                      className={`w-[94%] py-3 justify-between rounded-[16px] px-[14px] ${isSelected ? 'bg-[#F59E0B]' : 'bg-white'} flex-row items-center`}
-                      style={{
-                        borderTopWidth: 0.5,
-                        borderRightWidth: 1,
-                        borderBottomWidth: 2,
-                        borderLeftWidth: 1,
-                        borderColor: '#DC9047',
-                        borderStyle: 'solid'
-                      }}
-                      onPress={() => handlePaperToggle(paper)}
-                      activeOpacity={0.7}
+                  {!selectedTopic && (
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-[#6B7280] font-inter400"
                     >
-                      <Text
-                        style={{ fontSize: GetFontSize(14) }}
-                        className={`flex-1 font-inter600 ${isSelected ? 'text-white' : 'text-[#212B36]'}`}
-                        numberOfLines={2}
-                      >
-                        {paper.questionPaperTitle}
-                      </Text>
-
-                      <View
-                        className={`ml-3 h-[27px] rounded-full px-[10px] justify-center items-center`}
-                        style={{
-                          backgroundColor: statusBadge.bg,
-                          borderTopWidth: 0.5,
-                          borderRightWidth: 1,
-                          borderBottomWidth: 2,
-                          borderLeftWidth: 1,
-                          borderColor: statusBadge.borderColor,
-                          borderStyle: 'solid'
-                        }}
-                      >
-                        <Text
-                          className="font-inter600"
-                          style={{
-                            fontSize: GetFontSize(12),
-                            color: statusBadge.text,
-                          }}
-                          numberOfLines={1}
-                        >
-                          {statusBadge.label}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                })}
-              </View>
-            )}
+                      Tap to choose from available topics
+                    </Text>
+                  )}
+                </View>
+                <View className="ml-3">
+                  <Text className="text-[#B68201] text-xl">V</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-
       </ScrollView>
 
       {/* Fixed Bottom Buttons */}
@@ -434,7 +249,9 @@ const AssignTestTopics = ({ route }) => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopic ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
+              selectedTopic ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'
+            }`}
             onPress={handleContinue}
             disabled={!selectedTopic}
           >
@@ -445,10 +262,22 @@ const AssignTestTopics = ({ route }) => {
               Continue
             </Text>
             <RightArrow color={selectedTopic ? "#B68201" : "#DFAF02"} />
-             
           </TouchableOpacity>
         </View>
       </View>
+
+      {/* Topic Selection Modal */}
+      <TopicSelectionModal
+        visible={showModal}
+        onClose={() => setShowModal(false)}
+        examData={examData}
+        loading={loading}
+        selectedTopic={selectedTopic}
+        onTopicSelect={handlePaperToggle}
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        chapterName={chapterName}
+      />
     </SafeAreaView>
   );
 };
