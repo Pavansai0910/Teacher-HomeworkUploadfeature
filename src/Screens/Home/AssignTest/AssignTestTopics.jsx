@@ -86,33 +86,40 @@ const AssignTestTopics = ({ route }) => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#FFF3D6]" style={{ minHeight: 149, paddingTop: 20, paddingRight: 24, paddingBottom: 20, paddingLeft: 24, justifyContent: 'flex-end' }}>
-        <View className="flex-row items-center" style={{ height: 65, gap: 12, marginTop: 13 }}>
-          <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center">
-            <AssignTestDoc />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-center mb-1">
-              <Text style={{ fontSize: GetFontSize(18) }}
-                className="text-[#212B36] font-inter600 flex-shrink">
-                Assign Test
-              </Text>
-              <TouchableOpacity
-                className="w-7 h-7 justify-center items-center border-2 border-[#FDCA0C] rounded-full"
-                onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
-              >
-                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-                  <Text className="text-white font-inter400">✕</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <Text style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400">
-              Boost your students's progress in{'\n'}just few taps!
-            </Text>
-          </View>
-        </View>
+<View className="bg-[#FFF3D6] px-6 py-6">
+  <View className="flex-row items-center">
+    <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center mr-3">
+      <AssignTestDoc />
+    </View>
+    <View className="flex-1">
+      <View className="flex-row justify-between items-start">
+        <Text
+          style={{ fontSize: GetFontSize(18) }}
+          className="text-[#212B36] font-inter600 flex-shrink"
+        >
+          Assign Test
+        </Text>
+        <TouchableOpacity
+          className="w-6 h-6 bg-[#FDCA0C] rounded-full justify-center items-center"
+          onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
+        >
+          <Text
+            style={{ fontSize: GetFontSize(14) }}
+            className="text-white font-inter400"
+          >
+            ✕
+          </Text>
+        </TouchableOpacity>
       </View>
+      <Text
+        style={{ fontSize: GetFontSize(14) }}
+        className="text-[#454F5B] font-inter400"
+      >
+        Boost your students's progress in{'\n'}just few taps!
+      </Text>
+    </View>
+  </View>
+</View>
 
       {/* Class-Section-Subject Display */}
       <NavHeader />

@@ -248,7 +248,7 @@ const LessonPlanGeneration = () => {
         </View>
 
         {/* Progress Steps */}
-        <View className="px-6 mt-6">
+        <View className="px-6 mt-3">
           <View className="bg-[#1CB0F6] rounded-2xl px-3 py-6">
             <View className="flex-row items-center justify-between mb-5">
               {/* Step 1 - Completed */}
@@ -307,7 +307,7 @@ const LessonPlanGeneration = () => {
             />
 
             {/* Content Box */}
-            <View className="rounded-xl mt-3">
+            {/* <View className="rounded-xl mt-3">
               <View className="items-center mb-6">
                 <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
                   <Document />
@@ -330,10 +330,10 @@ const LessonPlanGeneration = () => {
                   plan for you.
                 </Text>
               </View>
-            </View>
+            </View> */}
 
             {/* Date Inputs */}
-            <View className="px-3">
+            <View className="px-3 mt-4">
               <Text className="text-[#FFFFFF] mb-2">
                 Start Date <Text className="text-[#E34F57]">*</Text>
               </Text>

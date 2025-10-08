@@ -5,8 +5,11 @@ import {
   TouchableOpacity,
   ScrollView,
   ActivityIndicator,
+  Modal,
+  FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LinearGradient from 'react-native-linear-gradient'; // Assuming LinearGradient is imported; add if not
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
@@ -14,39 +17,35 @@ import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import { getAllTopics } from '../../../Services/teacherAPIV1';
-import TopicDropdown from '../../../Commons/TopicDropdown';
 import { AuthContext } from '../../../Context/AuthContext';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 import GetFontSize from '../../../Commons/GetFontSize';
-
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
   const { teacherProfile } = useContext(AuthContext);
-
   const selectedAssignment = useSelector(
     state => state.assignment.selectedAssignment,
   );
-
   const [topics, setTopics] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedTopics, setSelectedTopics] = useState([]);
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
   // Prepare class and subject display
   const classDisplay = selectedAssignment
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
     : 'Not selected';
-
   const subjectDisplay =
     capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
     'Not selected';
-
+  const selectedTopicsDisplay = selectedTopics.length > 0
+    ? `${selectedTopics.length} topic${selectedTopics.length > 1 ? 's' : ''} selected`
+    : 'Select topics...';
   useEffect(() => {
     const fetchTopics = async () => {
       if (!chapterId) {
         return;
       }
-
       setLoading(true);
       try {
         const response = await getAllTopics({
@@ -55,13 +54,11 @@ const LessonPlanTopics = ({ route }) => {
           boardId: teacherProfile?.schoolId?.boardId,
           chapterId,
         });
-
         const topicData =
           response.data?.topics?.map(t => ({
             id: t.id,
             name: t.name,
           })) || [];
-
         setTopics(topicData);
       } catch (err) {
         console.error(
@@ -72,10 +69,8 @@ const LessonPlanTopics = ({ route }) => {
         setLoading(false);
       }
     };
-
     fetchTopics();
   }, [chapterId]);
-
   const handleTopicToggle = topic => {
     const isSelected = selectedTopics.some(t => t.id === topic.id);
     if (isSelected) {
@@ -84,16 +79,57 @@ const LessonPlanTopics = ({ route }) => {
       setSelectedTopics([...selectedTopics, topic]);
     }
   };
-
   const handleContinue = () => {
     if (selectedTopics.length === 0) return;
-
     navigation.navigate('LessonPlanGeneration', {
       chapterId,
       selectedTopics: selectedTopics,
     });
   };
-
+  const renderTopicItem = ({ item }) => {
+    const isSelected = selectedTopics.some(t => t.id === item.id);
+    return (
+      <TouchableOpacity
+        onPress={() => handleTopicToggle(item)}
+        className={`p-4 mb-3 rounded-lg ${
+          isSelected ? 'bg-[#FFF9E6]' : 'bg-white'
+        }`}
+        style={{
+          borderTopWidth: 1,
+          borderRightWidth: 2,
+          borderBottomWidth: 4,
+          borderLeftWidth: 2,
+          borderColor: isSelected ? '#DC9047' : '#DFE3E8',
+          borderStyle: 'solid'
+        }}
+      >
+        <View className="flex-row justify-between items-center">
+          <Text
+            style={{ fontSize: GetFontSize(15) }}
+            className={`flex-1 font-inter500 pr-2 ${
+              isSelected ? 'text-[#B68201]' : 'text-[#212B36]'
+            }`}
+            numberOfLines={2}
+          >
+            {item.name}
+          </Text>
+          <View
+            className={`w-5 h-5 rounded justify-center items-center ${
+              isSelected ? 'bg-[#FFF9E6] border-2' : 'border'
+            }`}
+            style={{
+              borderColor: isSelected ? '#B68201' : '#DFE3E8',
+              borderWidth: 2,
+            }}
+          >
+            {isSelected && (
+              <Text className="text-[#B68201] font-inter600 text-xs">✓</Text>
+            )}
+          </View>
+        </View>
+      </TouchableOpacity>
+    );
+  };
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
@@ -131,7 +167,6 @@ const LessonPlanTopics = ({ route }) => {
           </View>
         </View>
       </View>
-
       <ScrollView className="flex-1">
         {/* Class and Subject */}
         <View className="mt-6 px-6 bg-white">
@@ -170,9 +205,8 @@ const LessonPlanTopics = ({ route }) => {
             </View>
           </View>
         </View>
-
         {/* Progress Steps */}
-        <View className="px-6 mt-6">
+        <View className="px-6 mt-3">
           <View className="bg-[#1CB0F6] rounded-2xl px-3 py-6">
             <View className="flex-row items-center justify-between mb-5">
               {/* Step 1 - Completed */}
@@ -209,7 +243,6 @@ const LessonPlanTopics = ({ route }) => {
                 </View>
               </View>
               <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
-
               {/* Step 3 */}
               <View className="items-center">
                 <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
@@ -224,12 +257,10 @@ const LessonPlanTopics = ({ route }) => {
                 </View>
               </View>
             </View>
-
             <View
               className="h-[2px] border-t border-white"
               style={{ borderStyle: 'dashed' }}
             />
-
             {/* Content Box */}
             <View className="rounded-xl mt-3">
               <View className="items-center mb-6">
@@ -251,23 +282,47 @@ const LessonPlanTopics = ({ route }) => {
                 </Text>
               </View>
             </View>
-
-            {/* Topics List */}
+            {/* Topics Selection */}
             {loading ? (
               <View className="py-8">
                 <ActivityIndicator size="large" color="#ffffff" />
               </View>
             ) : (
-              <TopicDropdown
-                topics={topics}
-                selectedTopics={selectedTopics}
-                onTopicsSelect={setSelectedTopics}
-                placeholder="Select topics..."
-              />
+              <LinearGradient
+                colors={['#A17F5E', '#B8916B']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  borderRadius: 8,
+                  paddingTop: 3,
+                  paddingRight: 3,
+                  paddingBottom: 6,
+                  paddingLeft: 3,
+                  marginBottom: 20,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => setIsModalVisible(true)}
+                  className="bg-white rounded-lg px-4 py-4"
+                >
+                  <Text
+                    style={{
+                      fontSize: GetFontSize(16),
+                      color: '#DC9047',
+                      fontFamily: 'Inter',
+                      fontWeight: '700',
+                      lineHeight: GetFontSize(16) * 1.35,
+                      letterSpacing: GetFontSize(16) * -0.02
+                    }}
+                    className="font-inter700"
+                  >
+                    {selectedTopicsDisplay}
+                  </Text>
+                </TouchableOpacity>
+              </LinearGradient>
             )}
           </View>
         </View>
-
         {/* Pro Tip */}
         <View className="px-6 mt-4">
           <Text
@@ -283,10 +338,8 @@ const LessonPlanTopics = ({ route }) => {
             Select multiple topics to create a comprehensive lesson plan!
           </Text>
         </View>
-
         <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" />
       </ScrollView>
-
       {/* Navigation Buttons */}
       <View className="px-6 mb-4">
         <View className="flex-row gap-2">
@@ -321,8 +374,81 @@ const LessonPlanTopics = ({ route }) => {
           </TouchableOpacity>
         </View>
       </View>
+      {/* Topics Modal */}
+      <Modal
+        visible={isModalVisible}
+        animationType="slide"
+        transparent={false}
+        onRequestClose={() => setIsModalVisible(false)}
+        statusBarTranslucent={true}
+      >
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
+          <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF3D6' }}>
+            {/* Modal Header */}
+            <View className="px-4 pt-4 pb-4 border-b border-[#DFE3E8] flex-row justify-between items-center bg-[#FFF3D6]">
+              <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
+                Select Topics
+              </Text>
+              <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
+                className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+                  <Text className="text-white font-inter400">✕</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+            <Text
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#637381] font-inter400 mt-2 px-4"
+            >
+              {selectedTopics.length} of {topics.length} selected
+            </Text>
+            {/* Topics List with FlatList */}
+            <LinearGradient
+              colors={['#B8916B', '#E5D6C8']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{ flex: 1 }}
+            >
+              <FlatList
+                data={topics}
+                keyExtractor={item => item.id.toString()}
+                renderItem={renderTopicItem}
+                style={{ flex: 1 }}
+                contentContainerStyle={{ padding: 16, paddingBottom: 20 }}
+                showsVerticalScrollIndicator={true}
+              />
+            </LinearGradient>
+            {/* Modal Footer */}
+            <View className="px-6 py-4 bg-white border-t border-[#DFE3E8]">
+              <TouchableOpacity
+                className={`py-3 rounded-lg justify-center items-center ${
+                  selectedTopics.length > 0
+                    ? 'bg-[#1EAFF7]'
+                    : 'bg-gray-400'
+                }`}
+                onPress={() => {
+                  setIsModalVisible(false);
+                  if (selectedTopics.length > 0) {
+                    handleContinue();
+                  }
+                }}
+                disabled={selectedTopics.length === 0}
+              >
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className={`font-inter600 ${
+                    selectedTopics.length > 0 ? 'text-white' : 'text-gray-500'
+                  }`}
+                >
+                  Done ({selectedTopics.length})
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </SafeAreaView>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
-
-export default LessonPlanTopics;
+export default LessonPlanTopics; 
