@@ -9,7 +9,7 @@ import {
   FlatList,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient'; // Assuming LinearGradient is imported; add if not
+import LinearGradient from 'react-native-linear-gradient';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
@@ -20,6 +20,7 @@ import { getAllTopics } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import capitalize from '../../../Utils/Capitalize';
 import GetFontSize from '../../../Commons/GetFontSize';
+import TopArrow from '../../../Images/LessonPlan/TopArrow';
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
@@ -91,9 +92,8 @@ const LessonPlanTopics = ({ route }) => {
     return (
       <TouchableOpacity
         onPress={() => handleTopicToggle(item)}
-        className={`p-4 mb-3 rounded-lg ${
-          isSelected ? 'bg-[#FFF9E6]' : 'bg-white'
-        }`}
+        className={`p-4 mb-3 rounded-lg ${isSelected ? 'bg-[#FFF9E6]' : 'bg-white'
+          }`}
         style={{
           borderTopWidth: 1,
           borderRightWidth: 2,
@@ -106,17 +106,15 @@ const LessonPlanTopics = ({ route }) => {
         <View className="flex-row justify-between items-center">
           <Text
             style={{ fontSize: GetFontSize(15) }}
-            className={`flex-1 font-inter500 pr-2 ${
-              isSelected ? 'text-[#B68201]' : 'text-[#212B36]'
-            }`}
+            className={`flex-1 font-inter500 pr-2 ${isSelected ? 'text-[#B68201]' : 'text-[#212B36]'
+              }`}
             numberOfLines={2}
           >
             {item.name}
           </Text>
           <View
-            className={`w-5 h-5 rounded justify-center items-center ${
-              isSelected ? 'bg-[#FFF9E6] border-2' : 'border'
-            }`}
+            className={`w-5 h-5 rounded justify-center items-center ${isSelected ? 'bg-[#FFF9E6] border-2' : 'border'
+              }`}
             style={{
               borderColor: isSelected ? '#B68201' : '#DFE3E8',
               borderWidth: 2,
@@ -283,6 +281,28 @@ const LessonPlanTopics = ({ route }) => {
               </View>
             </View>
             {/* Topics Selection */}
+            <TouchableOpacity
+              className="bg-white rounded-xl p-3 mb-4"
+              style={{
+                borderTopWidth: 1,
+                borderLeftWidth: 2,
+                borderRightWidth: 2,
+                borderBottomWidth: 4,
+                borderColor: '#89D5FB',
+              }}
+              onPress={() => navigation.navigate('LessonPlanHistory')}
+            >
+              <View className="flex-row justify-center items-center gap-2">
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-[#1EAFF7] font-inter600"
+                >
+                  Saved Lesson plans
+                </Text>
+                <TopArrow color="#1EAFF7" />
+              </View>
+            </TouchableOpacity>
+
             {loading ? (
               <View className="py-8">
                 <ActivityIndicator size="large" color="#ffffff" />
@@ -356,11 +376,10 @@ const LessonPlanTopics = ({ route }) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
-              selectedTopics.length > 0
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopics.length > 0
                 ? 'bg-[#1EAFF7] border-[#0786C5]'
                 : 'bg-gray-400 border-gray-400'
-            }`}
+              }`}
             onPress={handleContinue}
             disabled={selectedTopics.length === 0}
           >
@@ -422,11 +441,10 @@ const LessonPlanTopics = ({ route }) => {
             {/* Modal Footer */}
             <View className="px-6 py-4 bg-white border-t border-[#DFE3E8]">
               <TouchableOpacity
-                className={`py-3 rounded-lg justify-center items-center ${
-                  selectedTopics.length > 0
+                className={`py-3 rounded-lg justify-center items-center ${selectedTopics.length > 0
                     ? 'bg-[#1EAFF7]'
                     : 'bg-gray-400'
-                }`}
+                  }`}
                 onPress={() => {
                   setIsModalVisible(false);
                   if (selectedTopics.length > 0) {
@@ -437,9 +455,8 @@ const LessonPlanTopics = ({ route }) => {
               >
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
-                  className={`font-inter600 ${
-                    selectedTopics.length > 0 ? 'text-white' : 'text-gray-500'
-                  }`}
+                  className={`font-inter600 ${selectedTopics.length > 0 ? 'text-white' : 'text-gray-500'
+                    }`}
                 >
                   Done ({selectedTopics.length})
                 </Text>
