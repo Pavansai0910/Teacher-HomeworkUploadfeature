@@ -14,7 +14,7 @@ import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import LessonPlanDropdown from '../../../Commons/LessonPlanDropdown';
-import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import capitalize from '../../../Utils/Capitalize';
 import GetFontSize from '../../../Commons/GetFontSize';
 
 const LessonPlanner = () => {
@@ -49,7 +49,7 @@ const LessonPlanner = () => {
     : 'Not selected';
 
   const subjectDisplay =
-    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    capitalize(selectedAssignment?.subjectId?.subjectName) ||
     'Not selected';
 
   // 3. Updated: Map chapters for dropdown options (only names)

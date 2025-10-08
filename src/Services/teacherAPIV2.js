@@ -25,3 +25,10 @@ export const getAllLessonPlans = async ({ lessonPlanId }) => {
     const headers = await getAuthHeader()
     return apiConnector('GET', `/v2/teacher/get-content-of-lesson-plan/${lessonPlanId}`, null, headers)
 }
+
+// get-pdf-for-lesson-plan/:_id
+
+export const downloadLessonPlan = async ({_id}) => {
+        const headers = await getAuthHeader();
+    return apiConnector('GET',`/v2/teacher/get-pdf-for-lesson-plan/${_id}`, null, headers, {}, 'blob')
+}

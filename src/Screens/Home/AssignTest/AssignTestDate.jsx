@@ -14,7 +14,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
-import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import capitalize from '../../../Utils/Capitalize';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import { assignExam } from '../../../Services/teacherAPIV1';
 import Toast from 'react-native-toast-message';
@@ -24,7 +24,7 @@ import { downloadExam } from '../../../Services/teacherAPIV1';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
-
+import LinearGradient from 'react-native-linear-gradient';
 import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader'; // Make sure the import path is correct
 import AssignSuccessScreen from './AssignSuccessScreen'; // Make sure the import path is correct
 
@@ -51,7 +51,7 @@ const AssignTestDate = ({ route }) => {
     : 'Not selected';
 
   const subjectDisplay =
-    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    capitalize(selectedAssignment?.subjectId?.subjectName) ||
     'Not selected';
 
   const formatDate = date => {

@@ -18,7 +18,7 @@ import StudentsInsightsCard from '../HomeScreen/Cards/StudentsInsightsCard';
 import LessonPlannerCard from '../HomeScreen/Cards/LessonPlannerCard';
 import AssignTestCard from '../HomeScreen/Cards/AssignTestCard';
 import NotificationIcon from '../../Images/Home/NotificationIcon';
-import capitalizeSubject from '../../Utils/CapitalizeSubject';
+import capitalize from '../../Utils/Capitalize';
 import GetFontSize from '../../Commons/GetFontSize';
 import { useSelector, useDispatch } from 'react-redux';
 import { setAssignment } from '../../store/Slices/assignment';
@@ -95,12 +95,6 @@ const Home = () => {
     }
   }, [selectedAssignment]);
 
-  useEffect(() => {
-    // console.log('Selected Assignment:', selectedAssignment);
-    // console.log('Classes:', classes);
-    // console.log('Selected Class:', selectedClass);
-  }, [selectedAssignment, classes, selectedClass]);
-
   // Get display text for class dropdown
   const getClassDisplayText = () => {
     if (selectedClass) {
@@ -116,11 +110,11 @@ const Home = () => {
   // Get display text for subject dropdown
   const getSubjectDisplayText = () => {
     if (selectedSubject) {
-      return capitalizeSubject(selectedSubject.subjectName);
+      return capitalize(selectedSubject.subjectName);
     }
     // Fallback to selectedAssignment
     if (selectedAssignment?.subjectId) {
-      return capitalizeSubject(selectedAssignment.subjectId.subjectName);
+      return capitalize(selectedAssignment.subjectId.subjectName);
     }
     return 'Select Subject';
   };
@@ -137,7 +131,7 @@ const Home = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 mt-2">
+    <SafeAreaView className="flex-1 pt-5 bg-white">
       {/* Header */}
       <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white">
         <TouchableOpacity
@@ -157,13 +151,7 @@ const Home = () => {
               style={{ fontSize: GetFontSize(16) }}
               className="text-[#454F5B] font-inter700"
             >
-              {teacherProfile?.name
-                ?.split(' ')
-                .map(
-                  word =>
-                    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
-                )
-                .join(' ')}
+              {capitalize(teacherProfile?.name)}
             </Text>
             <Text
               style={{ fontSize: GetFontSize(14) }}
@@ -209,7 +197,7 @@ const Home = () => {
 
           {/* Subject Dropdown */}
           <TouchableOpacity
-            className="flex-1 rounded-[16px] py-3 px-4 flex-row justify-between items-center" 
+            className="flex-1 rounded-[16px] py-3 px-4 flex-row justify-between items-center"
             style={{
               backgroundColor: '#FFF',
               borderTopWidth: 3,
@@ -260,27 +248,40 @@ const Home = () => {
                   <TouchableOpacity
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
+                      // Filter subjects for the selected class-section
+                      const relatedSubjects = teacherProfile?.assignments
+                        ?.filter(
+                          a =>
+                            a.classId?._id === item.classId?._id &&
+                            a.sectionId?._id === item.sectionId?._id
+                        )
+                        .map(a => a.subjectId)
+                        .filter(Boolean);
+
+                      // Pick first subject if available
+                      const firstSubject = relatedSubjects?.[0] || null;
+
                       const updatedAssignment = {
                         ...selectedAssignment,
                         classId: item.classId,
                         sectionId: item.sectionId,
+                        subjectId: firstSubject, // ✅ automatically assign first subject
                       };
 
                       setSelectedClass({
                         classId: item.classId,
                         sectionId: item.sectionId,
                       });
-                      setSelectedSubject(null);
+                      setSelectedSubject(firstSubject);
 
                       dispatch(setAssignment(updatedAssignment));
 
                       setClassModalVisible(false);
                     }}
+                  >                    <Text
+                    style={{ fontSize: GetFontSize(16) }}
+                    className="text-[#454F5B] font-inter700"
                   >
-                    <Text
-                      style={{ fontSize: GetFontSize(16) }}
-                      className="text-[#454F5B] font-inter700"
-                    >
                       Class: {item.displayName}
                     </Text>
                   </TouchableOpacity>
@@ -343,7 +344,7 @@ const Home = () => {
                     }}
                   >
                     <Text className="text-[#454F5B] text-base font-semibold">
-                      {capitalizeSubject(item?.subjectName)}
+                      {capitalize(item?.subjectName)}
                     </Text>
                   </TouchableOpacity>
                 )}

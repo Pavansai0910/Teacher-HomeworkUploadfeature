@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   PermissionsAndroid,
   Platform,
+  Alert
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,35 +19,33 @@ import LinearGradient from 'react-native-linear-gradient';
 import ScrollUpArrow from '../../../Images/LessonPlan/ScrollUpArrow';
 import RNFS, { DownloadDirectoryPath } from 'react-native-fs';
 import GetFontSize from '../../../Commons/GetFontSize';
-import { saveLessonPlan } from '../../../Services/teacherAPIV2';
+import { downloadLessonPlan, saveLessonPlan } from '../../../Services/teacherAPIV2';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../../Context/AuthContext';
+import { requestStoragePermission } from '../../../Permission/StoragePermission';
 
 const GeneratedLessonPlan = () => {
   const route = useRoute();
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
   const { teacherProfile } = useContext(AuthContext);
+  const sectionRefs = useRef({});
 
   const lessonPlanner = useSelector(
     state => state.lessonPlanner?.lessonPlannerData,
   );
-  console.log('Redux lessonPlannerData:', lessonPlanner);
 
   const {
     lessonPlanData,
-    chapterId,
     selectedTopics,
-    startDate,
-    endDate,
-    classDisplay,
-    subjectDisplay,
   } = route.params;
 
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false); // Track if already saved
   const [activeSection, setActiveSection] = useState(null);
-  const [downloadingHomework, setDownloadingHomework] = useState([]);
+  const [downloadStatus, setDownloadStatus] = useState(false);
+  const [isSavedClicked, setIsSavedClicked] = useState(false);
+  const [generatedLessonPlanId, setGeneratedLessonPlanId] = useState(null);
 
   const lessonPlanDetails = lessonPlanData?.generatedContent || {};
   const topicName =
@@ -58,10 +57,41 @@ const GeneratedLessonPlan = () => {
 
   const scrollToSection = sectionName => {
     setActiveSection(sectionName);
-    if (sectionName === 'sections') {
+    const yOffset = sectionRefs.current[sectionName];
+
+    if (scrollViewRef.current && yOffset !== undefined) {
+      // Scroll a little bit higher for better context (e.g., -10)
+      scrollViewRef.current.scrollTo({ y: yOffset - 10, animated: true });
+    } else if (sectionName === 'sections') {
+      // Original logic to scroll to the top
       scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     }
   };
+
+  // Function to show the section options
+  const handleShowSections = () => {
+    // 1. Map the ButtonsOptions array to an array of Alert button objects
+    const actions = ButtonsOptions.map(sectionName => ({
+      text: sectionName,
+      // 2. When an option is pressed, scroll to that section
+      onPress: () => scrollToSection(sectionName),
+    }));
+
+    // Add a cancel button
+    actions.push({
+      text: 'Cancel',
+      style: 'cancel',
+    });
+
+    // 3. Display the native ActionSheet/Alert
+    Alert.alert('Go to Section', 'Select a section to jump to:', actions, {
+        cancelable: true,
+    });
+
+    // NOTE: For a better UI, replace this Alert with a proper React Native Modal
+    // or an ActionSheet from a library like `@gorhom/bottom-sheet`.
+  };
+
 
   const handleSaveDoc = async () => {
     // Check if already saved
@@ -89,22 +119,20 @@ const GeneratedLessonPlan = () => {
       setIsSaved(true);
       Toast.show({
         type: 'success',
-        text1: 'Success',
-        text2: response.data.message || 'Lesson Plan Saved Successfully!',
-        position: 'bottom',
+        text1: response.data.message || 'Lesson Plan Saved Successfully!',
         visibilityTime: 3000,
       });
+      setIsSavedClicked(true);
+      setGeneratedLessonPlanId(response.data?.savedPlan._id);
+      console.log("Saved Lesson Plan ID:", response.data?.savedPlan._id);
     } catch (error) {
-      console.error('Error while saving lesson plan:', error);
-      
+
       // Handle 409 conflict (already exists)
       if (error.response?.status === 409) {
         setIsSaved(true); // Mark as saved since it exists on server
         Toast.show({
           type: 'info',
           text1: 'Already Saved',
-          text2: error.response.data?.message || 'This lesson plan has already been saved!',
-          position: 'bottom',
           visibilityTime: 3000,
         });
       } else {
@@ -114,7 +142,6 @@ const GeneratedLessonPlan = () => {
           type: 'error',
           text1: 'Save Failed',
           text2: errorMessage,
-          position: 'bottom',
           visibilityTime: 4000,
         });
       }
@@ -123,39 +150,26 @@ const GeneratedLessonPlan = () => {
     }
   };
 
-  // Request storage permission (Android only)
-  const requestStoragePermission = async () => {
-    if (Platform.OS === 'android') {
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-          {
-            title: 'Storage Permission Required',
-            message: 'This app needs access to your storage to download files',
-          },
-        );
-        return granted === PermissionsAndroid.RESULTS.GRANTED;
-      } catch (err) {
-        console.warn(err);
-        return false;
-      }
-    } else {
-      return true;
+  // Handle download
+  const handleLessonPlanDownload = async (generatedLessonPlanId) => {
+
+    if (!isSavedClicked) {
+      return Toast.show({
+        type: 'info',
+        text1: 'First Save Lesson Plan then you can download it.',
+        visibilityTime: 3000,
+      });
     }
-  };
 
-  const handleHomeworkDownload = async homeworkId => {
-    setDownloadingHomework(prev => [...prev, homeworkId]);
-
+    // 1. Permission Check
     const hasPermission = await requestStoragePermission();
     if (!hasPermission) {
-      setDownloadingHomework(prev => prev.filter(id => id !== homeworkId));
       return;
     }
 
+    setDownloadStatus(true);
     try {
-      // Replace this with your actual API call
-      const response = await downloadHomeworkExam({ homeworkId });
+      const response = await downloadLessonPlan({ _id: generatedLessonPlanId });
 
       const base64Data = await new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -167,31 +181,27 @@ const GeneratedLessonPlan = () => {
         reader.onerror = reject;
       });
 
-      const directoryPath = `${DownloadDirectoryPath}/Adaptmate Learner App`;
+      const directoryPath = `${DownloadDirectoryPath}/Adaptmate Educator App/Lesson Plan`;
       const checkDirectory = await RNFS.exists(directoryPath);
       if (!checkDirectory) {
         await RNFS.mkdir(directoryPath);
       }
 
-      const path = `${directoryPath}/Homework_${Date.now()}.pdf`;
+      const path = `${directoryPath}/Lesson Plan_${Date.now()}.pdf`;
       await RNFS.writeFile(path, base64Data, 'base64');
 
-      Toast.show({
-        type: 'success',
-        text1: 'Downloaded',
-        text2: 'Saved in Download/Adaptmate Learner App',
-        position: 'bottom',
-      });
+      Alert.alert('Lesson Plan Downloaded Successfully', 'Saved in Downloads/Adaptmate Educator App/Lesson Plan');
+      setDownloadStatus(false);
     } catch (error) {
-      console.error('RNFS Write Error:', error);
+      setDownloadStatus(false);
+      console.error("RNFS Write Error:", error);
       Toast.show({
         type: 'error',
-        text1: 'Download Failed',
-        text2: 'Could not save file. Check permissions or internal file error.',
-        position: 'bottom',
+        text1: "Download Failed",
+        text2: "Could not save file. Check permissions or internal file error.",
       });
     } finally {
-      setDownloadingHomework(prev => prev.filter(id => id !== homeworkId));
+      setDownloadStatus(false);
     }
   };
 
@@ -210,6 +220,24 @@ const GeneratedLessonPlan = () => {
       ))}
     </View>
   );
+
+  const ButtonsOptions = [
+    'Lesson Objectives',
+    'Key Terms',
+    'Pre-Requisites',
+    'Teaching Aids',
+    'Methodology',
+    'Suggested Flow',
+    'Learning Flow',
+    'Skills Applied',
+    'Activity Description',
+    'Practice Work',
+    'Inquiry Questions',
+    'Quick Assessments',
+    'Teacher Tips',
+    'Learning Outcomes',
+    'Values Inculcated',
+  ]
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -281,9 +309,8 @@ const GeneratedLessonPlan = () => {
           <View className="border border-[#E5E5E3] rounded-xl p-4">
             <View className="flex-row items-center ">
               <TouchableOpacity
-                className={`bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1 mr-3 shadow-lg shadow-red-500/25 ${
-                  isSaved ? 'opacity-75' : ''
-                }`}
+                className={`bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1 mr-3 shadow-lg shadow-red-500/25 ${isSaved ? 'opacity-75' : ''
+                  }`}
                 onPress={handleSaveDoc}
                 disabled={isSaving}
                 style={{
@@ -315,7 +342,7 @@ const GeneratedLessonPlan = () => {
               {/* Download Icon */}
               <TouchableOpacity
                 className="bg-white justify-center items-center"
-                onPress={() => handleHomeworkDownload(chapterId)}
+                onPress={() => handleLessonPlanDownload(generatedLessonPlanId)}
               >
                 <View
                   className="justify-center items-center rounded-lg border border-[#E1F4FE] p-3"
@@ -326,7 +353,11 @@ const GeneratedLessonPlan = () => {
                     borderBottomWidth: 3,
                   }}
                 >
+                  {downloadStatus ? (
+                    <ActivityIndicator size="small" color="#1EAFF7" />
+                  ) : (
                   <Download width={24} height={24} color="#1EAFF7" />
+                  )}
                 </View>
               </TouchableOpacity>
             </View>
@@ -347,17 +378,17 @@ const GeneratedLessonPlan = () => {
                   {lessonPlanDetails.preRequisite.map((prereq, index) => (
                     <View key={index} className="">
                       {prereq.priorKnowledge && (
-                        <Text style={{fontSize: GetFontSize(15)}}className="font-inter500 leading-6 mb-2 text-gray-700">
+                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-gray-700">
                           • Prior Knowledge: {prereq.priorKnowledge}
                         </Text>
                       )}
                       {prereq.warmUp && (
-                        <Text style={{fontSize: GetFontSize(15)}} className="font-inter500 leading-6 mb-2 text-gray-700">
+                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-gray-700">
                           • Warm Up: {prereq.warmUp}
                         </Text>
                       )}
                       {prereq.quickConnect && (
-                        <Text  style={{fontSize: GetFontSize(15)}} className="font-inter500 leading-6 mb-2 text-gray-700">
+                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-gray-700">
                           • Quick Connect: {prereq.quickConnect}
                         </Text>
                       )}
@@ -388,10 +419,10 @@ const GeneratedLessonPlan = () => {
                 <SectionHeader title="Suggested Flow" />
                 {lessonPlanDetails.suggestedFlow.map((flow, index) => (
                   <View key={index} className="mb-4">
-                    <Text style={{fontSize: GetFontSize(18)}}className="text-base font-inter600 text-[#0976A9] mb-1">
+                    <Text style={{ fontSize: GetFontSize(18) }} className="text-base font-inter600 text-[#0976A9] mb-1">
                       {flow.phase} ({flow.duration})
                     </Text>
-                    <Text style={{fontSize: GetFontSize(15)}} className="font-inter500 text-gray-700 leading-6 ml-2">
+                    <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 text-gray-700 leading-6 ml-2">
                       {flow.description}
                     </Text>
                   </View>
@@ -406,7 +437,7 @@ const GeneratedLessonPlan = () => {
                 {Object.entries(lessonPlanDetails.learningFlow).map(
                   ([phase, items]) => (
                     <View key={phase} className="mb-4">
-                      <Text style={{fontSize: GetFontSize(15)}} className=" font-inter500 text-[#212B36] mb-2 capitalize">
+                      <Text style={{ fontSize: GetFontSize(15) }} className=" font-inter500 text-[#212B36] mb-2 capitalize">
                         {phase}:
                       </Text>
                       <BulletList items={items} />
@@ -428,7 +459,7 @@ const GeneratedLessonPlan = () => {
             {lessonPlanDetails.activityDescription && (
               <>
                 <SectionHeader title="Activity Description" />
-                <Text  style={{fontSize: GetFontSize(15)}}className="font-inter500 leading-6 text-[#637381] mb-4">
+                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381] mb-4">
                   {lessonPlanDetails.activityDescription}
                 </Text>
               </>
@@ -438,7 +469,7 @@ const GeneratedLessonPlan = () => {
             {lessonPlanDetails.practiceWork && (
               <>
                 <SectionHeader title="Practice Work" />
-                <Text style={{fontSize:GetFontSize(15)}} className="font-inter500 leading-6 text-[#637381] mb-4">
+                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381] mb-4">
                   {lessonPlanDetails.practiceWork}
                 </Text>
               </>
@@ -458,10 +489,10 @@ const GeneratedLessonPlan = () => {
                 <SectionHeader title="Quick Assessments" />
                 {lessonPlanDetails.quickAssessments.map((assessment, index) => (
                   <View key={index} className="mb-3">
-                    <Text  style={{fontSize:GetFontSize(15)}} className=" font-500 text-[#637381] mb-1">
+                    <Text style={{ fontSize: GetFontSize(15) }} className=" font-500 text-[#637381] mb-1">
                       • {assessment.question}
                     </Text>
-                    <Text style={{fontSize:GetFontSize(16)}} className="font-600 text-[#6B7280] ml-4">
+                    <Text style={{ fontSize: GetFontSize(16) }} className="font-600 text-[#6B7280] ml-4">
                       Cognitive Level: {assessment.cognitiveLevel}
                     </Text>
                   </View>
@@ -502,6 +533,7 @@ const GeneratedLessonPlan = () => {
             end={{ x: 1, y: 0 }}
             style={{ borderRadius: 24, padding: 2 }}
           >
+            
             <TouchableOpacity
               className="bg-white py-4 px-5 rounded-3xl items-center flex-row justify-center"
               style={{
@@ -513,8 +545,8 @@ const GeneratedLessonPlan = () => {
               }}
               onPress={() => scrollToSection('sections')}
             >
-              <Text  style={{fontSize: GetFontSize(18)}}className="text-[#DC9047]  font-inter700 mr-2">
-                Lesson plan Sections
+              <Text style={{ fontSize: GetFontSize(18) }} className="text-[#DC9047]  font-inter700 mr-2">
+                Lesson Plan Sections
               </Text>
               <ScrollUpArrow Width={12} Height={12} color="#DC9047" />
             </TouchableOpacity>
