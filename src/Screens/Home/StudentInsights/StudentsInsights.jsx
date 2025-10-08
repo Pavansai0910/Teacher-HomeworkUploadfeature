@@ -1,244 +1,212 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
-
-const { width } = Dimensions.get('window');
+import { useSelector } from 'react-redux';
+import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import LearningNavbar from './LearningNavbar';
+import LinearGradient from 'react-native-linear-gradient';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Animated,
+  Dimensions,
+} from 'react-native';
+import GetFontSize from '../../../Commons/GetFontSize';
+import ScrollUpArrow from '../../../Images/LessonPlan/ScrollUpArrow';
+import { useState, useRef } from 'react';
 
 const StudentsInsights = () => {
-  const navigation = useNavigation();
-  const [selectedPeriod, setSelectedPeriod] = useState('Week');
+  const selectedAssignment = useSelector(
+    state => state.assignment.selectedAssignment,
+  );
 
-  const statsData = {
-    totalTests: 45,
-    averageScore: 87.5,
-    studyHours: 28.5,
-    streak: 12,
-    totalQuestions: 1250,
-    correctAnswers: 1087,
-    improvement: '+15%',
-    rank: 3,
+  // Dummy chapter data
+  const chaptersData = [
+    { id: 1, name: 'Number Systems', isSelected: true },
+    { id: 2, name: 'Polynomials', isSelected: false },
+    { id: 3, name: 'Coordinate Geometry', isSelected: false },
+    { id: 4, name: 'Linear Equations', isSelected: false },
+    { id: 5, name: 'Introduction to Euclid\'s Geometry', isSelected: false },
+    { id: 6, name: 'Lines and Angles', isSelected: false },
+    { id: 7, name: 'Triangles', isSelected: false },
+    { id: 8, name: 'Quadrilaterals', isSelected: false },
+  ];
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedChapter, setSelectedChapter] = useState(chaptersData[0]);
+  const [chapters, setChapters] = useState(chaptersData);
+  const dropdownAnimation = useRef(new Animated.Value(0)).current;
+  const { height: screenHeight } = Dimensions.get('window');
+
+  const classDisplay = selectedAssignment
+    ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
+    : 'Not selected';
+
+  const subjectDisplay =
+    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    'Not selected';
+
+  const toggleDropdown = () => {
+    const toValue = isDropdownOpen ? 0 : 1;
+    setIsDropdownOpen(!isDropdownOpen);
+    
+    Animated.spring(dropdownAnimation, {
+      toValue,
+      useNativeDriver: false,
+      tension: 100,
+      friction: 8,
+    }).start();
   };
 
-  const subjectStats = [
-    { subject: 'Mathematics', score: 92, progress: 85, color: 'bg-blue-500', icon: '📐' },
-    { subject: 'Science', score: 88, progress: 78, color: 'bg-green-500', icon: '🔬' },
-    { subject: 'English', score: 85, progress: 72, color: 'bg-yellow-500', icon: '📚' },
-    { subject: 'History', score: 89, progress: 80, color: 'bg-purple-500', icon: '🏛️' },
-  ];
+  const selectChapter = (chapter) => {
+    const updatedChapters = chapters.map(ch => ({
+      ...ch,
+      isSelected: ch.id === chapter.id
+    }));
+    
+    setChapters(updatedChapters);
+    setSelectedChapter(chapter);
+    toggleDropdown();
+  };
 
-  const weeklyActivity = [
-    { day: 'Mon', hours: 4.2, tests: 3 },
-    { day: 'Tue', hours: 3.8, tests: 2 },
-    { day: 'Wed', hours: 5.1, tests: 4 },
-    { day: 'Thu', hours: 2.9, tests: 2 },
-    { day: 'Fri', hours: 4.7, tests: 5 },
-    { day: 'Sat', hours: 6.2, tests: 4 },
-    { day: 'Sun', hours: 3.5, tests: 1 },
-  ];
+  const dropdownHeight = dropdownAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, Math.min(350, screenHeight * 0.4)],
+  });
 
-  const achievements = [
-    { title: 'Perfect Score', description: 'Scored 100% in 5 tests', icon: '🎯', earned: true },
-    { title: 'Study Streak', description: '10 days in a row', icon: '🔥', earned: true },
-    { title: 'Speed Runner', description: 'Complete 20 tests in a day', icon: '⚡', earned: false },
-    { title: 'Subject Master', description: 'Master all subjects', icon: '👑', earned: false },
-  ];
-
-  const periods = ['Week', 'Month', 'Year'];
-
-  const StatCard = ({ title, value, subtitle, icon, color = 'border-blue-500' }) => (
-    <View className={`bg-white p-4 rounded-2xl mb-2 border-l-4 ${color} shadow-sm`} style={{ width: (width - 50) / 2 }}>
-      <View className="flex-row items-center mb-2">
-        <Text className="text-lg mr-2">{icon}</Text>
-        <Text className="text-sm text-gray-600 font-medium">{title}</Text>
-      </View>
-      <Text className="text-2xl font-bold text-blue-500 mb-1">{value}</Text>
-      {subtitle && <Text className="text-xs text-gray-400">{subtitle}</Text>}
-    </View>
-  );
-
-  const SubjectCard = ({ subject, score, progress, color, icon }) => (
-    <View className="bg-white p-4 rounded-2xl mb-2 shadow-sm">
-      <View className="flex-row items-center mb-4">
-        <Text className="text-2xl mr-4">{icon}</Text>
-        <View className="flex-1">
-          <Text className="text-base font-bold text-gray-800 mb-1">{subject}</Text>
-          <Text className="text-sm text-gray-600">Average: {score}%</Text>
-        </View>
-      </View>
-      <View className="flex-row items-center">
-        <View className="flex-1 h-2 bg-gray-200 rounded-full mr-3">
-          <View 
-            className={`h-full ${color} rounded-full`}
-            style={{ width: `${progress}%` }}
-          />
-        </View>
-        <Text className="text-xs font-bold text-gray-600">{progress}%</Text>
-      </View>
-    </View>
-  );
-
-  const ActivityBar = ({ day, hours, tests, maxHours = 6.5 }) => (
-    <View className="items-center">
-      <View className="h-16 justify-end mb-1">
-        <View 
-          className={`w-5 rounded-full ${hours > 4 ? 'bg-green-500' : hours > 2 ? 'bg-yellow-500' : 'bg-red-400'}`}
-          style={{ height: (hours / maxHours) * 60 }}
-        />
-      </View>
-      <Text className="text-xs font-bold text-gray-800 mb-1">{day}</Text>
-      <Text className="text-xs text-gray-600">{hours}h</Text>
-      <Text className="text-xs text-gray-500">{tests} tests</Text>
-    </View>
-  );
+  const rotateIcon = dropdownAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-50">
-      {/* Header with Back Button */}
-      <View className="items-center py-5 px-5">
-        <View className="flex-row items-center justify-between w-full mb-2">
-          <TouchableOpacity 
-            onPress={() => navigation.goBack()}
-            className="p-2 rounded-full bg-white shadow-sm"
-          >
-            <Text className="text-lg">←</Text>
-          </TouchableOpacity>
-          <Text className="text-2xl font-bold text-gray-800">📊 Your Stats</Text>
-          <View className="w-10" />
+    <SafeAreaView className="flex-1 bg-white">
+      <LearningNavbar
+        classDisplay={classDisplay}
+        subjectDisplay={subjectDisplay}
+      />
+
+      {/* Main Content Area */}
+      <View className="flex-1">
+        {/* Your main content will go here */}
+        <View className="flex-1 justify-center items-center">
+          <Text style={{ fontSize: GetFontSize(16) }} className="text-gray-500">
+            Content for {selectedChapter.name}
+          </Text>
         </View>
-        <Text className="text-base text-gray-600">Track your learning progress</Text>
       </View>
 
-      {/* Period Filter */}
-      <View className="flex-row justify-center px-5 mb-5">
-        {periods.map((period) => (
-          <TouchableOpacity
-            key={period}
-            className={`py-2 px-5 mx-1 rounded-2xl border ${
-              selectedPeriod === period 
-                ? 'bg-blue-500 border-blue-500' 
-                : 'bg-white border-gray-200'
-            }`}
-            onPress={() => setSelectedPeriod(period)}
+      {/* Floating Chapter Selector */}
+      <View className="absolute bottom-0 left-0 right-0">
+        {/* Dropdown Content */}
+        {isDropdownOpen && (
+          <Animated.View
+            style={{
+              height: dropdownHeight,
+              backgroundColor: '#F8F4E6',
+              marginHorizontal: 20,
+              marginBottom: 10,
+              borderRadius: 20,
+              borderWidth: 2,
+              borderColor: '#E7B686',
+              elevation: 8,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -2 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+            }}
           >
-            <Text className={`text-sm ${
-              selectedPeriod === period ? 'text-white font-semibold' : 'text-gray-600'
-            }`}>
-              {period}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      <ScrollView className="flex-1 px-5" showsVerticalScrollIndicator={false}>
-        {/* Quick Stats */}
-        <View className="mb-8">
-          <Text className="text-xl font-bold text-gray-800 mb-4">Quick Overview</Text>
-          <View className="flex-row flex-wrap justify-between">
-            <StatCard
-              title="Tests Taken"
-              value={statsData.totalTests}
-              icon="📝"
-              color="border-blue-500"
-            />
-            <StatCard
-              title="Average Score"
-              value={`${statsData.averageScore}%`}
-              subtitle={`${statsData.improvement} this week`}
-              icon="📈"
-              color="border-green-500"
-            />
-            <StatCard
-              title="Study Hours"
-              value={`${statsData.studyHours}h`}
-              subtitle="This week"
-              icon="⏰"
-              color="border-yellow-500"
-            />
-            <StatCard
-              title="Current Streak"
-              value={`${statsData.streak} days`}
-              icon="🔥"
-              color="border-red-500"
-            />
-          </View>
-        </View>
-
-        {/* Subject Performance */}
-        <View className="mb-8">
-          <Text className="text-xl font-bold text-gray-800 mb-4">Subject Performance</Text>
-          {subjectStats.map((subject, index) => (
-            <SubjectCard key={index} {...subject} />
-          ))}
-        </View>
-
-        {/* Weekly Activity */}
-        <View className="mb-8">
-          <Text className="text-xl font-bold text-gray-800 mb-4">Weekly Activity</Text>
-          <View className="bg-white p-5 rounded-2xl shadow-sm">
-            <View className="flex-row justify-around">
-              {weeklyActivity.map((day, index) => (
-                <ActivityBar key={index} {...day} />
+            <ScrollView 
+              style={{ flex: 1 }}
+              contentContainerStyle={{ padding: 8 }}
+              showsVerticalScrollIndicator={false}
+            >
+              {chapters.map((chapter) => (
+                <TouchableOpacity
+                  key={chapter.id}
+                  onPress={() => selectChapter(chapter)}
+                  style={{
+                    backgroundColor: chapter.isSelected ? '#FFE4B5' : 'white',
+                    marginVertical: 4,
+                    paddingVertical: 12,
+                    paddingHorizontal: 16,
+                    borderRadius: 12,
+                    borderWidth: 1,
+                    borderColor: chapter.isSelected ? '#DC9047' : '#E7B686',
+                    elevation: 2,
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 2,
+                  }}
+                >
+                  <Text 
+                    style={{ 
+                      fontSize: GetFontSize(14),
+                      color: chapter.isSelected ? '#DC9047' : '#8B6914',
+                      fontWeight: chapter.isSelected ? '600' : '500'
+                    }}
+                  >
+                    {chapter.name}
+                  </Text>
+                </TouchableOpacity>
               ))}
-            </View>
-          </View>
-        </View>
+            </ScrollView>
+          </Animated.View>
+        )}
 
-        {/* Achievements */}
-        <View className="mb-8">
-          <Text className="text-xl font-bold text-gray-800 mb-4">Achievements</Text>
-          <View className="flex-row flex-wrap justify-between">
-            {achievements.map((achievement, index) => (
-              <View 
-                key={index} 
-                className={`p-4 rounded-2xl mb-2 items-center shadow-sm ${
-                  achievement.earned ? 'bg-white' : 'bg-gray-100'
-                }`}
-                style={{ width: (width - 50) / 2 }}
+        {/* Main Chapter Button */}
+        <View className="bg-white px-5 py-4">
+          <LinearGradient
+            colors={['#9C7B5B', '#E7B686']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={{ borderRadius: 24, padding: 2 }}
+          >
+            <TouchableOpacity
+              className="bg-white py-4 px-5 rounded-3xl items-center flex-row justify-center"
+              style={{
+                borderLeftWidth: 2,
+                borderRightWidth: 2,
+                borderTopWidth: 1,
+                borderBottomWidth: 3,
+                borderColor: '#E7B686',
+              }}
+              onPress={toggleDropdown}
+            >
+              <Text 
+                style={{ fontSize: GetFontSize(18) }} 
+                className="text-[#DC9047] font-inter700 mr-2 flex-1 text-center"
               >
-                <Text className={`text-2xl mb-2 ${!achievement.earned && 'opacity-30'}`}>
-                  {achievement.earned ? achievement.icon : '🔒'}
-                </Text>
-                <Text className={`text-sm font-bold text-center mb-1 ${
-                  achievement.earned ? 'text-gray-800' : 'text-gray-400'
-                }`}>
-                  {achievement.title}
-                </Text>
-                <Text className={`text-xs text-center ${
-                  achievement.earned ? 'text-gray-600' : 'text-gray-400'
-                }`}>
-                  {achievement.description}
-                </Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {/* Detailed Stats */}
-        <View className="mb-8">
-          <Text className="text-xl font-bold text-gray-800 mb-4">Detailed Statistics</Text>
-          <View className="bg-white rounded-2xl p-5 shadow-sm">
-            <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
-              <Text className="text-sm text-gray-600">Total Questions Answered</Text>
-              <Text className="text-base font-bold text-gray-800">{statsData.totalQuestions}</Text>
-            </View>
-            <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
-              <Text className="text-sm text-gray-600">Correct Answers</Text>
-              <Text className="text-base font-bold text-gray-800">{statsData.correctAnswers}</Text>
-            </View>
-            <View className="flex-row justify-between items-center py-3 border-b border-gray-100">
-              <Text className="text-sm text-gray-600">Accuracy Rate</Text>
-              <Text className="text-base font-bold text-gray-800">
-                {((statsData.correctAnswers / statsData.totalQuestions) * 100).toFixed(1)}%
+                {selectedChapter.name}
               </Text>
-            </View>
-            <View className="flex-row justify-between items-center py-3">
-              <Text className="text-sm text-gray-600">Current Rank</Text>
-              <Text className="text-base font-bold text-gray-800">#{statsData.rank}</Text>
-            </View>
-          </View>
+              <Animated.View
+                style={{
+                  transform: [{ rotate: rotateIcon }]
+                }}
+              >
+                <ScrollUpArrow Width={12} Height={12} color="#DC9047" />
+              </Animated.View>
+            </TouchableOpacity>
+          </LinearGradient>
         </View>
-      </ScrollView>
+      </View>
+
+      {/* Overlay to close dropdown when tapping outside */}
+      {isDropdownOpen && (
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.1)',
+          }}
+          activeOpacity={1}
+          onPress={toggleDropdown}
+        />
+      )}
     </SafeAreaView>
   );
 };

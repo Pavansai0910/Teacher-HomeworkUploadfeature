@@ -12,9 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
-import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import capitalizeSubject from '../../../Utils/CapitalizeSubject';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import { assignExam } from '../../../Services/teacherAPIV1';
@@ -30,6 +28,8 @@ import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader';
 import AssignSuccessScreen from './AssignSuccessScreen';
 import Calendar from '../../../Images/LessonPlan/Calendar';
 import ViewIcon from '../../../Images/AssignTestCard/ViewIcon';
+import PdfViewerModal from './PdfViewerModal';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
@@ -44,6 +44,9 @@ const AssignTestDate = ({ route }) => {
   const [pickerTarget, setPickerTarget] = useState(null);
   const [showLoader, setShowLoader] = useState(false);
   const [downloadLoader, setDownloadLoader] = useState(false);
+  const [showPdfViewer, setShowPdfViewer] = useState(false);
+  const [pdfUrl, setPdfUrl] = useState('');
+
 
   const [showTestLoader, setShowTestLoader] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
@@ -111,50 +114,52 @@ const AssignTestDate = ({ route }) => {
     setShowTestLoader(true);
   };
 
-  const handleExamDownload = async questionPaperCode => {
-    setDownloadLoader(true);
-    const hasPermission = await requestStoragePermission();
-    if (!hasPermission) {
-      setDownloadLoader(false);
-      return;
-    }
-    try {
-      const response = await downloadExam({
-        questionPaperCode: questionPaperCode,
-      });
-      const base64Data = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(response.data);
-        reader.onloadend = () => {
-          const base64 = reader.result.split(',')[1];
-          resolve(base64);
-        };
-        reader.onerror = reject;
-      });
-      const directoryPath = `${DownloadDirectoryPath}/Adaptmate Educator App`;
-      const checkDirectory = await RNFS.exists(directoryPath);
-      if (!checkDirectory) {
-        await RNFS.mkdir(directoryPath);
-      }
-      const path = `${directoryPath}/LGA_${Date.now()}.pdf`;
-      await RNFS.writeFile(path, base64Data, 'base64');
-      Toast.show({
-        type: 'success',
-        text1: `Saved in Download/Adaptmate Educator App`,
-      });
-      setDownloadLoader(false);
-    } catch (error) {
-      console.error('RNFS Write Error:', error);
-      setDownloadLoader(false);
-      Toast.show({
-        type: 'error',
-        text1: 'Download Failed',
-        text2: 'Could not save file. Check permissions or internal file error.',
-      });
-    } finally {
-      setDownloadLoader(false);
-    }
-  };
+  // const handleExamDownload = async questionPaperCode => {
+  //   setDownloadLoader(true);
+  //   const hasPermission = await requestStoragePermission();
+  //   if (!hasPermission) {
+  //     setDownloadLoader(false);
+  //     return;
+  //   }
+  //   try {
+  //     const response = await downloadExam({
+  //       questionPaperCode: questionPaperCode,
+  //     });
+  //     const base64Data = await new Promise((resolve, reject) => {
+  //       const reader = new FileReader();
+  //       reader.readAsDataURL(response.data);
+  //       reader.onloadend = () => {
+  //         const base64 = reader.result.split(',')[1];
+  //         resolve(base64);
+  //       };
+  //       reader.onerror = reject;
+  //     });
+  //     const directoryPath = `${DownloadDirectoryPath}/Adaptmate Educator App`;
+  //     const checkDirectory = await RNFS.exists(directoryPath);
+  //     if (!checkDirectory) {
+  //       await RNFS.mkdir(directoryPath);
+  //     }
+  //     const path = `${directoryPath}/LGA_${Date.now()}.pdf`;
+  //     await RNFS.writeFile(path, base64Data, 'base64');
+  //     Toast.show({
+  //       type: 'success',
+  //       text1: `Saved in Download/Adaptmate Educator App`,
+  //     });
+  //     setDownloadLoader(false);
+  //   } catch (error) {
+  //     console.error('RNFS Write Error:', error);
+  //     setDownloadLoader(false);
+  //     Toast.show({
+  //       type: 'error',
+  //       text1: 'Download Failed',
+  //       text2: 'Could not save file. Check permissions or internal file error.',
+  //     });
+  //   } finally {
+  //     setDownloadLoader(false);
+  //   }
+  // };
+
+
 
   // Success screen actions
   const handleViewAssignedTests = () => {
@@ -166,6 +171,59 @@ const AssignTestDate = ({ route }) => {
     setShowSuccessScreen(false);
     navigation.navigate('MainTabNavigator', { screen: 'Home' });
   };
+
+const handleViewPdf = async (questionPaperCode) => {
+  try {
+    setDownloadLoader(true);
+
+    // Request the PDF from backend
+    const response = await downloadExam({ questionPaperCode });
+    console.log('downloadExam response:', response?.data);
+
+    // Case 1: Backend returns a direct URL to PDF
+    if (response?.data?.url && response.data.url.endsWith('.pdf')) {
+      setPdfUrl(response.data.url);
+      setShowPdfViewer(true);
+    }
+
+    // Case 2: Backend returns base64 string directly
+    else if (typeof response?.data === 'string' && response.data.startsWith('JVBER')) {
+      const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
+      await RNFS.writeFile(path, response.data, 'base64');
+      setPdfUrl(`file://${path}`);
+      setShowPdfViewer(true);
+    }
+
+    // Case 3: Backend returns blob object with blobId
+    else if (response?.data?._data?.blobId) {
+      const blobId = response.data._data.blobId;
+
+      // Fetch the actual PDF binary from your API
+      const base64Data = await ReactNativeBlobUtil.fetch(
+        'GET',
+        `https://your-backend-api.com/download/${blobId}`, 
+      ).then(res => res.base64());
+
+      const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
+      await RNFS.writeFile(path, base64Data, 'base64');
+      setPdfUrl(`file://${path}`);
+      setShowPdfViewer(true);
+    }
+
+    else {
+      Toast.show({ type: 'error', text1: 'Unsupported PDF format received' });
+      console.log('Unknown PDF data type:', response?.data);
+    }
+  } catch (error) {
+    console.error('PDF Load Error:', error);
+    Toast.show({ type: 'error', text1: 'Failed to load PDF' });
+  } finally {
+    setDownloadLoader(false);
+  }
+};
+
+
+
 
   return (
     <SafeAreaView className="flex-1 bg-[#FFFFFF]">
@@ -388,17 +446,16 @@ const AssignTestDate = ({ route }) => {
                   borderBottomWidth: 3,
                   borderColor: '#DFAF02',
                 }}
-                onPress={() =>
-                  handleExamDownload(questionPaper.questionPaperCode)
-                }
+                onPress={() => handleViewPdf(questionPaper.questionPaperCode)}
+                disabled={downloadLoader} // Disable while loading
               >
                 {downloadLoader ? (
                   <ActivityIndicator size="small" color="#FFB84D" />
                 ) : (
-                  <View className="flex-row items-center gap-2"> 
-                  <ViewIcon color='#CB9101' />
+                  <View className="flex-row items-center gap-2">
+                    <ViewIcon color='#CB9101' />
                     <Text
-                      style={{ fontSize: GetFontSize(14)}}
+                      style={{ fontSize: GetFontSize(14) }}
                       className=" font-inter600 text-[#CB9101]"
                     >
                       View test
@@ -479,6 +536,12 @@ const AssignTestDate = ({ route }) => {
           onClose={handleCloseSuccess}
         />
       </Modal>
+
+      <PdfViewerModal
+        visible={showPdfViewer}
+        onClose={() => setShowPdfViewer(false)}
+        pdfUrl={pdfUrl}
+      />
     </SafeAreaView>
   );
 };
