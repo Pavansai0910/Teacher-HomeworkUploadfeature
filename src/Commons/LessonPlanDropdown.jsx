@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
-import capitalizeSubject from '../Utils/CapitalizeSubject';
+import capitalize from '../Utils/Capitalize';
 import GetFontSize from './GetFontSize';
 import DropdownArrow from '../Images/LessonPlan/DropdownArrow';
 
@@ -65,7 +65,7 @@ const LessonPlanDropdown = ({ options, placeholder, onSelect, selectedValue }) =
                         isSelected ? 'text-[#DC9047] font-semibold ' : 'text-[#637381]'
                       }`}
                     >
-                      {capitalizeSubject(item)}
+                      {capitalize(item)}
                     </Text>
                   </TouchableOpacity>
                 );

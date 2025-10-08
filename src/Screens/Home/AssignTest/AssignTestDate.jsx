@@ -13,23 +13,22 @@ import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
-import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import capitalize from '../../../Utils/Capitalize';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import { assignExam } from '../../../Services/teacherAPIV1';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../../Context/AuthContext';
 import RNFS, { DownloadDirectoryPath } from 'react-native-fs';
 import { downloadExam } from '../../../Services/teacherAPIV1';
-import { requestStoragePermission } from '../../../Permission/StoragePermission';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
 import LinearGradient from 'react-native-linear-gradient';
-import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader';
 import AssignSuccessScreen from './AssignSuccessScreen';
 import Calendar from '../../../Images/LessonPlan/Calendar';
 import ViewIcon from '../../../Images/AssignTestCard/ViewIcon';
 import PdfViewerModal from './PdfViewerModal';
 import ReactNativeBlobUtil from 'react-native-blob-util';
+import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader'; 
 
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
@@ -58,7 +57,7 @@ const AssignTestDate = ({ route }) => {
     : 'Not selected';
 
   const subjectDisplay =
-    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    capitalize(selectedAssignment?.subjectId?.subjectName) ||
     'Not selected';
 
   const formatDate = date => {

@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
 import { View, Text } from 'react-native'
-import capitalizeSubject from '../../Utils/CapitalizeSubject'
+import capitalize from '../../Utils/Capitalize'
 import { useSelector } from 'react-redux';
 import { getAllStudents } from '../../Services/teacherAPIV1';
 import { AuthContext } from '../../Context/AuthContext';
@@ -48,7 +48,7 @@ function NavHeader() {
                  numberOfLines={1}
                  ellipsizeMode="tail"
                >
-                 {capitalizeSubject(selectedAssignment?.subjectId?.subjectName)}
+                 {capitalize(selectedAssignment?.subjectId?.subjectName)}
                </Text>
              </View>
            </View>

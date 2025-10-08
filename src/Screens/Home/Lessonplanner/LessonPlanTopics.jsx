@@ -18,7 +18,7 @@ import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import { getAllTopics } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
-import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import capitalize from '../../../Utils/Capitalize';
 import GetFontSize from '../../../Commons/GetFontSize';
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -36,7 +36,7 @@ const LessonPlanTopics = ({ route }) => {
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
     : 'Not selected';
   const subjectDisplay =
-    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    capitalize(selectedAssignment?.subjectId?.subjectName) ||
     'Not selected';
   const selectedTopicsDisplay = selectedTopics.length > 0
     ? `${selectedTopics.length} topic${selectedTopics.length > 1 ? 's' : ''} selected`

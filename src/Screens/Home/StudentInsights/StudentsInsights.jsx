@@ -1,6 +1,6 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
-import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import capitalizeSubject from '../../../Utils/Capitalize';
 import LearningNavbar from './LearningNavbar';
 import LinearGradient from 'react-native-linear-gradient';
 import {

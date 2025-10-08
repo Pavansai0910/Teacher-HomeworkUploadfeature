@@ -7,6 +7,7 @@ import {
     ActivityIndicator,
     PermissionsAndroid,
     Platform,
+    Alert
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,15 +15,17 @@ import { useSelector } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import RNFS, { DownloadDirectoryPath } from 'react-native-fs';
 import Toast from 'react-native-toast-message';
-
+import { downloadLessonPlan } from '../../../Services/teacherAPIV2';
 import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Download from '../../../Images/LessonPlan/Download';
 import ScrollUpArrow from '../../../Images/LessonPlan/ScrollUpArrow';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { AuthContext } from '../../../Context/AuthContext';
+import { requestStoragePermission } from '../../../Permission/StoragePermission';
 
 const HistoryDetails = () => {
     const route = useRoute();
+    const [downloadStatus, setDownloadStatus] = useState(false);
     const navigation = useNavigation();
     const scrollViewRef = useRef(null);
     const { teacherProfile } = useContext(AuthContext);
@@ -36,6 +39,8 @@ const HistoryDetails = () => {
         chapterId,
         selectedTopics,
     } = route.params || {};
+
+    console.log("Route params:", route.params);
 
     // Add validation like web
     if (!lessonPlanData) {
@@ -54,8 +59,6 @@ const HistoryDetails = () => {
         );
     }
 
-    const [downloadingHomework, setDownloadingHomework] = useState([]);
-
     // Use the same structure as web - lessonPlanData is the main data
     const lessonPlanDetails = lessonPlanData || {};
 
@@ -73,80 +76,51 @@ const HistoryDetails = () => {
         scrollViewRef.current?.scrollTo({ y: 0, animated: true });
     };
 
-    // Request permission (Android)
-    const requestStoragePermission = async () => {
-        if (Platform.OS === 'android') {
-            try {
-                const granted = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-                    {
-                        title: 'Storage Permission Required',
-                        message: 'This app needs access to your storage to download files.',
-                    }
-                );
-                return granted === PermissionsAndroid.RESULTS.GRANTED;
-            } catch (err) {
-                console.warn(err);
-                return false;
-            }
-        } else {
-            return true;
-        }
-    };
-
     // Handle download
-    const handleHomeworkDownload = async (homeworkId) => {
-        // Show toast message when download starts
-        Toast.show({
-            type: 'info',
-            text1: 'Download Starting',
-            text2: 'Your lesson plan download is starting...',
-            position: 'bottom',
-        });
-
-        setDownloadingHomework((prev) => [...prev, homeworkId]);
-
+    const handleLessonPlanDownload = async (_id) => {
+        console.log("Initiating download for lesson plan ID:", _id);
+        
+        // 1. Permission Check
         const hasPermission = await requestStoragePermission();
         if (!hasPermission) {
-            setDownloadingHomework((prev) => prev.filter((id) => id !== homeworkId));
-            Toast.show({
-                type: 'error',
-                text1: 'Permission Denied',
-                text2: 'Storage permission is required to download files.',
-                position: 'bottom',
-            });
             return;
         }
-
+        
+        setDownloadStatus(true);
         try {
-            const directoryPath = `${DownloadDirectoryPath}/Adaptmate_Learner_App`;
-            const exists = await RNFS.exists(directoryPath);
-            if (!exists) await RNFS.mkdir(directoryPath);
+            const response = await downloadLessonPlan({ _id: _id });
 
-            const fileName = `Lesson_Plan_${topicName.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}.pdf`;
-            const path = `${directoryPath}/${fileName}`;
-
-            // Dummy data for example
-            const dummyPDF = 'JVBERi0xLjQKJeLjz9MKMyAwIG9iago8PAovVHlwZSAvUGFnZQovUGFyZW50IDIgMCBSCi9Db250ZW50cyA0IDAgUgovUmVzb3VyY2VzIDw8L0ZvbnQgPDwvRjEgNSAwIFI+PiA+PgovTWVkaWFCb3ggWzAgMCA1OTUuMjggODQxLjg5XQovQ3JvcEJveCBbMCAwIDU5NS4yOCA4NDEuODldPj4KZW5kb2JqCjUgMCBvYmoKPDwvVHlwZSAvRm9udAovU3VidHlwZSAvVHlwZTEKL0Jhc2VGb250IC9UaW1lcy1Sb21hbgovRW5jb2RpbmcgL1dpbkFuc2lFbmNvZGluZz4+CmVuZG9iago=';
-
-            await RNFS.writeFile(path, dummyPDF, 'base64');
-
-            Toast.show({
-                type: 'success',
-                text1: 'Download Complete',
-                text2: `Lesson plan saved as ${fileName}`,
-                position: 'bottom',
+            const base64Data = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(response.data);
+                reader.onloadend = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = reject;
             });
+
+            const directoryPath = `${DownloadDirectoryPath}/Adaptmate Educator App/Lesson Plan`;
+            const checkDirectory = await RNFS.exists(directoryPath);
+            if (!checkDirectory) {
+                await RNFS.mkdir(directoryPath);
+            }
+
+            const path = `${directoryPath}/Lesson Plan_${Date.now()}.pdf`;  
+            await RNFS.writeFile(path, base64Data, 'base64');
+
+            Alert.alert('Lesson Plan Downloaded Successfully', 'Saved in Downloads/Adaptmate Educator App/Lesson Plan');
+            setDownloadStatus(false);
         } catch (error) {
-            console.error('Download error:', error);
+            setDownloadStatus(false);
+            console.error("RNFS Write Error:", error);
             Toast.show({
                 type: 'error',
-                text1: 'Download Failed',
-                text2: 'Could not save file. Please try again.',
-                position: 'bottom',
+                text1: "Download Failed",
+                text2: "Could not save file. Check permissions or internal file error.",
             });
         } finally {
-            setDownloadingHomework((prev) => prev.filter((id) => id !== homeworkId));
+            setDownloadStatus(false);
         }
     };
 
@@ -236,8 +210,8 @@ const HistoryDetails = () => {
                         <View className="flex-row items-center mb-4">
                             <TouchableOpacity
                                 className="bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1"
-                                onPress={() => handleHomeworkDownload(chapterId)}
-                                disabled={downloadingHomework.includes(chapterId)}
+                                onPress={() => handleLessonPlanDownload(lessonPlanData._id)}
+                                // disabled={downloadingHomework.includes(chapterId)}
                                 style={{
                                     borderRightWidth: 2,
                                     borderLeftWidth: 2,
@@ -245,7 +219,7 @@ const HistoryDetails = () => {
                                     borderBottomWidth: 3,
                                 }}
                             >
-                                {downloadingHomework.includes(chapterId) ? (
+                                {downloadStatus ? (
                                     <ActivityIndicator
                                         size="small"
                                         color="#1EAFF7"

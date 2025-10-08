@@ -12,7 +12,7 @@ import Loader from '../../../Commons/AnimatedLoader/Loader';
 import { createLessonPlan } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import Calendar from '../../../Images/LessonPlan/Calendar';
-import capitalizeSubject from '../../../Utils/CapitalizeSubject';
+import capitalize from '../../../Utils/Capitalize';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { setLessonPlanner } from '../../../store/Slices/lessonPlannerSlice'; 
 
@@ -39,7 +39,7 @@ const LessonPlanGeneration = () => {
     : 'Not selected';
 
   const subjectDisplay =
-    capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
+    capitalize(selectedAssignment?.subjectId?.subjectName) ||
     'Not selected';
 
   const handleGenerate = async () => {
