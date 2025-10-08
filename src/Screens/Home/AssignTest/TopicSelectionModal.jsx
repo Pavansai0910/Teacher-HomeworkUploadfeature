@@ -59,7 +59,7 @@ const TopicSelectionModal = ({
       case 'pending':
         return {
           bg: '#FEF6EB',
-          text: '#ffc466ff',
+          text: '#FFB133',
           label: 'Pending',
           borderColor: '#FFC466',
         };
@@ -208,7 +208,7 @@ const TopicSelectionModal = ({
                     className={`font-inter600 ${
                       activeFilter === 'completed'
                         ? 'text-[#A17F5E]'
-                        : 'text-[#6B7280]'
+                        : 'text-[#637381]'
                     }`}
                     numberOfLines={1}
                   >
@@ -253,10 +253,10 @@ const TopicSelectionModal = ({
                         isSelected ? 'bg-[#F59E0B]' : 'bg-white'
                       } flex-row items-center`}
                       style={{
-                        borderTopWidth: 0.5,
-                        borderRightWidth: 1,
-                        borderBottomWidth: 2,
-                        borderLeftWidth: 1,
+                        borderTopWidth: 1.5,
+                        borderRightWidth: 2.5,
+                        borderBottomWidth: 4,
+                        borderLeftWidth: 2.5,
                         borderColor: '#DC9047',
                         borderStyle: 'solid'
                       }}
@@ -269,7 +269,7 @@ const TopicSelectionModal = ({
                       <Text
                         style={{ fontSize: GetFontSize(14) }}
                         className={`flex-1 font-inter600 ${
-                          isSelected ? 'text-white' : 'text-[#212B36]'
+                          isSelected ? 'text-white' : 'text-[#637381]'
                         }`}
                         numberOfLines={2}
                       >
@@ -289,7 +289,7 @@ const TopicSelectionModal = ({
                         }}
                       >
                         <Text
-                          className="font-inter600"
+                          className="font-inter500"
                           style={{
                             fontSize: GetFontSize(12),
                             color: statusBadge.text,

@@ -228,52 +228,41 @@ const handleViewPdf = async (questionPaperCode) => {
   return (
     <SafeAreaView className="flex-1 bg-[#FFFFFF]">
       {/* Header */}
-      <View
-        className="bg-[#FFF3D6]"
-        style={{
-          minHeight: 149,
-          paddingTop: 20,
-          paddingRight: 24,
-          paddingBottom: 20,
-          paddingLeft: 24,
-          justifyContent: 'flex-end',
-        }}
-      >
-        <View
-          className="flex-row items-center"
-          style={{ height: 80, gap: 12, marginTop: 13 }}
+      {/* Header */}
+<View className="bg-[#FFF3D6] px-6 py-6">
+  <View className="flex-row items-center">
+    <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center mr-3">
+      <AssignTestDoc />
+    </View>
+    <View className="flex-1">
+      <View className="flex-row justify-between items-start">
+        <Text
+          style={{ fontSize: GetFontSize(18) }}
+          className="text-[#212B36] font-inter600 flex-shrink"
         >
-          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center">
-            <AssignTestDoc />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-center mb-1">
-              <Text
-                style={{ fontSize: GetFontSize(18) }}
-                className="text-[#212B36] font-inter600 flex-shrink"
-              >
-                Assign Test
-              </Text>
-              <TouchableOpacity
-                className="w-7 h-7 justify-center items-center border-2 border-[#FDCA0C] rounded-full"
-                onPress={() =>
-                  navigation.navigate('MainTabNavigator', { screen: 'Home' })
-                }
-              >
-                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-                  <Text className="text-white font-inter400">✕</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400"
-            >
-              Boost your students's progress in{'\n'}just few taps!
-            </Text>
-          </View>
-        </View>
+          Assign Test
+        </Text>
+        <TouchableOpacity
+          className="w-6 h-6 bg-[#FDCA0C] rounded-full justify-center items-center"
+          onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
+        >
+          <Text
+            style={{ fontSize: GetFontSize(14) }}
+            className="text-white font-inter400"
+          >
+            ✕
+          </Text>
+        </TouchableOpacity>
       </View>
+      <Text
+        style={{ fontSize: GetFontSize(14) }}
+        className="text-[#454F5B] font-inter400"
+      >
+        Boost your students's progress in{'\n'}just few taps!
+      </Text>
+    </View>
+  </View>
+</View>
       {/* Scrollable Content */}
       <ScrollView>
         <NavHeader />
@@ -409,7 +398,7 @@ const handleViewPdf = async (questionPaperCode) => {
             <View className="flex-row justify-between items-start mb-3">
               <Text
                 style={{ fontSize: GetFontSize(14) }}
-                className="text-[#1A1A1A] font-inter600 flex-1"
+                className="text-[#454F5B] font-inter600 flex-1"
               >
                 {questionPaper.questionPaperTitle}
               </Text>
@@ -417,10 +406,10 @@ const handleViewPdf = async (questionPaperCode) => {
                 className="px-3 py-1 rounded-full ml-2"
                 style={{
                   backgroundColor: '#FEF6EB',
-                  borderTopWidth: 1,
-                  borderLeftWidth: 2,
-                  borderRightWidth: 2,
-                  borderBottomWidth: 3,
+                  borderTopWidth: 0.5,
+                  borderLeftWidth: 1,
+                  borderRightWidth: 1,
+                  borderBottomWidth: 2,
                   borderColor: '#FFC466',
                 }}
               >
@@ -430,7 +419,7 @@ const handleViewPdf = async (questionPaperCode) => {
                     color: '#FFB133',
 
                   }}
-                  className="font-inter600"
+                  className="font-inter500"
                 >
                   Pending
                 </Text>
