@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Modal,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -24,9 +25,11 @@ import { downloadExam } from '../../../Services/teacherAPIV1';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
-
-import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader'; // Make sure the import path is correct
-import AssignSuccessScreen from './AssignSuccessScreen'; // Make sure the import path is correct
+import LinearGradient from 'react-native-linear-gradient';
+import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader';
+import AssignSuccessScreen from './AssignSuccessScreen';
+import Calendar from '../../../Images/LessonPlan/Calendar';
+import ViewIcon from '../../../Images/AssignTestCard/ViewIcon';
 
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
@@ -42,9 +45,10 @@ const AssignTestDate = ({ route }) => {
   const [showLoader, setShowLoader] = useState(false);
   const [downloadLoader, setDownloadLoader] = useState(false);
 
-  // NEW STATE
   const [showTestLoader, setShowTestLoader] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
+
+  const { width, height } = useWindowDimensions();
 
   const classDisplay = selectedAssignment
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
@@ -155,7 +159,7 @@ const AssignTestDate = ({ route }) => {
   // Success screen actions
   const handleViewAssignedTests = () => {
     setShowSuccessScreen(false);
-    navigation.navigate('AssignedTests'); // Change to your Assigned Tests screen name
+    navigation.navigate('AssignedTests');
   };
 
   const handleCloseSuccess = () => {
@@ -262,8 +266,9 @@ const AssignTestDate = ({ route }) => {
                   style={{ fontSize: GetFontSize(12) }}
                   className="text-white font-inter600"
                 >
-                  Generate Plan
+                  Assign Test
                 </Text>
+
               </View>
             </View>
           </View>
@@ -274,7 +279,7 @@ const AssignTestDate = ({ route }) => {
           />
 
           {/* Content */}
-          <View className="rounded-xl mb-6 mt-8">
+          {/* <View className="rounded-xl mb-6 mt-8">
             <View className="items-center mb-5">
               <View className="w-16 h-16 rounded-xl justify-center items-center mb-3">
                 <Document />
@@ -293,55 +298,56 @@ const AssignTestDate = ({ route }) => {
                 to go!
               </Text>
             </View>
-          </View>
+          </View> */}
 
           {/* Due Date Input */}
-          <View className="mb-6 items-center">
+          <View className="mb-6 items-center mt-3">
             <Text
-              style={{ fontSize: GetFontSize(13) }}
-              className="text-[#5FCC3D] mb-2 font-inter500 self-start"
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#B68201] mb-2 font-inter500 self-start"
             >
               Select Due Date <Text className="text-[#E74C3C]">*</Text>
             </Text>
-        
 
-<LinearGradient
-  colors={['#E8B787', '#9B7A5A']}
-  start={{ x: 0, y: 0 }}
-  end={{ x: 1, y: 1 }}
-  style={{
-    width: 311,
-    height: 56,
-    borderRadius: 12,
-    paddingTop: 1.5,
-    paddingLeft: 2.5,
-    paddingRight: 2.5,
-    paddingBottom: 4,
-  }}
->
-  <TouchableOpacity
-    className="bg-white rounded-xl flex-row justify-between items-center"
-    style={{
-      flex: 1,
-      paddingHorizontal: 14,
-    }}
-    onPress={() => {
-      setPickerTarget('due');
-      setShowPicker(true);
-    }}
-  >
-    <Text
-      style={{ fontSize: GetFontSize(15) }}
-      className="text-[#FFB84D] font-inter500"
-    >
-      {dueDate ? formatDate(dueDate) : 'dd\\mm\\yyyy'}
-    </Text>
-  </TouchableOpacity>
-</LinearGradient>
+
+            <LinearGradient
+              colors={['#E8B787', '#9B7A5A']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                width: width * 0.8,
+                height: height * 0.07,
+                borderRadius: 12,
+                paddingTop: 1.5,
+                paddingLeft: 3,
+                paddingRight: 3,
+                paddingBottom: 4,
+              }}
+            >
+              <TouchableOpacity
+                className="bg-white rounded-xl flex-row justify-between items-center "
+                style={{
+                  flex: 1,
+                  paddingHorizontal: 14,
+                }}
+                onPress={() => {
+                  setPickerTarget('due');
+                  setShowPicker(true);
+                }}
+              >
+                <Text
+                  style={{ fontSize: GetFontSize(15) }}
+                  className="text-[#DC9047] font-inter500"
+                >
+                  {dueDate ? formatDate(dueDate) : 'dd\\mm\\yyyy'}
+                </Text>
+                <Calendar width={20} height={20} color="#DC9047" />
+              </TouchableOpacity>
+            </LinearGradient>
           </View>
 
           {/* Selected Topics */}
-          <View className="bg-white rounded-xl p-4">
+          <View className="bg-white rounded-xl p-6">
             <View className="flex-row justify-between items-start mb-3">
               <Text
                 style={{ fontSize: GetFontSize(14) }}
@@ -361,10 +367,10 @@ const AssignTestDate = ({ route }) => {
                 }}
               >
                 <Text
-                  style={{ 
+                  style={{
                     fontSize: GetFontSize(11),
                     color: '#FFB133',
-                    
+
                   }}
                   className="font-inter600"
                 >
@@ -389,12 +395,15 @@ const AssignTestDate = ({ route }) => {
                 {downloadLoader ? (
                   <ActivityIndicator size="small" color="#FFB84D" />
                 ) : (
-                  <Text
-                    style={{ fontSize: GetFontSize(13),color:'#CB9101' }}
-                    className=" font-inter600"
-                  >
-                    View test
-                  </Text>
+                  <View className="flex-row items-center gap-2"> 
+                  <ViewIcon color='#CB9101' />
+                    <Text
+                      style={{ fontSize: GetFontSize(14)}}
+                      className=" font-inter600 text-[#CB9101]"
+                    >
+                      View test
+                    </Text>
+                  </View>
                 )}
               </TouchableOpacity>
             </View>
