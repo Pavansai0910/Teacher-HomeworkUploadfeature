@@ -44,8 +44,8 @@ const Home = () => {
     ['#FFFFFF', '#FEDB85'],
   ];
 
-  const cardWidth = width * 0.8;
-  const cardSpacing = 2;
+  const cardWidth = width * 0.7;
+  const cardSpacing = 20;
 
   const handleScroll = event => {
     const contentOffset = event.nativeEvent.contentOffset.x;
@@ -372,7 +372,7 @@ const Home = () => {
         </Modal>
 
         {/* Cards */}
-        <View className="justify-center items-center mt-2">
+        <View className="justify-center items-center mt-5">
           <ScrollView
             ref={scrollViewRef}
             horizontal
@@ -398,12 +398,13 @@ const Home = () => {
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             />
+           
             <AssignTestCard
               onPress={() => navigation.navigate('AssignTest')}
               isActive={currentIndex === 2}
               cardWidth={cardWidth}
               cardSpacing={0}
-            />
+            /> 
           </ScrollView>
 
           {/* Pagination Dots */}

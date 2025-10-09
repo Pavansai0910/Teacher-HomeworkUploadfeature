@@ -15,7 +15,7 @@ import { AuthContext } from '../../../Context/AuthContext';
 import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import DropdownArrow from '../../../Images/LessonPlan/DropdownArrow';
-
+import { Shadow } from 'react-native-shadow-2';
 const AssignTest = () => {
   const navigation = useNavigation();
   const { teacherProfile } = useContext(AuthContext);
@@ -72,6 +72,7 @@ const AssignTest = () => {
 
   const renderHeader = () => (
     <View>
+
       <NavHeader />
 
       <View className="px-4 mt-3">
@@ -79,6 +80,14 @@ const AssignTest = () => {
           {/* Progress Steps */}
           <View className="flex-row items-center justify-between mb-5">
             <View className="items-center">
+                <Shadow
+                                distance={3}
+                                startColor="#6FCE62"
+                                offset={[0, 3]}
+                                radius={20}
+                                style={{ borderRadius: 50 }}
+                              >
+              
               <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center ">
                 <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
                   <Text style={{ fontSize: GetFontSize(12) }}
@@ -91,25 +100,42 @@ const AssignTest = () => {
                   Choose Chapter
                 </Text>
               </View>
+            </Shadow>
             </View>
 
             <View className="flex-1 h-[2px] bg-[#F7F7F5] " />
-
             <View className="items-center">
-              <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
-                <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                  <Text style={{ fontSize: GetFontSize(12) }}
-                    className="text-white font-inter600">
-                    2
-                  </Text>
+              <Shadow
+                distance={1}
+                startColor="#CDCDCD"
+                offset={[0, 2]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
+
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                    <Text style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600">
+                      2
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              </Shadow>
             </View>
 
             <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
 
             <View className="items-center">
-              <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                <Shadow
+                                distance={1}
+                                startColor="#CDCDCD"
+                                offset={[0, 2]}
+                                radius={20}
+                                style={{ borderRadius: 50 }}
+                              >
+
+              <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
                 <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
                   <Text style={{ fontSize: GetFontSize(12) }}
                     className="text-white font-inter600">
@@ -117,6 +143,7 @@ const AssignTest = () => {
                   </Text>
                 </View>
               </View>
+              </Shadow>
             </View>
           </View>
 
@@ -291,7 +318,7 @@ const AssignTest = () => {
         <View className="flex-row gap-3">
           <TouchableOpacity
             style={{ fontSize: GetFontSize(16) }}
-            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3 font-inter600"
+            className="flex-row gap-1 rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] justify-center items-center px-4 py-3 font-inter600"
             onPress={() => navigation.goBack()}
           >
             <LeftArrow color="#FED570" />
@@ -311,7 +338,7 @@ const AssignTest = () => {
                 chapterName: selectedChapterName,
               })
             }
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
+            className={`flex-row gap-1 flex-1 py-3 rounded-xl border-t-[1.5px] border-x-2 border-b-4 justify-center items-center ${selectedChapterId
               ? 'bg-[#FED570] border-[#DFAF02]'
               : 'bg-[#FEDB85] border-[#DFAF02]'
               }`}

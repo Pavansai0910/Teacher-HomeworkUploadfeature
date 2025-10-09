@@ -22,7 +22,7 @@ import capitalize from '../../../Utils/Capitalize';
 import GetFontSize from '../../../Commons/GetFontSize';
 import TopArrow from '../../../Images/LessonPlan/TopArrow';
 import LessonPlanNavbar from './LessonPlanNavbar';
-
+import { Shadow } from 'react-native-shadow-2';
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
@@ -145,50 +145,74 @@ const LessonPlanTopics = ({ route }) => {
             <View className="flex-row items-center justify-between mb-5">
               {/* Step 1 - Completed */}
               <View className="items-center">
-                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
-                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                    <Text
-                      style={{ fontSize: GetFontSize(12) }}
-                      className="font-inter600"
-                    >
-                      1
-                    </Text>
+                <Shadow
+                  distance={1}
+                  startColor="#CDCDCD"
+                  offset={[0, 2]}
+                  radius={20}
+                  style={{ borderRadius: 50 }}
+                >
+                  <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                    <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                      <Text
+                        style={{ fontSize: GetFontSize(12) }}
+                        className="font-inter600"
+                      >
+                        1
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                </Shadow>
               </View>
               <View className="flex-1 h-[3px] bg-[#F7F7F5]" />
               {/* Step 2 - Active */}
               <View className="items-center">
-                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
-                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-                    <Text
-                      style={{ fontSize: GetFontSize(12) }}
-                      className="text-[#212B36] font-inter600"
-                    >
-                      2
-                    </Text>
-                  </View>
-                  <Text
-                    style={{ fontSize: GetFontSize(12) }}
-                    className="text-white font-inter600"
-                  >
-                    Select Topics
-                  </Text>
-                </View>
-              </View>
-              <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
-              {/* Step 3 */}
-              <View className="items-center">
-                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
-                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                <Shadow
+                  distance={3}
+                  startColor="#6FCE62"
+                  offset={[0, 3]}
+                  radius={20}
+                  style={{ borderRadius: 50 }}
+                >
+                  <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
+                    <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
+                      <Text
+                        style={{ fontSize: GetFontSize(12) }}
+                        className="text-[#212B36] font-inter600"
+                      >
+                        2
+                      </Text>
+                    </View>
                     <Text
                       style={{ fontSize: GetFontSize(12) }}
                       className="text-white font-inter600"
                     >
-                      3
+                      Select Topics
                     </Text>
                   </View>
-                </View>
+                </Shadow>
+              </View>
+              <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
+              {/* Step 3 */}
+              <View className="items-center">
+                <Shadow
+                  distance={1}
+                  startColor="#CDCDCD"
+                  offset={[0, 2]}
+                  radius={20}
+                  style={{ borderRadius: 50 }}
+                >
+                  <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                    <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                      <Text
+                        style={{ fontSize: GetFontSize(12) }}
+                        className="text-white font-inter600"
+                      >
+                        3
+                      </Text>
+                    </View>
+                  </View>
+                </Shadow>
               </View>
             </View>
             <View
@@ -300,7 +324,7 @@ const LessonPlanTopics = ({ route }) => {
       <View className="px-6 mb-4">
         <View className="flex-row gap-2">
           <TouchableOpacity
-            className="flex-row gap-1 border-2 border-[#DFE3E8] rounded-lg justify-center items-center px-4 py-3"
+            className="flex-row gap-1 border-[#DFE3E8] rounded-xl border-t-[1.5px] border-x-2 border-b-4 justify-center items-center px-4 py-3"
             onPress={() => navigation.goBack()}
           >
             <LeftArrow color="#1EAFF7" />
@@ -312,9 +336,9 @@ const LessonPlanTopics = ({ route }) => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopics.length > 0
+            className={`flex-row gap-1 flex-1 py-3 justify-center items-center rounded-xl border-t-[1.5px] border-x-2 border-b-4 ${selectedTopics.length > 0
               ? 'bg-[#1EAFF7] border-[#0786C5]'
-              : 'bg-gray-400 border-gray-400'
+              : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
               }`}
             onPress={handleContinue}
             disabled={selectedTopics.length === 0}

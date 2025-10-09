@@ -236,7 +236,7 @@ const GeneratedLessonPlan = () => {
       {/* Header */}
       <View className="bg-[#E0F5FF] px-6 py-6">
         <View className="flex-row items-center">
-          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
+          <View className="w-[54px] h-10 rounded-xl mr-3 justify-center items-center">
             <Bluepage />
           </View>
           <View className="flex-1">
@@ -301,7 +301,7 @@ const GeneratedLessonPlan = () => {
           <View className="border border-[#E5E5E3] rounded-xl p-4">
             <View className="flex-row items-center ">
               <TouchableOpacity
-                className={`bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1 mr-3 shadow-lg shadow-red-500/25 ${isSaved ? 'opacity-75' : ''
+                className={`bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl border-t-[1.5px] border-x-2 border-b-4 items-center justify-center flex-row flex-1 mr-3  ${isSaved ? 'opacity-75' : ''
                   }`}
                 onPress={handleSaveDoc}
                 disabled={isSaving}
@@ -337,7 +337,7 @@ const GeneratedLessonPlan = () => {
                 onPress={() => handleLessonPlanDownload(generatedLessonPlanId)}
               >
                 <View
-                  className="justify-center items-center rounded-lg border border-[#E1F4FE] p-3"
+                  className="justify-center items-center rounded-xl border border-[#E1F4FE] p-3"
                   style={{
                     borderLeftWidth: 2,
                     borderRightWidth: 2,

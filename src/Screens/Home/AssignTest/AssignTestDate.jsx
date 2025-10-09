@@ -29,6 +29,7 @@ import ViewIcon from '../../../Images/AssignTestCard/ViewIcon';
 import PdfViewerModal from './PdfViewerModal';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader';
+import { Shadow } from 'react-native-shadow-2';
 
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
@@ -235,49 +236,75 @@ const AssignTestDate = ({ route }) => {
         >
           <View className="flex-row items-center justify-between">
             <View className="items-center">
-              <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
-                <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                  <Text
-                    style={{ fontSize: GetFontSize(12) }}
-                    className="font-inter600"
-                  >
-                    1
-                  </Text>
+              <Shadow
+                distance={1}
+                startColor="#CDCDCD"
+                offset={[0, 2]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
+
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="font-inter600"
+                    >
+                      1
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              </Shadow>
             </View>
             <View className="flex-1 h-[3px] bg-white" />
             <View className="items-center">
-              <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
-                <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                  <Text
-                    style={{ fontSize: GetFontSize(12) }}
-                    className="font-inter600"
-                  >
-                    2
-                  </Text>
+              <Shadow
+                distance={1}
+                startColor="#CDCDCD"
+                offset={[0, 2]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-white items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="font-inter600"
+                    >
+                      2
+                    </Text>
+                  </View>
                 </View>
-              </View>
+              </Shadow>
             </View>
             <View className="flex-1 h-[2px] bg-white" />
             <View className="items-center">
-              <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
-                <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
+              <Shadow
+                distance={3}
+                startColor="#6FCE62"
+                offset={[0, 3]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
+
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-[#212B36] font-inter600"
+                    >
+                      3
+                    </Text>
+                  </View>
                   <Text
                     style={{ fontSize: GetFontSize(12) }}
-                    className="text-[#212B36] font-inter600"
+                    className="text-white font-inter600"
                   >
-                    3
+                    Assign Test
                   </Text>
-                </View>
-                <Text
-                  style={{ fontSize: GetFontSize(12) }}
-                  className="text-white font-inter600"
-                >
-                  Assign Test
-                </Text>
 
-              </View>
+                </View>
+              </Shadow>
             </View>
           </View>
 
@@ -422,7 +449,7 @@ const AssignTestDate = ({ route }) => {
       <View className="px-6 pb-6 pt-5 bg-white border-t border-gray-200">
         <View className="flex-row gap-2">
           <TouchableOpacity
-            className="border-2 border-[#E5E5E5] bg-white rounded-xl px-6 py-3 flex-row items-center justify-center"
+            className="rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#E5E5E5] bg-white px-6 py-3 flex-row items-center justify-center"
             onPress={() => navigation.goBack()}
             disabled={showLoader}
           >
@@ -431,12 +458,12 @@ const AssignTestDate = ({ route }) => {
               style={{ fontSize: GetFontSize(15) }}
               className="text-[#FFB84D] font-inter600 ml-1"
             >
-              back
+              Back
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            className={`flex-1 rounded-xl py-3 flex-row justify-center items-center border-2 ${dueDate ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
+            className={`flex-1 py-3 flex-row justify-center items-center rounded-xl border-t-[1.5px] border-x-2 border-b-4 ${dueDate ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
             onPress={handleAssign}
             disabled={!dueDate || showLoader}
           >
