@@ -125,3 +125,12 @@ export const downloadExam = async ({ questionPaperCode }) => {
     "blob"
   );
 };
+export const getQuestionPaperById = async ({ questionPaperId }) => {
+  const headers = await getAuthHeader();
+  return apiConnector(
+    "GET",
+    `/v1/teacher/get-question-paper-with-id/${questionPaperId}`,
+    null,
+    headers
+  );
+};
