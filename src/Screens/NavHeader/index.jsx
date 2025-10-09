@@ -87,9 +87,9 @@ function NavHeader() {
             </Text>
           </View>
           <View className="flex-[1] ml-2">
-            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
+            <Text className="text-gray-500 text-xs px-2 mb-1">Subject</Text>
             <Text
-              className="text-gray-800 font-semibold"
+              className="text-gray-800 px-2 font-semibold"
               numberOfLines={1}
               ellipsizeMode="tail"
             >

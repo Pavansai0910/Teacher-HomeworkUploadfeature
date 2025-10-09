@@ -32,3 +32,14 @@ export const downloadLessonPlan = async ({_id}) => {
         const headers = await getAuthHeader();
     return apiConnector('GET',`/v2/teacher/get-pdf-for-lesson-plan/${_id}`, null, headers, {}, 'blob')
 }
+
+export const getChapterAssessmentStats = async ({classId, sectionId, subjectId, boardId}) => {
+    const headers = await getAuthHeader();
+    return apiConnector('GET',`/v2/teacher/get-chapter-assessment-stats/${classId}/${sectionId}/${subjectId}/${boardId}`, null, headers)
+}
+
+// router.get("/get-topic-assessment-stats/:classId/:sectionId/:subjectId/:boardId/:chapterId");
+export const gettopicAssessmentStats = async ({ classId, sectionId, subjectId, boardId, chapterId}) => {
+    const headers = await getAuthHeader();
+    return apiConnector('GET',`/v2/teacher/get-topic-assessment-stats/${classId}/${sectionId}/${subjectId}/${boardId}/${chapterId}`)
+}

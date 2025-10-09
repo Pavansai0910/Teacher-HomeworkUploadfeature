@@ -15,11 +15,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import capitalize from '../../../Utils/Capitalize';
 import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
-import { assignExam } from '../../../Services/teacherAPIV1';
+import { assignExam, downloadExam } from '../../../Services/teacherAPIV1';
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../../Context/AuthContext';
 import RNFS, { DownloadDirectoryPath } from 'react-native-fs';
-import { downloadExam } from '../../../Services/teacherAPIV1';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
 import LinearGradient from 'react-native-linear-gradient';
@@ -172,56 +171,154 @@ const AssignTestDate = ({ route }) => {
     navigation.navigate('MainTabNavigator', { screen: 'Home' });
   };
 
+  // const handleViewPdf = async (questionPaperCode) => {
+  //   try {
+  //     setDownloadLoader(true);
+
+  //     // Request the PDF from backend
+  //     const response = await downloadExam({ questionPaperCode });
+  //     console.log('downloadExam response:', response?.data);
+
+  //     // Case 1: Backend returns a direct URL to PDF
+  //     if (response?.data?.url && response.data.url.endsWith('.pdf')) {
+  //       setPdfUrl(response.data.url);
+  //       setShowPdfViewer(true);
+  //     }
+
+  //     // Case 2: Backend returns base64 string directly
+  //     else if (typeof response?.data === 'string' && response.data.startsWith('JVBER')) {
+  //       const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
+  //       await RNFS.writeFile(path, response.data, 'base64');
+  //       setPdfUrl(`file://${path}`);
+  //       setShowPdfViewer(true);
+  //     }
+
+  //     // Case 3: Backend returns blob object with blobId
+  //     else if (response?.data?._data?.blobId) {
+  //       const blobId = response.data._data.blobId;
+
+  //       // Fetch the actual PDF binary from your API
+  //       const base64Data = await ReactNativeBlobUtil.fetch(
+  //         'GET',
+  //         `https://your-backend-api.com/download/${blobId}`,
+  //       ).then(res => res.base64());
+
+  //       const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
+  //       await RNFS.writeFile(path, base64Data, 'base64');
+  //       setPdfUrl(`file://${path}`);
+  //       setShowPdfViewer(true);
+  //     }
+
+  //     else {
+  //       Toast.show({ type: 'error', text1: 'Unsupported PDF format received' });
+  //       console.log('Unknown PDF data type:', response?.data);
+  //     }
+  //   } catch (error) {
+  //     console.error('PDF Load Error:', error);
+  //     Toast.show({ type: 'error', text1: 'Failed to load PDF' });
+  //   } finally {
+  //     setDownloadLoader(false);
+  //   }
+  // };
+
   const handleViewPdf = async (questionPaperCode) => {
     try {
       setDownloadLoader(true);
 
       // Request the PDF from backend
       const response = await downloadExam({ questionPaperCode });
-      console.log('downloadExam response:', response?.data);
+      console.log('downloadExam response type:', typeof response?.data);
+      console.log('downloadExam response:', response);
 
-      // Case 1: Backend returns a direct URL to PDF
-      if (response?.data?.url && response.data.url.endsWith('.pdf')) {
-        setPdfUrl(response.data.url);
-        setShowPdfViewer(true);
+      let base64Data = '';
+
+      // Case 1: Response is already a Blob
+      if (response?.data instanceof Blob) {
+        base64Data = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            const base64 = reader.result.split(',')[1];
+            resolve(base64);
+          };
+          reader.onerror = reject;
+          reader.readAsDataURL(response.data);
+        });
+      }
+      // Case 2: Response.data is ArrayBuffer or Uint8Array
+      else if (response?.data instanceof ArrayBuffer || response?.data instanceof Uint8Array) {
+        const uint8Array = new Uint8Array(response.data);
+        let binary = '';
+        for (let i = 0; i < uint8Array.byteLength; i++) {
+          binary += String.fromCharCode(uint8Array[i]);
+        }
+        base64Data = btoa(binary);
+      }
+      // Case 3: Response.data is already base64 string
+      else if (typeof response?.data === 'string') {
+        // Check if it starts with data:application/pdf
+        if (response.data.startsWith('data:application/pdf')) {
+          base64Data = response.data.split(',')[1];
+        } 
+        // Check if it's already base64 (starts with JVBERi which is %PDF in base64)
+        else if (response.data.startsWith('JVBER')) {
+          base64Data = response.data;
+        }
+        // Otherwise, it might be a URL
+        else if (response.data.startsWith('http')) {
+          setPdfUrl(response.data);
+          setShowPdfViewer(true);
+          setDownloadLoader(false);
+          return;
+        }
+      }
+      // Case 4: Response has a nested structure
+      else if (response?.data?.data) {
+        // Recursively handle nested data
+        const nestedBlob = response.data.data;
+        if (nestedBlob instanceof Blob) {
+          base64Data = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              const base64 = reader.result.split(',')[1];
+              resolve(base64);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(nestedBlob);
+          });
+        }
       }
 
-      // Case 2: Backend returns base64 string directly
-      else if (typeof response?.data === 'string' && response.data.startsWith('JVBER')) {
-        const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
-        await RNFS.writeFile(path, response.data, 'base64');
-        setPdfUrl(`file://${path}`);
-        setShowPdfViewer(true);
+      if (!base64Data) {
+        throw new Error('Unable to extract PDF data from response');
       }
 
-      // Case 3: Backend returns blob object with blobId
-      else if (response?.data?._data?.blobId) {
-        const blobId = response.data._data.blobId;
-
-        // Fetch the actual PDF binary from your API
-        const base64Data = await ReactNativeBlobUtil.fetch(
-          'GET',
-          `https://your-backend-api.com/download/${blobId}`,
-        ).then(res => res.base64());
-
-        const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
-        await RNFS.writeFile(path, base64Data, 'base64');
-        setPdfUrl(`file://${path}`);
-        setShowPdfViewer(true);
+      // Save to cache and display
+      const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
+      await RNFS.writeFile(path, base64Data, 'base64');
+      console.log('PDF saved to:', path);
+      
+      // Verify file was written correctly
+      const fileStats = await RNFS.stat(path);
+      console.log('PDF file size:', fileStats.size);
+      
+      if (fileStats.size === 0) {
+        throw new Error('PDF file is empty after writing');
       }
-
-      else {
-        Toast.show({ type: 'error', text1: 'Unsupported PDF format received' });
-        console.log('Unknown PDF data type:', response?.data);
-      }
+      
+      setPdfUrl(`file://${path}`);
+      setShowPdfViewer(true);
     } catch (error) {
       console.error('PDF Load Error:', error);
-      Toast.show({ type: 'error', text1: 'Failed to load PDF' });
+      console.error('Error details:', error.message);
+      Toast.show({ 
+        type: 'error', 
+        text1: 'Failed to load PDF',
+        text2: error.message || 'Please try again'
+      });
     } finally {
       setDownloadLoader(false);
     }
   };
-
 
   return (
     <SafeAreaView className="flex-1 bg-[#FFFFFF]">
@@ -516,7 +613,13 @@ const AssignTestDate = ({ route }) => {
 
       <PdfViewerModal
         visible={showPdfViewer}
-        onClose={() => setShowPdfViewer(false)}
+        onClose={() => {
+          setShowPdfViewer(false);
+          // Optionally clean up the temp file
+          if (pdfUrl.startsWith('file://')) {
+            RNFS.unlink(pdfUrl.replace('file://', '')).catch(() => {});
+          }
+        }}
         pdfUrl={pdfUrl}
       />
     </SafeAreaView>
