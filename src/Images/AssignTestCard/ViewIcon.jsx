@@ -1,6 +1,4 @@
-import * as React from "react";
 import Svg, { G, Path, Defs, ClipPath, Rect } from "react-native-svg";
-import { View } from "react-native/types_generated/index";
 const ViewIcon = ({ Width, Height, color }) => (
     <Svg
         width={Width || 16}
