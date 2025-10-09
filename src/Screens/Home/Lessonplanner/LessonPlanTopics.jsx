@@ -94,21 +94,21 @@ const LessonPlanTopics = ({ route }) => {
     return (
       <TouchableOpacity
         onPress={() => handleTopicToggle(item)}
-        className={`p-4 mb-3 rounded-lg ${isSelected ? 'bg-[#FFF9E6]' : 'bg-white'
+        className={`p-4 mb-3 rounded-lg ${isSelected ? 'bg-[#1EAFF7]' : 'bg-white'
           }`}
         style={{
           borderTopWidth: 1,
           borderRightWidth: 2,
           borderBottomWidth: 4,
           borderLeftWidth: 2,
-          borderColor: isSelected ? '#DC9047' : '#DFE3E8',
+          borderColor: isSelected ? '#077FBB' : '#1A9DDD',
           borderStyle: 'solid'
         }}
       >
         <View className="flex-row justify-between items-center">
           <Text
             style={{ fontSize: GetFontSize(15) }}
-            className={`flex-1 font-inter500 pr-2 ${isSelected ? 'text-[#B68201]' : 'text-[#212B36]'
+            className={`flex-1 font-inter500 pr-2 ${isSelected ? 'text-white' : 'text-[#212B36]'
               }`}
             numberOfLines={2}
           >
@@ -118,12 +118,12 @@ const LessonPlanTopics = ({ route }) => {
             className={`w-5 h-5 rounded justify-center items-center ${isSelected ? 'bg-[#FFF9E6] border-2' : 'border'
               }`}
             style={{
-              borderColor: isSelected ? '#B68201' : '#DFE3E8',
+              borderColor: isSelected ? '#077FBB' : '#1A9DDD',
               borderWidth: 2,
             }}
           >
             {isSelected && (
-              <Text className="text-[#B68201] font-inter600 text-xs">✓</Text>
+              <Text className="text-[#077FBB] font-inter600 text-xs">✓</Text>
             )}
           </View>
         </View>
@@ -338,34 +338,34 @@ const LessonPlanTopics = ({ route }) => {
         statusBarTranslucent={true}
       >
         <View style={{ flex: 1, backgroundColor: 'white' }}>
-          <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF3D6' }}>
+          <SafeAreaView style={{ flex: 1}}>
             {/* Modal Header */}
-            <View className="px-4 pt-4 pb-4 border-b border-[#DFE3E8] flex-row justify-between items-center bg-[#FFF3D6]">
+            <View className="px-4 pt-4 flex-row justify-between items-center bg-[#E0F5FF]">
               <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
                 Select Topics
               </Text>
               <TouchableOpacity
                 onPress={() => setIsModalVisible(false)}
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+                <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
                   <Text className="text-white font-inter400">✕</Text>
                 </View>
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#637381] font-inter400 mt-2 px-4"
+              className="text-[#637381] font-inter400 py-3 px-4 bg-[#E0F5FF] border-b-4 border-[#DFE3E8]"
             >
               {selectedTopics.length} of {topics.length} selected
             </Text>
             {/* Topics List with FlatList */}
             <LinearGradient
-              colors={['#B8916B', '#E5D6C8']}
+              colors={['#E0F5FF', '#1EAFF7']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={{ flex: 1 }}
             >
-              <FlatList
+              <FlatList    
                 data={topics}
                 keyExtractor={item => item.id.toString()}
                 renderItem={renderTopicItem}
@@ -375,11 +375,11 @@ const LessonPlanTopics = ({ route }) => {
               />
             </LinearGradient>
             {/* Modal Footer */}
-            <View className="px-6 py-4 bg-white border-t border-[#DFE3E8]">
+            <View className="px-6 py-4 ">
               <TouchableOpacity
                 className={`py-3 rounded-lg justify-center items-center ${selectedTopics.length > 0
                   ? 'bg-[#1EAFF7]'
-                  : 'bg-gray-400'
+                  : 'bg-gray-400 '
                   }`}
                 onPress={() => {
                   setIsModalVisible(false);
