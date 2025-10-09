@@ -4,12 +4,13 @@ import capitalize from '../../../Utils/Capitalize';
 import { useSelector } from 'react-redux';
 import { AuthContext } from '../../../Context/AuthContext';
 import { View, Text, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import SkullIcon from '../../../Images/StudentInsights/SkullIcon';
+import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import GetFontSize from '../../../Commons/GetFontSize';
+import { useNavigation } from '@react-navigation/native';
 import { getAllStudents } from '../../../Services/teacherAPIV1'
 
-const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
+
+const LessonPlanNavbar = () => {
   const navigation = useNavigation();
   const [studentData, setStudentData] = useState([]);
   const { teacherProfile } = useContext(AuthContext);
@@ -38,10 +39,10 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
   return (
     <>
       {/* Header */}
-      <View className="bg-[#E8FADB] px-6 py-6">
+      <View className="bg-[#E0F5FF] px-6 py-6">
         <View className="flex-row items-center">
           <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-            <SkullIcon />
+            <Bluepage />
           </View>
           <View className="flex-1">
             <View className="flex-row justify-between items-start">
@@ -49,10 +50,10 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
                 style={{ fontSize: GetFontSize(18) }}
                 className="text-[#212B36] font-inter600 flex-shrink"
               >
-                Test Insights
+                Create Lesson Plan
               </Text>
               <TouchableOpacity
-                className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
+                className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center"
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
                 <Text
@@ -67,13 +68,13 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
               style={{ fontSize: GetFontSize(14) }}
               className="text-[#454F5B] font-inter400"
             >
-              Boost your students' progress in {'\n'} just a few taps!
+              Generate a comprehensive lesson{'\n'} plan in seconds
             </Text>
           </View>
         </View>
       </View>
 
-      {/* Class & Subject */}
+      {/* Selected Class and Subject */}
       <View className="mt-6 px-6 bg-white">
         <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
           <View className="w-[60%] border-r-2 border-[#E5E5E3] pr-4">
@@ -98,8 +99,9 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
           </View>
         </View>
       </View>
+
     </>
   );
 };
 
-export default LearningNavbar;
+export default LessonPlanNavbar;

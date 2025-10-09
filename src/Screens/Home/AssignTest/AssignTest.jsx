@@ -37,11 +37,9 @@ const AssignTest = () => {
           boardId: teacherProfile?.schoolId?.boardId,
         });
         setAllChapters(response.data.chapters);
-        console.log(response.data.chapters);
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        console.log(error);
         if (error.response.status != 400 && error.response.status != 404) {
           Toast.show({
             type: 'error',
@@ -128,76 +126,76 @@ const AssignTest = () => {
           />
 
           {/* Content Box */}
-         <View className="rounded-xl mt-8">
-  <View className="items-center mb-4">
-    {/* Icon Section */}
-    <View className="justify-center items-center mb-2">
-      <View 
-        style={{ width: 27.43, height: 41.71 }}
-      >
-        <Document />
-      </View>
-    </View>
+          <View className="rounded-xl mt-8">
+            <View className="items-center mb-4">
+              {/* Icon Section */}
+              <View className="justify-center items-center mb-2">
+                <View
+                  style={{ width: 27.43, height: 41.71 }}
+                >
+                  <Document />
+                </View>
+              </View>
 
-    {/* Title Text Section */}
-    <View className="mb-2">
-      <Text 
-        style={{fontSize:GetFontSize(16)}}
-        className="text-[#B68201] font-inter700 text-center">
-        Ready to plan smarter?
-      </Text>
-    </View>
+              {/* Title Text Section */}
+              <View className="mb-2">
+                <Text
+                  style={{ fontSize: GetFontSize(16) }}
+                  className="text-[#B68201] font-inter700 text-center">
+                  Ready to plan smarter?
+                </Text>
+              </View>
 
-    {/* Subtitle Text Section */}
-    <View className="px-2">
-      <Text 
-      style={{fontSize:GetFontSize(13)}}
-        
-        className="text-[#B68201] font-inter500 text-center">
-        Select a chapter for which you want to assign a test.
-      </Text>
-    </View>
-  </View>
-</View>
+              {/* Subtitle Text Section */}
+              <View className="px-2">
+                <Text
+                  style={{ fontSize: GetFontSize(13) }}
+
+                  className="text-[#B68201] font-inter500 text-center">
+                  Select a chapter for which you want to assign a test.
+                </Text>
+              </View>
+            </View>
+          </View>
           {/* Choose Chapter Button */}
           <View className="w-full">
-  {loading ? (
-    <ActivityIndicator size="large" color="#ffffff" />
-  ) : (
-    <LinearGradient
-      colors={['#E8B787', '#9B7A5A']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{
-        borderRadius: 8,
-        paddingTop: 3,
-        paddingRight: 3,
-        paddingBottom: 6,
-        paddingLeft: 3,
-      }}
-    >
-      <TouchableOpacity 
-        onPress={() => setIsModalVisible(true)}
-        className="bg-white rounded-lg px-4 py-4 flex-row justify-between items-center"
-      >
-        <Text
-          style={{ 
-            fontSize: GetFontSize(17), 
-            color: '#DC9047',
-            fontFamily: 'Inter',
-            fontWeight: '700',
-            lineHeight: GetFontSize(16) * 1.35,
-            letterSpacing: GetFontSize(16) * -0.02  // -2% of fontSize
-          }}
-          className="font-inter700 flex-1"
-        >
-          {selectedChapterName || "Choose a chapter to get started..."}
-        </Text>
-        <DropdownArrow color="#DC9047" />
-      </TouchableOpacity>
-    </LinearGradient>
-  )}
-</View>
+            {loading ? (
+              <ActivityIndicator size="large" color="#ffffff" />
+            ) : (
+              <LinearGradient
+                colors={['#E8B787', '#9B7A5A']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  borderRadius: 8,
+                  paddingTop: 3,
+                  paddingRight: 3,
+                  paddingBottom: 6,
+                  paddingLeft: 3,
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => setIsModalVisible(true)}
+                  className="bg-white rounded-lg px-4 py-4 flex-row justify-between items-center"
+                >
+                  <Text
+                    style={{
+                      fontSize: GetFontSize(17),
+                      color: '#DC9047',
+                      fontFamily: 'Inter',
+                      fontWeight: '700',
+                      lineHeight: GetFontSize(16) * 1.35,
+                      letterSpacing: GetFontSize(16) * -0.02  // -2% of fontSize
+                    }}
+                    className="font-inter700 flex-1"
+                  >
+                    {selectedChapterName || "Choose a chapter to get started..."}
+                  </Text>
+                  <DropdownArrow color="#DC9047" />
+                </TouchableOpacity>
+              </LinearGradient>
+            )}
+          </View>
         </View>
       </View>
     </View>
@@ -205,42 +203,7 @@ const AssignTest = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
- {/* Header */}
-<View className="bg-[#FFF3D6] px-6 py-6">
-  <View className="flex-row items-center">
-    <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center mr-3">
-      <AssignTestDoc />
-    </View>
-    <View className="flex-1">
-      <View className="flex-row justify-between items-start">
-        <Text
-          style={{ fontSize: GetFontSize(18) }}
-          className="text-[#212B36] font-inter600 flex-shrink"
-        >
-          Assign Test
-        </Text>
-        <TouchableOpacity
-          className="w-6 h-6 bg-[#FDCA0C] rounded-full justify-center items-center"
-          onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
-        >
-          <Text
-            style={{ fontSize: GetFontSize(14) }}
-            className="text-white font-inter400"
-          >
-            ✕
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <Text
-        style={{ fontSize: GetFontSize(14) }}
-        className="text-[#454F5B] font-inter400"
-      >
-        Boost your students's progress in{'\n'}just few taps!
-      </Text>
-    </View>
-  </View>
-</View>
+
       {/* Scrollable Content */}
       <FlatList
         style={{ flex: 1 }}
@@ -260,20 +223,20 @@ const AssignTest = () => {
         <View style={{ flex: 1, backgroundColor: 'white' }}>
           <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF3D6' }}>
             {/* Modal Header */}
-           <View className="px-4 pt-4 pb-4 border-b border-[#DFE3E8] flex-row justify-between items-center bg-[#FFF3D6]">
-  <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
-    Select Chapter
-  </Text>
-  <TouchableOpacity
-    onPress={() => setIsModalVisible(false)}
-    className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-  
-    <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+            <View className="px-4 pt-4 pb-4 border-b border-[#DFE3E8] flex-row justify-between items-center bg-[#FFF3D6]">
+              <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
+                Select Chapter
+              </Text>
+              <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
+                className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+
+                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
                   <Text className="text-white font-inter400">✕</Text>
                 </View>
-   
-  </TouchableOpacity>
-</View>
+
+              </TouchableOpacity>
+            </View>
 
             {/* Chapter List with ScrollView */}
             <LinearGradient
@@ -282,7 +245,7 @@ const AssignTest = () => {
               end={{ x: 1, y: 1 }}
               style={{ flex: 1 }}
             >
-              <ScrollView 
+              <ScrollView
                 style={{ flex: 1 }}
                 contentContainerStyle={{ padding: 16 }}
                 showsVerticalScrollIndicator={true}
@@ -291,11 +254,10 @@ const AssignTest = () => {
                   <TouchableOpacity
                     key={index}
                     onPress={() => handleChapterSelect(chapter.name)}
-                    className={`p-4 mb-3 rounded-lg ${
-                      selectedChapterName === chapter.name
-                        ? 'bg-[#FFF9E6]'
-                        : 'bg-white'
-                    }`}
+                    className={`p-4 mb-3 rounded-lg ${selectedChapterName === chapter.name
+                      ? 'bg-[#FFF9E6]'
+                      : 'bg-white'
+                      }`}
                     style={{
                       borderTopWidth: 1,
                       borderRightWidth: 2,
@@ -307,20 +269,19 @@ const AssignTest = () => {
                   >
                     <Text
                       style={{ fontSize: GetFontSize(15) }}
-                      className={`font-inter500 ${
-                        selectedChapterName === chapter.name
-                          ? 'text-[#B68201]'
-                          : 'text-[#637381]'
-                      }`}
+                      className={`font-inter500 ${selectedChapterName === chapter.name
+                        ? 'text-[#B68201]'
+                        : 'text-[#637381]'
+                        }`}
                     >
-                       {chapter.name}
+                      {chapter.name}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
             </LinearGradient>
 
-            
+
           </SafeAreaView>
         </View>
       </Modal>
@@ -353,7 +314,7 @@ const AssignTest = () => {
             className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
               ? 'bg-[#FED570] border-[#DFAF02]'
               : 'bg-[#FEDB85] border-[#DFAF02]'
-            }`}
+              }`}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}

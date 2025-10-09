@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../Context/AuthContext';
+import GetFontSize from '../../Commons/GetFontSize';
 
 
 const Settings = () => {
@@ -14,14 +15,16 @@ const Settings = () => {
       <ScrollView className="flex-1 px-5">
         {/* Header */}
         <View className="items-center mt-6">
-          <View className="w-20 h-20 rounded-full bg-[#E75B9C] items-center justify-center">
-            <Text className="text-white text-2xl font-bold">
+          <View className="w-16 h-16 rounded-full bg-[#E75B9C] items-center justify-center">
+            <Text style={{ fontSize: GetFontSize(18)}}
+            className="text-white font-inter600">
               {teacherProfile?.name
                 ? teacherProfile.name.charAt(0)
                 : 'Section'}
             </Text>
           </View>
-          <Text className="mt-3 text-lg font-bold text-[#454F5B]">
+          <Text style={{ fontSize: GetFontSize(18)}}
+          className="mt-3 text-lg font-inter600 text-[#454F5B]">
             {teacherProfile?.name || 'Teacher'}
           </Text>
           {/* <Text className="text-[#637381] text-sm">
@@ -66,8 +69,9 @@ const Settings = () => {
 
         {/* Logout */}
         <TouchableOpacity onPress={logout}
-        className="bg-red-50 rounded-xl p-4 mt-6 flex-row justify-center">
-          <Text className="text-red-500 font-bold">Log Out</Text>
+        className="bg-red-50 rounded-xl p-4 mt-3 flex-row justify-center">
+          <Text style={{ fontSize: GetFontSize(16) }}
+          className="text-red-500 font-inter700">Log Out</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

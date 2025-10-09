@@ -21,6 +21,8 @@ import { AuthContext } from '../../../Context/AuthContext';
 import capitalize from '../../../Utils/Capitalize';
 import GetFontSize from '../../../Commons/GetFontSize';
 import TopArrow from '../../../Images/LessonPlan/TopArrow';
+import LessonPlanNavbar from './LessonPlanNavbar';
+
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
@@ -131,78 +133,12 @@ const LessonPlanTopics = ({ route }) => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#E0F5FF] px-6 py-6">
-        <View className="flex-row items-center">
-          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-            <Bluepage />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-start">
-              <Text
-                style={{ fontSize: GetFontSize(18) }}
-                className="text-[#212B36] font-inter600 flex-shrink"
-              >
-                Create Lesson Plan
-              </Text>
-              <TouchableOpacity
-                className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('MainTabNavigator')}
-              >
-                <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white "
-                >
-                  ✕
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400"
-            >
-              Generate a comprehensive lesson{'\n'} plan in seconds
-            </Text>
-          </View>
-        </View>
-      </View>
+      <LessonPlanNavbar
+        classDisplay={classDisplay}
+        subjectDisplay={subjectDisplay}
+      />
       <ScrollView className="flex-1">
-        {/* Class and Subject */}
-        <View className="mt-6 px-6 bg-white">
-          <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
-            <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-              <Text
-                style={{ fontSize: GetFontSize(12) }}
-                className="text-[#637381] font-inter400 mb-1"
-              >
-                Selected Class
-              </Text>
-              <Text
-                style={{ fontSize: GetFontSize(14) }}
-                className="text-[#212B36] font-inter500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {classDisplay}
-              </Text>
-            </View>
-            <View className="flex-[1] ml-2">
-              <Text
-                style={{ fontSize: GetFontSize(12) }}
-                className="text-[#637381] font-inter400 mb-1"
-              >
-                Subject
-              </Text>
-              <Text
-                style={{ fontSize: GetFontSize(14) }}
-                className="text-[#212B36] font-inter500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {subjectDisplay}
-              </Text>
-            </View>
-          </View>
-        </View>
+
         {/* Progress Steps */}
         <View className="px-6 mt-3">
           <View className="bg-[#1CB0F6] rounded-2xl px-3 py-6">
@@ -377,8 +313,8 @@ const LessonPlanTopics = ({ route }) => {
           </TouchableOpacity>
           <TouchableOpacity
             className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedTopics.length > 0
-                ? 'bg-[#1EAFF7] border-[#0786C5]'
-                : 'bg-gray-400 border-gray-400'
+              ? 'bg-[#1EAFF7] border-[#0786C5]'
+              : 'bg-gray-400 border-gray-400'
               }`}
             onPress={handleContinue}
             disabled={selectedTopics.length === 0}
@@ -442,8 +378,8 @@ const LessonPlanTopics = ({ route }) => {
             <View className="px-6 py-4 bg-white border-t border-[#DFE3E8]">
               <TouchableOpacity
                 className={`py-3 rounded-lg justify-center items-center ${selectedTopics.length > 0
-                    ? 'bg-[#1EAFF7]'
-                    : 'bg-gray-400'
+                  ? 'bg-[#1EAFF7]'
+                  : 'bg-gray-400'
                   }`}
                 onPress={() => {
                   setIsModalVisible(false);

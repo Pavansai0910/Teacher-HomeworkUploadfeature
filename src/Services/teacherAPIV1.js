@@ -10,7 +10,6 @@ export const getAuthHeader = async () => {
 };
 
 export const getChapters = async ({ classId, subjectId, boardId }) => {
-  console.log({classId, subjectId, boardId});
   const headers = await getAuthHeader();
   return apiConnector(
     'GET',

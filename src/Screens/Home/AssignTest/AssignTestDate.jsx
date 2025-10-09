@@ -28,7 +28,7 @@ import Calendar from '../../../Images/LessonPlan/Calendar';
 import ViewIcon from '../../../Images/AssignTestCard/ViewIcon';
 import PdfViewerModal from './PdfViewerModal';
 import ReactNativeBlobUtil from 'react-native-blob-util';
-import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader'; 
+import TestLoader from '../../../Commons/TestAnimateLoader/TestLoader';
 
 const AssignTestDate = ({ route }) => {
   const navigation = useNavigation();
@@ -171,97 +171,59 @@ const AssignTestDate = ({ route }) => {
     navigation.navigate('MainTabNavigator', { screen: 'Home' });
   };
 
-const handleViewPdf = async (questionPaperCode) => {
-  try {
-    setDownloadLoader(true);
+  const handleViewPdf = async (questionPaperCode) => {
+    try {
+      setDownloadLoader(true);
 
-    // Request the PDF from backend
-    const response = await downloadExam({ questionPaperCode });
-    console.log('downloadExam response:', response?.data);
+      // Request the PDF from backend
+      const response = await downloadExam({ questionPaperCode });
+      console.log('downloadExam response:', response?.data);
 
-    // Case 1: Backend returns a direct URL to PDF
-    if (response?.data?.url && response.data.url.endsWith('.pdf')) {
-      setPdfUrl(response.data.url);
-      setShowPdfViewer(true);
+      // Case 1: Backend returns a direct URL to PDF
+      if (response?.data?.url && response.data.url.endsWith('.pdf')) {
+        setPdfUrl(response.data.url);
+        setShowPdfViewer(true);
+      }
+
+      // Case 2: Backend returns base64 string directly
+      else if (typeof response?.data === 'string' && response.data.startsWith('JVBER')) {
+        const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
+        await RNFS.writeFile(path, response.data, 'base64');
+        setPdfUrl(`file://${path}`);
+        setShowPdfViewer(true);
+      }
+
+      // Case 3: Backend returns blob object with blobId
+      else if (response?.data?._data?.blobId) {
+        const blobId = response.data._data.blobId;
+
+        // Fetch the actual PDF binary from your API
+        const base64Data = await ReactNativeBlobUtil.fetch(
+          'GET',
+          `https://your-backend-api.com/download/${blobId}`,
+        ).then(res => res.base64());
+
+        const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
+        await RNFS.writeFile(path, base64Data, 'base64');
+        setPdfUrl(`file://${path}`);
+        setShowPdfViewer(true);
+      }
+
+      else {
+        Toast.show({ type: 'error', text1: 'Unsupported PDF format received' });
+        console.log('Unknown PDF data type:', response?.data);
+      }
+    } catch (error) {
+      console.error('PDF Load Error:', error);
+      Toast.show({ type: 'error', text1: 'Failed to load PDF' });
+    } finally {
+      setDownloadLoader(false);
     }
-
-    // Case 2: Backend returns base64 string directly
-    else if (typeof response?.data === 'string' && response.data.startsWith('JVBER')) {
-      const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
-      await RNFS.writeFile(path, response.data, 'base64');
-      setPdfUrl(`file://${path}`);
-      setShowPdfViewer(true);
-    }
-
-    // Case 3: Backend returns blob object with blobId
-    else if (response?.data?._data?.blobId) {
-      const blobId = response.data._data.blobId;
-
-      // Fetch the actual PDF binary from your API
-      const base64Data = await ReactNativeBlobUtil.fetch(
-        'GET',
-        `https://your-backend-api.com/download/${blobId}`, 
-      ).then(res => res.base64());
-
-      const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
-      await RNFS.writeFile(path, base64Data, 'base64');
-      setPdfUrl(`file://${path}`);
-      setShowPdfViewer(true);
-    }
-
-    else {
-      Toast.show({ type: 'error', text1: 'Unsupported PDF format received' });
-      console.log('Unknown PDF data type:', response?.data);
-    }
-  } catch (error) {
-    console.error('PDF Load Error:', error);
-    Toast.show({ type: 'error', text1: 'Failed to load PDF' });
-  } finally {
-    setDownloadLoader(false);
-  }
-};
-
-
+  };
 
 
   return (
     <SafeAreaView className="flex-1 bg-[#FFFFFF]">
-      {/* Header */}
-      {/* Header */}
-<View className="bg-[#FFF3D6] px-6 py-6">
-  <View className="flex-row items-center">
-    <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center mr-3">
-      <AssignTestDoc />
-    </View>
-    <View className="flex-1">
-      <View className="flex-row justify-between items-start">
-        <Text
-          style={{ fontSize: GetFontSize(18) }}
-          className="text-[#212B36] font-inter600 flex-shrink"
-        >
-          Assign Test
-        </Text>
-        <TouchableOpacity
-          className="w-6 h-6 bg-[#FDCA0C] rounded-full justify-center items-center"
-          onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
-        >
-          <Text
-            style={{ fontSize: GetFontSize(14) }}
-            className="text-white font-inter400"
-          >
-            ✕
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <Text
-        style={{ fontSize: GetFontSize(14) }}
-        className="text-[#454F5B] font-inter400"
-      >
-        Boost your students's progress in{'\n'}just few taps!
-      </Text>
-    </View>
-  </View>
-</View>
       {/* Scrollable Content */}
       <ScrollView>
         <NavHeader />

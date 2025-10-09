@@ -41,7 +41,7 @@ const GeneratedLessonPlan = () => {
   } = route.params;
 
   const [isSaving, setIsSaving] = useState(false);
-  const [isSaved, setIsSaved] = useState(false); // Track if already saved
+  const [isSaved, setIsSaved] = useState(false); 
   const [activeSection, setActiveSection] = useState(null);
   const [downloadStatus, setDownloadStatus] = useState(false);
   const [isSavedClicked, setIsSavedClicked] = useState(false);
@@ -68,33 +68,25 @@ const GeneratedLessonPlan = () => {
     }
   };
 
-  // Function to show the section options
+
   const handleShowSections = () => {
-    // 1. Map the ButtonsOptions array to an array of Alert button objects
     const actions = ButtonsOptions.map(sectionName => ({
       text: sectionName,
-      // 2. When an option is pressed, scroll to that section
       onPress: () => scrollToSection(sectionName),
     }));
 
-    // Add a cancel button
     actions.push({
       text: 'Cancel',
       style: 'cancel',
     });
 
-    // 3. Display the native ActionSheet/Alert
     Alert.alert('Go to Section', 'Select a section to jump to:', actions, {
         cancelable: true,
     });
-
-    // NOTE: For a better UI, replace this Alert with a proper React Native Modal
-    // or an ActionSheet from a library like `@gorhom/bottom-sheet`.
   };
 
 
   const handleSaveDoc = async () => {
-    // Check if already saved
     if (isSaved) {
       Toast.show({
         type: 'info',
@@ -124,7 +116,6 @@ const GeneratedLessonPlan = () => {
       });
       setIsSavedClicked(true);
       setGeneratedLessonPlanId(response.data?.savedPlan._id);
-      console.log("Saved Lesson Plan ID:", response.data?.savedPlan._id);
     } catch (error) {
 
       // Handle 409 conflict (already exists)
@@ -194,7 +185,6 @@ const GeneratedLessonPlan = () => {
       setDownloadStatus(false);
     } catch (error) {
       setDownloadStatus(false);
-      console.error("RNFS Write Error:", error);
       Toast.show({
         type: 'error',
         text1: "Download Failed",
@@ -206,7 +196,8 @@ const GeneratedLessonPlan = () => {
   };
 
   const SectionHeader = ({ title }) => (
-    <Text className="text-[16px] font-semibold text-[#212B36] mt-4">
+    <Text style={{ fontSize: GetFontSize(16)}}
+    className="text-[16px] font-inter500 text-[#212B36] mt-4">
       {title}
     </Text>
   );
@@ -214,7 +205,8 @@ const GeneratedLessonPlan = () => {
   const BulletList = ({ items }) => (
     <View className="ml-0">
       {items?.map((item, index) => (
-        <Text key={index} className="text-[14px] leading-6 mx-2 text-[#454F5B]">
+        <Text style={{ fontSize: GetFontSize(14)}}
+        key={index} className="leading-6 mx-2 text-[#454F5B]">
           • {item}
         </Text>
       ))}

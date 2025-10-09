@@ -18,7 +18,7 @@ import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import capitalize from '../../../Utils/Capitalize';
 import GetFontSize from '../../../Commons/GetFontSize';
 import DropdownArrow from '../../../Images/LessonPlan/DropdownArrow';
-
+import LessonPlanNavbar from './LessonPlanNavbar';
 
 
 const LessonPlanner = () => {
@@ -63,114 +63,46 @@ const LessonPlanner = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#E0F5FF] px-6 py-6">
-        <View className="flex-row items-center">
-          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-            <Bluepage />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-start">
-              <Text
-                style={{ fontSize: GetFontSize(18) }}
-                className="text-[#212B36] font-inter600 flex-shrink"
-              >
-                Create Lesson Plan
-              </Text>
-              <TouchableOpacity
-                className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('MainTabNavigator')}
-              >
-                <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white "
-                >
-                  ✕
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400"
-            >
-              Generate a comprehensive lesson{'\n'} plan in seconds
-            </Text>
-          </View>
-        </View>
-      </View>
+      <LessonPlanNavbar
+        classDisplay={classDisplay}
+        subjectDisplay={subjectDisplay}
+      />
 
       <ScrollView className="flex-1">
-        {/* Class and Subject */}
-        <View className="mt-6 px-6 bg-white">
-          <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
-            <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-              <Text
-                style={{ fontSize: GetFontSize(12) }}
-                className="text-[#637381] font-inter400 mb-1"
-              >
-                Selected Class
-              </Text>
-              <Text
-                style={{ fontSize: GetFontSize(14) }}
-                className="text-[#212B36] font-inter500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {classDisplay}
-              </Text>
-            </View>
-            <View className="flex-[1] ml-2">
-              <Text
-                style={{ fontSize: GetFontSize(12) }}
-                className="text-[#637381] font-inter400 mb-1"
-              >
-                Subject
-              </Text>
-              <Text
-                style={{ fontSize: GetFontSize(14) }}
-                className="text-[#212B36] font-inter500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {subjectDisplay}
-              </Text>
-            </View>
-          </View>
-        </View>
-
         {/* Progress Steps */}
         <View className="px-6 mt-3">
           <View className="bg-[#1CB0F6] rounded-2xl px-3 py-6">
             {/* Stepper */}
             <View className="flex-row items-center justify-between mb-5">
               {/* Step 1 */}
-             <View className="items-center">
-  <View 
-    className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center"
-    style={{
-      shadowColor: '#6FCE62',
-      shadowOffset: { width: 0, height: 3 },
-      shadowOpacity: 1,
-      shadowRadius: 0,
-      elevation: 3,
-    }}
-  >
-    <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
-      <Text
-        style={{ fontSize: GetFontSize(12) }}
-        className="text-[#212B36] font-inter600"
-      >
-        1
-      </Text>
-    </View>
-    <Text
-      style={{ fontSize: GetFontSize(12) }}
-      className="text-white font-inter600"
-    >
-      Choose Chapter
-    </Text>
-  </View>
-</View>
-<View className="flex-1 h-[2px] bg-[#F7F7F5]" />
+              <View className="items-center">
+                <View
+                  className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center"
+                  style={{
+                    shadowColor: '#6FCE62',
+                    shadowOffset: { width: 0, height: 3 },
+                    shadowOpacity: 1,
+                    shadowRadius: 0,
+                    elevation: 3,
+                  }}
+                >
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-[#212B36] font-inter600"
+                    >
+                      1
+                    </Text>
+                  </View>
+                  <Text
+                    style={{ fontSize: GetFontSize(12) }}
+                    className="text-white font-inter600"
+                  >
+                    Choose Chapter
+                  </Text>
+                </View>
+              </View>
+              <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
               {/* Step 2 */}
               <View className="items-center">
                 <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
@@ -226,49 +158,49 @@ const LessonPlanner = () => {
                 </Text>
               </View>
             </View>
-<View className="w-full">
-  {loading ? (
-    <ActivityIndicator size="large" color="#ffffff" />
-  ) : (
-    <LinearGradient
-      colors={['#A17F5E', '#B8916B']}
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 1 }}
-      style={{
-        borderRadius: 8,
-        paddingTop: 3,
-        paddingRight: 3,
-        paddingBottom: 6,
-        paddingLeft: 3,
-      }}
-    >
-      <TouchableOpacity 
-        onPress={() => setIsModalVisible(true)}
-        className="bg-white rounded-lg px-4 py-4"
-      >
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <Text
-            style={{ 
-              fontSize: GetFontSize(17), 
-              color: '#DC9047',
-              fontFamily: 'Inter',
-              fontWeight: '700',
-              lineHeight: GetFontSize(16) * 1.35,
-              letterSpacing: GetFontSize(16) * -0.02  // -2% of fontSize
-            }}
-            className="font-inter700"
-          >
-            {selectedChapterName || "Choose a chapter to get started..."}
-          </Text>
-          <DropdownArrow color="#DC9047" />
+            <View className="w-full">
+              {loading ? (
+                <ActivityIndicator size="large" color="#ffffff" />
+              ) : (
+                <LinearGradient
+                  colors={['#A17F5E', '#B8916B']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    borderRadius: 8,
+                    paddingTop: 3,
+                    paddingRight: 3,
+                    paddingBottom: 6,
+                    paddingLeft: 3,
+                  }}
+                >
+                  <TouchableOpacity
+                    onPress={() => setIsModalVisible(true)}
+                    className="bg-white rounded-lg px-4 py-4"
+                  >
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Text
+                        style={{
+                          fontSize: GetFontSize(17),
+                          color: '#DC9047',
+                          fontFamily: 'Inter',
+                          fontWeight: '700',
+                          lineHeight: GetFontSize(16) * 1.35,
+                          letterSpacing: GetFontSize(16) * -0.02  // -2% of fontSize
+                        }}
+                        className="font-inter700"
+                      >
+                        {selectedChapterName || "Choose a chapter to get started..."}
+                      </Text>
+                      <DropdownArrow color="#DC9047" />
+                    </View>
+                  </TouchableOpacity>
+                </LinearGradient>
+              )}
+            </View>
+          </View>
         </View>
-      </TouchableOpacity>
-    </LinearGradient>
-  )}
-</View>
-</View>
-</View>
-               
+
 
         {/* Pro Tip */}
         {/* <View className="px-6 mt-4">
@@ -311,11 +243,10 @@ const LessonPlanner = () => {
                 chapterId: selectedChapterId,
               })
             }
-            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${
-              selectedChapterId
-                ? 'bg-[#1EAFF7] border-[#0786C5]'
-                : 'bg-gray-300 border-gray-300'
-            }`}
+            className={`flex-row gap-1 flex-1 py-3 rounded-lg justify-center items-center border-2 ${selectedChapterId
+              ? 'bg-[#1EAFF7] border-[#0786C5]'
+              : 'bg-gray-300 border-gray-300'
+              }`}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}
@@ -337,31 +268,29 @@ const LessonPlanner = () => {
         statusBarTranslucent={true}
       >
         <View style={{ flex: 1, backgroundColor: 'white' }}>
-          <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF3D6' }}>
+          <SafeAreaView style={{ flex: 1 }}>
             {/* Modal Header */}
-           <View className="px-4 pt-4 pb-4 border-b border-[#DFE3E8] flex-row justify-between items-center bg-[#FFF3D6]">
-  <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
-    Select Chapter
-  </Text>
-  <TouchableOpacity
-    onPress={() => setIsModalVisible(false)}
-    className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-  
-    <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
+            <View className="px-4 pt-8 pb-4 border-b-4 border-[#DFE3E8] flex-row justify-between items-center bg-[#E0F5FF]">
+              <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
+                Select Chapter
+              </Text>
+              <TouchableOpacity
+                onPress={() => setIsModalVisible(false)}
+              >
+                <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
                   <Text className="text-white font-inter400">✕</Text>
                 </View>
-   
-  </TouchableOpacity>
-</View>
+              </TouchableOpacity>
+            </View>
 
             {/* Chapter List with ScrollView */}
             <LinearGradient
-              colors={['#B8916B', '#E5D6C8']}
+              colors={['#E0F5FF', '#1EAFF7']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={{ flex: 1 }}
             >
-              <ScrollView 
+              <ScrollView
                 style={{ flex: 1 }}
                 contentContainerStyle={{ padding: 16 }}
                 showsVerticalScrollIndicator={true}
@@ -373,36 +302,34 @@ const LessonPlanner = () => {
                       handleChapterSelect(chapter.name);
                       setIsModalVisible(false);
                     }}
-                    className={`p-4 mb-3 rounded-lg ${
-                      selectedChapterName === chapter.name
-                        ? 'bg-[#FFF9E6]'
-                        : 'bg-white'
-                    }`}
+                    className={`p-4 mb-3 rounded-lg ${selectedChapterName === chapter.name
+                      ? 'bg-[#1EAFF7]'
+                      : 'bg-white'
+                      }`}
                     style={{
                       borderTopWidth: 1,
                       borderRightWidth: 2,
                       borderBottomWidth: 4,
                       borderLeftWidth: 2,
-                      borderColor: selectedChapterName === chapter.name ? '#DC9047' : '#DFE3E8',
+                      borderColor: selectedChapterName === chapter.name ? '#077FBB' : '#1A9DDD',
                       borderStyle: 'solid'
                     }}
                   >
                     <Text
                       style={{ fontSize: GetFontSize(15) }}
-                      className={`font-inter500 ${
-                        selectedChapterName === chapter.name
-                          ? 'text-[#B68201]'
-                          : 'text-[#212B36]'
-                      }`}
+                      className={`font-inter500 ${selectedChapterName === chapter.name
+                        ? 'text-white'
+                        : 'text-[#212B36]'
+                        }`}
                     >
-                       {chapter.name}
+                      {chapter.name}
                     </Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
             </LinearGradient>
 
-            
+
           </SafeAreaView>
         </View>
       </Modal>

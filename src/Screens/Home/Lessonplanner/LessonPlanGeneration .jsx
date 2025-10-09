@@ -15,6 +15,7 @@ import Calendar from '../../../Images/LessonPlan/Calendar';
 import capitalize from '../../../Utils/Capitalize';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { setLessonPlanner } from '../../../store/Slices/lessonPlannerSlice'; 
+import LessonPlanNavbar from './LessonPlanNavbar';
 
 const LessonPlanGeneration = () => {
   const navigation = useNavigation();
@@ -173,80 +174,12 @@ const LessonPlanGeneration = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#E0F5FF] px-6 py-6">
-        <View className="flex-row items-center">
-          <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
-            <Bluepage />
-          </View>
-          <View className="flex-1">
-            <View className="flex-row justify-between items-start">
-              <Text
-                style={{ fontSize: GetFontSize(18) }}
-                className="text-[#212B36] font-inter600 flex-shrink"
-              >
-                Create Lesson Plan
-              </Text>
-              <TouchableOpacity
-                className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('MainTabNavigator')}
-              >
-                <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white "
-                >
-                  ✕
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] "
-            >
-              Generate a comprehensive lesson{'\n'} plan in seconds
-            </Text>
-          </View>
-        </View>
-      </View>
+      <LessonPlanNavbar
+        classDisplay={classDisplay}
+        subjectDisplay={subjectDisplay}
+      />
 
       <ScrollView className="flex-1">
-        {/* Class and Subject */}
-        <View className="mt-6 px-6 bg-white">
-          <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
-            <View className="flex-[2] mr-4 border-r-2 border-[#E5E5E3] pr-4">
-              <Text
-                style={{ fontSize: GetFontSize(12) }}
-                className="text-[#637381] font-inter400 mb-1"
-              >
-                Selected Class
-              </Text>
-              <Text
-                style={{ fontSize: GetFontSize(14) }}
-                className="text-[#212B36] font-inter500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {classDisplay}
-              </Text>
-            </View>
-            <View className="flex-[1] ml-2">
-              <Text
-                style={{ fontSize: GetFontSize(12) }}
-                className="text-[#637381]  font-inter400 mb-1"
-              >
-                Subject
-              </Text>
-              <Text
-                style={{ fontSize: GetFontSize(14) }}
-                className="text-[#212B36] font-inter500"
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {subjectDisplay}
-              </Text>
-            </View>
-          </View>
-        </View>
-
         {/* Progress Steps */}
         <View className="px-6 mt-3">
           <View className="bg-[#1CB0F6] rounded-2xl px-3 py-6">

@@ -85,41 +85,6 @@ const AssignTestTopics = ({ route }) => {
 
   return (
     <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-<View className="bg-[#FFF3D6] px-6 py-6">
-  <View className="flex-row items-center">
-    <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center mr-3">
-      <AssignTestDoc />
-    </View>
-    <View className="flex-1">
-      <View className="flex-row justify-between items-start">
-        <Text
-          style={{ fontSize: GetFontSize(18) }}
-          className="text-[#212B36] font-inter600 flex-shrink"
-        >
-          Assign Test
-        </Text>
-        <TouchableOpacity
-          className="w-6 h-6 bg-[#FDCA0C] rounded-full justify-center items-center"
-          onPress={() => navigation.navigate('MainTabNavigator', { screen: 'Home' })}
-        >
-          <Text
-            style={{ fontSize: GetFontSize(14) }}
-            className="text-white font-inter400"
-          >
-            ✕
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <Text
-        style={{ fontSize: GetFontSize(14) }}
-        className="text-[#454F5B] font-inter400"
-      >
-        Boost your students's progress in{'\n'}just few taps!
-      </Text>
-    </View>
-  </View>
-</View>
 
       {/* Class-Section-Subject Display */}
       <NavHeader />

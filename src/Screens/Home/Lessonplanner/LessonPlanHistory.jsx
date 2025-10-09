@@ -37,9 +37,7 @@ const LessonPlanHistory = () => {
       }));
 
       setLessonPlans(plans || []);
-      console.log("Mapped lesson plans:", plans);
     } catch (error) {
-      console.log('Error fetching lesson plans:', error);
       Toast.show({
         type: 'error',
         text1: 'Error',
@@ -53,14 +51,12 @@ const LessonPlanHistory = () => {
   const fetchLessonPlanDetails = async (lessonPlanId) => {
     try {
       setLoading(true);
-      console.log("Fetching details for:", lessonPlanId);
       const response = await getAllLessonPlans({ lessonPlanId });
 
       // Use the same structure as web
       const lessonPlanData = response?.data?.lessonPlan;
 
       if (lessonPlanData) {
-        console.log("Navigating to HistoryDetails with data");
         navigation.navigate('HistoryDetails', {
           lessonPlanData,
           chapterId: lessonPlanData.chapterId || lessonPlanId,
@@ -69,7 +65,6 @@ const LessonPlanHistory = () => {
           }]
         });
       } else {
-        console.log('No lesson plan data found in response.data.lessonPlan');
         Toast.show({
           type: 'error',
           text1: 'Error',
@@ -77,7 +72,6 @@ const LessonPlanHistory = () => {
         });
       }
     } catch (error) {
-      console.error('Error fetching lesson plan details:', error);
       Toast.show({
         type: 'error',
         text1: 'Error',
