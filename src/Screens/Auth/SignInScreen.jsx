@@ -8,13 +8,13 @@ import {
   Alert,
   KeyboardAvoidingView,
 } from 'react-native';
-// import EmailIcon from '../../Images/svg/EmailIcon';
+import EmailIcon from '../../Images/Login/EmailIcon';
 import GetFontSize from '../../Commons/GetFontSize';
-import { loginTeacher} from '../../Services/loginAPI';
+import { loginTeacher } from '../../Services/loginAPI';
 import { AuthContext } from '../../Context/AuthContext';
 import Toast from 'react-native-toast-message';
-// import Eye from '../../Images/svg/Eye';
-// import EyeSlash from '../../Images/svg/EyeSlash';
+import Eye from '../../Images/Login/Eye';
+import EyeSlash from '../../Images/Login/EyeSlash';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SignInScreen = () => {
@@ -32,8 +32,8 @@ const SignInScreen = () => {
     try {
       setLoading(true);
       const result = await loginTeacher({
-        identifier: email,
-        password,
+        identifier: email.trim(),
+        password:password.trim(),
         role: 'teacher',
       });
       updateProfile(result.data.profile);
@@ -60,7 +60,7 @@ const SignInScreen = () => {
 
             <View className="flex flex-row items-center mt-[27px] w-[100%] h-[54px] rounded-[11px] bg-[#A7C4FF66]">
               <View className="mx-[9px]">
-                {/* <EmailIcon /> */}
+                <EmailIcon />
               </View>
               <TextInput
                 style={{ fontSize: GetFontSize(15) }}
@@ -74,9 +74,9 @@ const SignInScreen = () => {
             </View>
 
             <View className="flex flex-row items-center mt-[12px] w-[100%] h-[54px] rounded-[11px] bg-[#A7C4FF66]">
-              {/* <TouchableOpacity onPress={() => setPasswordHidden(!passwordHidden)} className="mx-[9px]">
+              <TouchableOpacity onPress={() => setPasswordHidden(!passwordHidden)} className="mx-[9px]">
                 {passwordHidden ? <EyeSlash /> : <Eye />}
-              </TouchableOpacity> */}
+              </TouchableOpacity>
 
               <TextInput
                 style={{ fontSize: GetFontSize(15) }}

@@ -8,8 +8,19 @@ import GetStartedScreen from '../Screens/GetStartedScreen';
 import Loader from '../Commons/Loader';
 import checkAuthentication from '../Utils/logout';
 import Home from '../Screens/Home/Home';
-import AssignTest from '../Screens/Home/AssignTest';
-import LessonPlanner from '../Screens/Home/LessonPlanner';
+import AssignTest from '../Screens/Home/AssignTest/AssignTest';
+import LessonPlanner from '../Screens/Home/Lessonplanner/LessonPlanner';
+import MainTabNavigator from './MainTabNavigator';
+import StudentsInsights from '../Screens/Home/StudentInsights/StudentsInsights'
+import Settings from '../Screens/Settings/Settings';
+import LessonPlanTopics from '../Screens/Home/Lessonplanner/LessonPlanTopics';
+import LessonPlanGeneration from '../Screens/Home/Lessonplanner/LessonPlanGeneration ';
+import GeneratedLessonPlan from '../Screens/Home/Lessonplanner/GeneratedLessonPlan';
+import AssignTestTopics from '../Screens/Home/AssignTest/AssignTestTopics';
+import AssignTestDate from '../Screens/Home/AssignTest/AssignTestDate';
+import LessonPlanHistory from '../Screens/Home/Lessonplanner/LessonPlanHistory';
+import HistoryDetails from '../Screens/Home/Lessonplanner/HistoryDetails';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -55,9 +66,40 @@ function AppNavigator() {
       >
         {isAuthenticated ? (
           <>
+            <Stack.Screen
+              name="MainTabNavigator"
+              component={MainTabNavigator}
+            />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="LessonPlanner" component={LessonPlanner} />
+            <Stack.Screen
+              name="LessonPlanTopics"
+              component={LessonPlanTopics}
+            />
             <Stack.Screen name="AssignTest" component={AssignTest} />
+            <Stack.Screen
+              name="StudentsInsights"
+              component={StudentsInsights}
+            />
+            <Stack.Screen name="Settings" component={Settings} />
+            
+
+            <Stack.Screen
+              name="LessonPlanGeneration"
+              component={LessonPlanGeneration}
+            />
+            <Stack.Screen
+              name="GeneratedLessonPlan"
+              component={GeneratedLessonPlan}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AssignTestTopics"
+              component={AssignTestTopics}
+            />
+            <Stack.Screen name="AssignTestDate" component={AssignTestDate} />
+            <Stack.Screen name="LessonPlanHistory" component={LessonPlanHistory} />
+            <Stack.Screen name="HistoryDetails" component={HistoryDetails} />
           </>
         ) : (
           <>
@@ -66,6 +108,7 @@ function AppNavigator() {
               component={GetStartedScreen}
             />
             <Stack.Screen name="SignInScreen" component={SignInScreen} />
+            
           </>
         )}
       </Stack.Navigator>
