@@ -1,8 +1,4 @@
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSelector } from 'react-redux';
-import capitalizeSubject from '../../../Utils/Capitalize';
-import LearningNavbar from './LearningNavbar';
-import LinearGradient from 'react-native-linear-gradient';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -12,35 +8,50 @@ import {
   Dimensions,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
+import LinearGradient from 'react-native-linear-gradient';
+
+import capitalizeSubject from '../../../Utils/Capitalize';
+import LearningNavbar from './LearningNavbar';
 import GetFontSize from '../../../Commons/GetFontSize';
 import ScrollUpArrow from '../../../Images/LessonPlan/ScrollUpArrow';
-import { useState, useRef, useEffect, useContext } from 'react';
-import { getChapters } from '../../../Services/teacherAPIV1';
-import { AuthContext } from '../../../Context/AuthContext';
 import RightArrowIcon from '../../../Images/LessonPlan/RightArrowIcon';
+import { getChapters } from '../../../Services/teacherAPIV1';
+import { gettopicAssessmentStats } from '../../../Services/teacherAPIV2';
+import { AuthContext } from '../../../Context/AuthContext';
 
 const StudentsInsights = () => {
+  const navigation = useNavigation();
   const selectedAssignment = useSelector(
-    state => state.assignment.selectedAssignment,
+    (state) => state.assignment.selectedAssignment
   );
   const { teacherProfile } = useContext(AuthContext);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedChapterId, setSelectedChapterId] = useState(null); 
+  const [selectedChapterId, setSelectedChapterId] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [topicsData, setTopicsData] = useState({
+    completed: [],
+    assigned: [],
+    pending: [],
+  });
+  const [topicsLoading, setTopicsLoading] = useState(false);
+
   const dropdownAnimation = useRef(new Animated.Value(0)).current;
   const { height: screenHeight } = Dimensions.get('window');
 
   const classDisplay = selectedAssignment
     ? `${selectedAssignment.classId?.className || 'Class'}-${selectedAssignment.sectionId?.sectionName || 'Section'}`
     : 'Not selected';
-
   const subjectDisplay =
     capitalizeSubject(selectedAssignment?.subjectId?.subjectName) ||
     'Not selected';
 
-  // Get selected chapter object
-  const selectedChapter = chapters.find(ch => ch.id === selectedChapterId) || null;
+  const selectedChapter =
+    chapters.find((ch) => ch.id === selectedChapterId) || null;
 
   // ✅ Fetch Chapters API call
   useEffect(() => {
@@ -50,13 +61,10 @@ const StudentsInsights = () => {
         !selectedAssignment?.subjectId?._id ||
         !teacherProfile?.schoolId?.boardId
       ) {
-        console.log('Missing required parameters for API call');
         return;
       }
 
       setLoading(true);
-      console.log('Fetching chapters...');
-
       try {
         const response = await getChapters({
           classId: selectedAssignment.classId._id,
@@ -64,22 +72,17 @@ const StudentsInsights = () => {
           boardId: teacherProfile.schoolId.boardId,
         });
 
-        console.log('API Response:', response.data);
-
         const chapterList =
           response.data?.chapters?.map((ch, index) => ({
-            id: ch._id || `chapter_${index}`, // Ensure unique ID
+            id: ch.id || ch._id || `chapter_${index}`,
             name: ch.name || 'Untitled Chapter',
-            originalData: ch, // Keep original data if needed
+            originalData: ch,
           })) || [];
 
-        console.log('Processed chapters:', chapterList);
         setChapters(chapterList);
 
-        // Set the first chapter as selected if available
         if (chapterList.length > 0) {
           setSelectedChapterId(chapterList[0].id);
-          console.log('Selected first chapter:', chapterList[0].name);
         }
       } catch (err) {
         console.error('Failed to fetch chapters:', err.message);
@@ -90,6 +93,51 @@ const StudentsInsights = () => {
 
     fetchChapters();
   }, [selectedAssignment]);
+
+  // ✅ Fetch Topics when chapter is selected
+  useEffect(() => {
+    const fetchTopics = async () => {
+      if (
+        !selectedChapterId ||
+        !selectedAssignment?.classId?._id ||
+        !selectedAssignment?.sectionId?._id ||
+        !selectedAssignment?.subjectId?._id ||
+        !teacherProfile?.schoolId?.boardId
+      ) {
+        return;
+      }
+
+      setTopicsLoading(true);
+      try {
+        const response = await gettopicAssessmentStats({
+          classId: selectedAssignment.classId._id,
+          sectionId: selectedAssignment.sectionId._id,
+          subjectId: selectedAssignment.subjectId._id,
+          boardId: teacherProfile.schoolId.boardId,
+          chapterId: selectedChapterId,
+        });
+
+        const topics = response.data?.topics || [];
+
+        const completedTopics = response.data?.completed || [];
+        const assignedTopics = response.data?.notAssigned || [];
+        const pendingTopics = response.data?.pending || [];
+
+        setTopicsData({
+          completed: completedTopics,
+          assigned: assignedTopics,
+          pending: pendingTopics,
+        });
+      } catch (err) {
+        console.error('Failed to fetch topics:', err.message);
+        setTopicsData({ completed: [], assigned: [], pending: [] });
+      } finally {
+        setTopicsLoading(false);
+      }
+    };
+
+    fetchTopics();
+  }, [selectedChapterId, selectedAssignment]);
 
   // 🔄 Dropdown open/close animation
   const toggleDropdown = () => {
@@ -104,23 +152,32 @@ const StudentsInsights = () => {
     }).start();
   };
 
-  // ✅ Handle chapter selection - COMPLETELY REWRITTEN
+  // ✅ Handle chapter selection
   const selectChapter = (chapter) => {
-    console.log('Selecting chapter:', chapter.name, 'with ID:', chapter.id);
-
-    // Simply update the selected chapter ID
     setSelectedChapterId(chapter.id);
-
-    // Close dropdown
     setIsDropdownOpen(false);
+
     Animated.spring(dropdownAnimation, {
       toValue: 0,
       useNativeDriver: false,
       tension: 100,
       friction: 8,
     }).start();
+  };
 
-    console.log('Chapter selection completed');
+  // ✅ Navigate to LearningTopic screen
+  const navigateToLearningTopic = (status) => {
+    if (!selectedChapter || topicsLoading) return;
+
+    const topicsToPass = topicsData[status] || [];
+    navigation.navigate('LearningTopic', {
+      status: status,
+      topics: topicsToPass,
+      chapterName: selectedChapter.name,
+      classDisplay: classDisplay,
+      subjectDisplay: subjectDisplay,
+      chapterId: selectedChapter.id,
+    });
   };
 
   const dropdownHeight = dropdownAnimation.interpolate({
@@ -133,10 +190,8 @@ const StudentsInsights = () => {
     outputRange: ['0deg', '180deg'],
   });
 
-  // Helper function to check if chapter is selected
-  const isChapterSelected = (chapterId) => {
-    return selectedChapterId === chapterId;
-  };
+  const isChapterSelected = (chapterId) => selectedChapterId === chapterId;
+  const getTopicCount = (status) => topicsData[status]?.length || 0;
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -145,35 +200,112 @@ const StudentsInsights = () => {
         subjectDisplay={subjectDisplay}
       />
 
-      <View className="bg-[#D0F5B3] p-6 mx-6 mt-6 rounded-2xl ">
-        <TouchableOpacity style={{ borderTopWidth: 1, borderBottomWidth: 4, borderLeftWidth: 2, borderRightWidth: 2, borderColor: '#77E425' }}
-          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white">
-          <Text className="text-[#454F5B] font-inter500" style={{ fontSize: GetFontSize(16) }}>
-            Completed
-          </Text>
-          <RightArrowIcon color='#77E425' />
+      <View className="bg-[#D0F5B3] p-6 mx-6 mt-6 rounded-2xl">
+        {/* Completed */}
+        <TouchableOpacity
+          style={{
+            borderTopWidth: 1,
+            borderBottomWidth: 4,
+            borderLeftWidth: 2,
+            borderRightWidth: 2,
+            borderColor: '#77E425',
+          }}
+          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
+          onPress={() => navigateToLearningTopic('completed')}
+          disabled={topicsLoading || !selectedChapter}
+        >
+          <View className="flex-row items-center">
+            <Text
+              className="text-[#454F5B] font-inter500 py-1 px-2"
+              style={{ fontSize: GetFontSize(16) }}
+            >
+              Completed
+            </Text>
+            {/* {topicsLoading ? (
+              <ActivityIndicator size="small" color="#77E425" className="ml-2" />
+            ) : (
+              <Text
+                className="text-[#77E425] font-inter600 ml-2"
+                style={{ fontSize: GetFontSize(14) }}
+              >
+                ({getTopicCount('completed')})
+              </Text>
+            )} */}
+          </View>
+          <RightArrowIcon color="#77E425" />
         </TouchableOpacity>
 
-        <TouchableOpacity style={{ borderTopWidth: 1, borderBottomWidth: 4, borderLeftWidth: 2, borderRightWidth: 2, borderColor: '#77E425' }}
-        className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white">
-          <Text className="text-[#454F5B] font-inter500" style={{ fontSize: GetFontSize(16) }}>
-            Assigned
-          </Text>
-          <RightArrowIcon color='#77E425' />
+        {/* Assigned */}
+        <TouchableOpacity
+          style={{
+            borderTopWidth: 1,
+            borderBottomWidth: 4,
+            borderLeftWidth: 2,
+            borderRightWidth: 2,
+            borderColor: '#77E425',
+          }}
+          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
+          onPress={() => navigateToLearningTopic('assigned')}
+          disabled={topicsLoading || !selectedChapter}
+        >
+          <View className="flex-row items-center">
+            <Text
+              className="text-[#454F5B] font-inter500 py-1 px-2"
+              style={{ fontSize: GetFontSize(16) }}
+            >
+              Assigned
+            </Text>
+            {/* {topicsLoading ? (
+              <ActivityIndicator size="small" color="#77E425" className="ml-2" />
+            ) : (
+              <Text
+                className="text-[#77E425] font-inter600 ml-2"
+                style={{ fontSize: GetFontSize(14) }}
+              >
+                ({getTopicCount('assigned')})
+              </Text>
+            )} */}
+          </View>
+          <RightArrowIcon color="#77E425" />
         </TouchableOpacity>
-        
-        <TouchableOpacity style={{ borderTopWidth: 1, borderBottomWidth: 4, borderLeftWidth: 2, borderRightWidth: 2, borderColor: '#77E425' }}
-        className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white">
-          <Text className="text-[#454F5B] font-inter500" style={{ fontSize: GetFontSize(16) }}>
-            Pending
-          </Text>
-          <RightArrowIcon color='#77E425' />
+
+        {/* Pending */}
+        <TouchableOpacity
+          style={{
+            borderTopWidth: 1,
+            borderBottomWidth: 4,
+            borderLeftWidth: 2,
+            borderRightWidth: 2,
+            borderColor: '#77E425',
+          }}
+          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
+          onPress={() => navigateToLearningTopic('pending')}
+          disabled={topicsLoading || !selectedChapter}
+        >
+          <View className="flex-row items-center">
+            <Text
+              className="text-[#454F5B] font-inter500 py-1 px-2"
+              style={{ fontSize: GetFontSize(16) }}
+            >
+              Pending
+            </Text>
+            {/* {topicsLoading ? (
+              <ActivityIndicator size="small" color="#77E425" className="ml-2" />
+            ) : (
+              <Text
+                className="text-[#77E425] font-inter600 ml-2"
+                style={{ fontSize: GetFontSize(14) }}
+              >
+                ({getTopicCount('pending')})
+              </Text>
+            )} */}
+          </View>
+          <RightArrowIcon color="#77E425" />
         </TouchableOpacity>
       </View>
 
-      {/* Floating Dropdown - */}
+      {/* Floating Dropdown */}
       <View className="absolute bottom-0 left-0 right-0">
-        {/* Dropdown Content */}
         {isDropdownOpen && (
           <Animated.View
             style={{
@@ -198,9 +330,8 @@ const StudentsInsights = () => {
               contentContainerStyle={{ padding: 8 }}
               showsVerticalScrollIndicator={false}
             >
-              {chapters.map(chapter => {
+              {chapters.map((chapter) => {
                 const isSelected = isChapterSelected(chapter.id);
-
                 return (
                   <TouchableOpacity
                     key={chapter.id}
@@ -259,7 +390,11 @@ const StudentsInsights = () => {
                 style={{ fontSize: GetFontSize(18) }}
                 className="text-[#DC9047] font-inter700 mr-2 flex-1 text-center"
               >
-                {selectedChapter ? selectedChapter.name : (loading ? 'Loading...' : 'Select Chapter')}
+                {selectedChapter
+                  ? selectedChapter.name
+                  : loading
+                    ? 'Loading...'
+                    : 'Select Chapter'}
               </Text>
               <Animated.View
                 style={{
@@ -273,8 +408,7 @@ const StudentsInsights = () => {
         </View>
       </View>
 
-
-      {/* Overlay to close dropdown when tapping outside */}
+      {/* Overlay to close dropdown */}
       {isDropdownOpen && (
         <TouchableOpacity
           style={{

@@ -53,12 +53,12 @@ function NavHeader() {
                 Assign Test
               </Text>
               <TouchableOpacity
-                className="w-6 h-6 bg-[#FDCA0C] rounded-full justify-center items-center"
+                className="w-6 h-6 bg-[#FEDB85] rounded-full justify-center items-center border-2 border-[#FDCA0C]"
                 onPress={() => navigation.navigate('MainTabNavigator')}
               >
                 <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white font-inter400"
+                  style={{ fontSize: GetFontSize(11), marginTop: -1 }}
+                  className="text-white font-inter600"
                 >
                   ✕
                 </Text>
