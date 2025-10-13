@@ -43,3 +43,9 @@ export const gettopicAssessmentStats = async ({ classId, sectionId, subjectId, b
     const headers = await getAuthHeader();
     return apiConnector('GET',`/v2/teacher/get-topic-assessment-stats/${classId}/${sectionId}/${subjectId}/${boardId}/${chapterId}`)
 }
+
+// router.get("/get-exam-participation-for-teacher/:classId/:sectionId/:subjectId/:topicId", verifyToken, generalRateLimiter, getExamParticipationByTopic);
+export const getExamParticipationByTopic = async ({classId, sectionId, subjectId, topicId}) => {
+    const headers = await getAuthHeader();
+    return apiConnector('GET',`/v2/teacher/get-exam-participation-for-teacher/${classId}/${sectionId}/${subjectId}/${topicId}`, null, headers)
+}

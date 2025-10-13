@@ -138,7 +138,9 @@ const LearningDetails = () => {
                         transform: [{ rotateY }],
                     }}
                 >
-                    <TestAnalytics />
+                    <TestAnalytics 
+                    selectedTopic={route.params?.topicId}     
+                    />
                 </Animated.View>
             </ScrollView>
 
