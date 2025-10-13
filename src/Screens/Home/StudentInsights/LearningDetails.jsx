@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Dimensions, Animated, Easing } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Dimensions, Animated, Easing, Vibration } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SkullIcon from '../../../Images/StudentInsights/SkullIcon';
@@ -60,7 +60,10 @@ const LearningDetails = () => {
                             </Text>
                             <TouchableOpacity
                                 className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
-                                onPress={() => navigation.navigate('MainTabNavigator')}
+                                onPress={() => {
+                                    Vibration.vibrate(50);
+                                    navigation.navigate('MainTabNavigator')
+                                }}
                             >
                                 <Text style={{ fontSize: GetFontSize(14) }} className="text-white">
                                     ✕
@@ -96,7 +99,7 @@ const LearningDetails = () => {
             </View>
 
             {/* Dashed Line */}
-            <View className="border-b-2 border-dashed border-[#E5E5E3] mx-6 mt-4 mb-4" />
+            {/* <View className="border-b-2 border-dashed border-[#E5E5E3] mx-6 mt-4 mb-4" /> */}
 
             {/* Animated Scroll Cards */}
             <ScrollView
@@ -122,7 +125,7 @@ const LearningDetails = () => {
                     <TestDetails
                         chapterId={route.params?.chapterId}
                         selectedAssignment={route.params?.selectedAssignment}
-                        selectedTopic={route.params?.topicId} 
+                        selectedTopic={route.params?.topicId}
                     />
                 </Animated.View>
 
@@ -138,8 +141,8 @@ const LearningDetails = () => {
                         transform: [{ rotateY }],
                     }}
                 >
-                    <TestAnalytics 
-                    selectedTopic={route.params?.topicId}     
+                    <TestAnalytics
+                        selectedTopic={route.params?.topicId}
                     />
                 </Animated.View>
             </ScrollView>
@@ -149,7 +152,10 @@ const LearningDetails = () => {
             <View className="px-6 mb-4 flex-row justify-between items-center">
                 <TouchableOpacity
                     className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"
-                    onPress={() => navigation.goBack()}
+                    onPress={() => {
+                        Vibration.vibrate(50);
+                        navigation.goBack()
+                    }}
                 >
                     <LeftArrow color="#357A20" />
                     <Text style={{ fontSize: GetFontSize(16) }} className="text-[#357A20] font-inter600">
@@ -159,7 +165,10 @@ const LearningDetails = () => {
 
                 <TouchableOpacity
                     className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#71E31C] rounded-xl justify-center items-center px-4 py-3 bg-[#B0EF80]"
-                    onPress={handleFlip}
+                    onPress={() => {
+                        Vibration.vibrate(50);
+                        handleFlip();
+                    }}
                 >
                     <Text style={{ fontSize: GetFontSize(16) }} className="text-[#357A20] font-inter600">
                         Flip

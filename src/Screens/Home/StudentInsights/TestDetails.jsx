@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Vibration } from 'react-native';
 import { getTopicPerformanceBySection } from "../../../Services/teacherAPIV1";
 import { useSelector } from 'react-redux';
 import GetFontSize from '../../../Commons/GetFontSize';
@@ -103,7 +103,10 @@ const TestDetails = ({
                                         </Text>
 
                                         <TouchableOpacity 
-                                            onPress={() => toggleExpand(index)}
+                                            onPress={() => {
+                                                Vibration.vibrate(50);
+                                                toggleExpand(index);
+                                            }}
                                             className="justify-center items-center"
                                         >
                                             <ExpandIcon />
@@ -146,7 +149,10 @@ const TestDetails = ({
                                     </Text>
 
                                     <TouchableOpacity 
-                                        onPress={() => toggleExpand(index)}
+                                        onPress={() => {
+                                            Vibration.vibrate(50);
+                                            toggleExpand(index);
+                                        }}
                                         className="justify-center items-center"
                                     >
                                         <ExpandIcon />

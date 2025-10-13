@@ -6,7 +6,8 @@ import {
   ScrollView,
   Animated,
   Dimensions,
-  Vibration
+  Vibration,
+  ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -226,16 +227,16 @@ const StudentsInsights = () => {
             >
               Completed
             </Text>
-            {/* {topicsLoading ? (
-              <ActivityIndicator size="small" color="#77E425" className="ml-2" />
+            {topicsLoading ? (
+              <ActivityIndicator size="small" color="#454F5B" className="" />
             ) : (
               <Text
-                className="text-[#77E425] font-inter600 ml-2"
+                className="text-[#454F5B] font-inter600"
                 style={{ fontSize: GetFontSize(14) }}
               >
                 ({getTopicCount('completed')})
               </Text>
-            )} */}
+            )}
           </View>
           <RightArrowIcon color="#77E425" />
         </TouchableOpacity>
@@ -263,16 +264,16 @@ const StudentsInsights = () => {
             >
               Assigned
             </Text>
-            {/* {topicsLoading ? (
-              <ActivityIndicator size="small" color="#77E425" className="ml-2" />
+            {topicsLoading ? (
+              <ActivityIndicator size="small" color="#454F5B" className="" />
             ) : (
               <Text
-                className="text-[#77E425] font-inter600 ml-2"
+                className="text-[#454F5B] font-inter600"
                 style={{ fontSize: GetFontSize(14) }}
               >
                 ({getTopicCount('assigned')})
               </Text>
-            )} */}
+            )}
           </View>
           <RightArrowIcon color="#77E425" />
         </TouchableOpacity>
@@ -300,16 +301,16 @@ const StudentsInsights = () => {
             >
               Pending
             </Text>
-            {/* {topicsLoading ? (
-              <ActivityIndicator size="small" color="#77E425" className="ml-2" />
+            {topicsLoading ? (
+              <ActivityIndicator size="small" color="#454F5B" className="" />
             ) : (
               <Text
-                className="text-[#77E425] font-inter600 ml-2"
+                className="text-[#454F5B] font-inter600"
                 style={{ fontSize: GetFontSize(14) }}
               >
                 ({getTopicCount('pending')})
               </Text>
-            )} */}
+            )}
           </View>
           <RightArrowIcon color="#77E425" />
         </TouchableOpacity>

@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import capitalize from '../../../Utils/Capitalize';
 import { useSelector } from 'react-redux';
 import { AuthContext } from '../../../Context/AuthContext';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Vibration } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SkullIcon from '../../../Images/StudentInsights/SkullIcon';
 import GetFontSize from '../../../Commons/GetFontSize';
@@ -92,7 +92,10 @@ const TestAnalytics = ({ selectedTopic }) => {
                         </View>
                         <TouchableOpacity
                             className="self-center px-6 py-1 rounded-[17.19px] px-5 py-1 bg-[#A88462] border-t-2 border-r-2 border-b-4 border-l-2 border-[#836549] mt-2"
-                            onPress={() => handleViewDetails('completed')}
+                            onPress={() => {
+                                Vibration.vibrate(50);
+                                handleViewDetails('completed');
+                            }}
                         >
                             <Text className="text-white font-inter400 text-center mt-0.5" style={{ fontSize: GetFontSize(11) }}>
                                 View Details
@@ -112,7 +115,10 @@ const TestAnalytics = ({ selectedTopic }) => {
                         </View>
                         <TouchableOpacity
                             className="self-center w-[112px] h-[33px] rounded-[17.19px] px-5 py-1 bg-[#A88462] border-t-2 border-r-2 border-b-4 border-l-2 border-[#836549] mt-2"
-                            onPress={() => handleViewDetails('notCompleted')}
+                            onPress={() => {
+                                Vibration.vibrate(50);
+                                handleViewDetails('notCompleted');
+                            }}
                         >
                             <Text className="text-white font-inter400 text-center mt-0.5" style={{ fontSize: GetFontSize(11) }}>
                                 View Details

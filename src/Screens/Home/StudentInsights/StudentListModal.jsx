@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Modal, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Modal, Dimensions, ActivityIndicator, Vibration } from 'react-native';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { getExamParticipationByTopic } from '../../../Services/teacherAPIV2';
 import { useSelector } from 'react-redux';
@@ -104,7 +104,10 @@ const StudentListModal = ({ visible, onClose, modalType, selectedTopic }) => {
                             alignItems: 'center',
                             zIndex: 1,
                         }}
-                        onPress={onClose}
+                        onPress={() => {
+                            Vibration.vibrate(50);
+                            onClose();
+                        }}
                     >
                         <Text style={{ fontSize: GetFontSize(16), color: '#454F5B' }}>✕</Text>
                     </TouchableOpacity>

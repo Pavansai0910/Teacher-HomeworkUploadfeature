@@ -4,6 +4,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Vibration
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -59,7 +60,9 @@ const LearningTopic = () => {
             return (
               <TouchableOpacity
                 key={topic._id || topic.id || index}
-                onPress={() => handleTopicPress(topic)}
+                onPress={() => {
+                  Vibration.vibrate(50);
+                  handleTopicPress(topic)}}
                 className={`border-2 mb-2 p-3 rounded-xl ${isSelected ? 'border-[#77E425] bg-[#E8FADB]' : 'border-[#DC9047] bg-white'}`}
               >
                 <Text className={`font-medium ${isSelected ? 'text-[#454F5B]' : 'text-[#454F5B]'}`} style={{ fontSize: GetFontSize(16) }}>
@@ -83,7 +86,9 @@ const LearningTopic = () => {
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigation.goBack()}}
           >
             <LeftArrow color="#357A20" />
             <Text
@@ -97,6 +102,7 @@ const LearningTopic = () => {
           <TouchableOpacity
             disabled={!selectedTopicId}
             onPress={() => {
+              Vibration.vibrate(50);
               if (selectedTopicId) {
                 const selectedTopic = topics.find(t => (t._id || t.id) === selectedTopicId);
                 navigation.navigate('LearningDetails', {
