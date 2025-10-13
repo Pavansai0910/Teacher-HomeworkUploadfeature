@@ -20,8 +20,8 @@ import AssignTestTopics from '../Screens/Home/AssignTest/AssignTestTopics';
 import AssignTestDate from '../Screens/Home/AssignTest/AssignTestDate';
 import LessonPlanHistory from '../Screens/Home/Lessonplanner/LessonPlanHistory';
 import HistoryDetails from '../Screens/Home/Lessonplanner/HistoryDetails';
-import TestAnalytics from '../Screens/Home/StudentInsights/TestAnalytics';
-
+import LearningTopic from '../Screens/Home/StudentInsights/LearningTopic';
+import LearningDetails from '../Screens/Home/StudentInsights/LearningDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -68,8 +68,6 @@ function AppNavigator() {
         {isAuthenticated ? (
           <>
 
-          {/* <Stack.Screen name="TestAnaltics" component={TestAnalytics} /> */}
-
             <Stack.Screen
               name="MainTabNavigator"
               component={MainTabNavigator}
@@ -86,8 +84,6 @@ function AppNavigator() {
               component={StudentsInsights}
             />
             <Stack.Screen name="Settings" component={Settings} />
-            
-
             <Stack.Screen
               name="LessonPlanGeneration"
               component={LessonPlanGeneration}
@@ -104,6 +100,8 @@ function AppNavigator() {
             <Stack.Screen name="AssignTestDate" component={AssignTestDate} />
             <Stack.Screen name="LessonPlanHistory" component={LessonPlanHistory} />
             <Stack.Screen name="HistoryDetails" component={HistoryDetails} />
+            <Stack.Screen name="LearningTopic" component={LearningTopic} />
+            <Stack.Screen name="LearningDetails" component={LearningDetails} />
           </>
         ) : (
           <>

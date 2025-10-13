@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext, useEffect } from 'react';
+import React, { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   View,
@@ -6,10 +6,10 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  PermissionsAndroid,
-  Platform,
+  Vibration,
   Alert,
-  Vibration
+  Animated,
+  Dimensions
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -31,6 +31,8 @@ const GeneratedLessonPlan = () => {
   const scrollViewRef = useRef(null);
   const { teacherProfile } = useContext(AuthContext);
   const sectionRefs = useRef({});
+  const dropdownAnimation = useRef(new Animated.Value(0)).current;
+  const { height: screenHeight } = Dimensions.get('window');
 
   const lessonPlanner = useSelector(
     state => state.lessonPlanner?.lessonPlannerData,
@@ -47,6 +49,8 @@ const GeneratedLessonPlan = () => {
   const [downloadStatus, setDownloadStatus] = useState(false);
   const [isSavedClicked, setIsSavedClicked] = useState(false);
   const [generatedLessonPlanId, setGeneratedLessonPlanId] = useState(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedSection, setSelectedSection] = useState('Learning Objectives');
 
   const lessonPlanDetails = lessonPlanData?.generatedContent || {};
   const topicName =
@@ -56,40 +60,91 @@ const GeneratedLessonPlan = () => {
     'Topic';
   const chapterName = lessonPlanData?.chapter || lessonPlanner?.chapter || 'Chapter';
 
-  const scrollToSection = sectionName => {
-    setActiveSection(sectionName);
-    const yOffset = sectionRefs.current[sectionName];
+  const getAvailableSections = () => {
+    const availableSections = [];
 
-    if (scrollViewRef.current && yOffset !== undefined) {
-      // Scroll a little bit higher for better context (e.g., -10)
-      scrollViewRef.current.scrollTo({ y: yOffset - 10, animated: true });
-    } else if (sectionName === 'sections') {
-      // Original logic to scroll to the top
-      scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+    if (lessonPlanDetails.learningObjectives) availableSections.push('Learning Objectives');
+    if (lessonPlanDetails.keyTerms) availableSections.push('Key Terms');
+    if (lessonPlanDetails.preRequisite) availableSections.push('Pre-Requisites');
+    if (lessonPlanDetails.teachingAids) availableSections.push('Teaching Aids');
+    if (lessonPlanDetails.methodology) availableSections.push('Methodology');
+    if (lessonPlanDetails.suggestedFlow) availableSections.push('Suggested Flow');
+    if (lessonPlanDetails.learningFlow) availableSections.push('Learning Flow');
+    if (lessonPlanDetails.skillsApplied) availableSections.push('Skills Applied');
+    if (lessonPlanDetails.activityDescription) availableSections.push('Activity Description');
+    if (lessonPlanDetails.practiceWork) availableSections.push('Practice Work');
+    if (lessonPlanDetails.inquiryQuestions) availableSections.push('Inquiry Questions');
+    if (lessonPlanDetails.quickAssessments) availableSections.push('Quick Assessments');
+    if (lessonPlanDetails.teacherTips) availableSections.push('Teacher Tips');
+    if (lessonPlanDetails.learningOutcomes) availableSections.push('Learning Outcomes');
+    if (lessonPlanDetails.valuesInculcated) availableSections.push('Values Inculcated');
+
+    return availableSections;
+  };
+
+  const ButtonsOptions = getAvailableSections();
+
+  useEffect(() => {
+    if (ButtonsOptions.length > 0 && !ButtonsOptions.includes(selectedSection)) {
+      setSelectedSection(ButtonsOptions[0]);
     }
+  }, [ButtonsOptions]);
+
+  const toggleDropdown = () => {
+    Vibration.vibrate(50);
+    const toValue = isDropdownOpen ? 0 : 1;
+    setIsDropdownOpen(!isDropdownOpen);
+
+    Animated.spring(dropdownAnimation, {
+      toValue,
+      useNativeDriver: false,
+      tension: 100,
+      friction: 8,
+    }).start();
   };
 
-
-  const handleShowSections = () => {
-    const actions = ButtonsOptions.map(sectionName => ({
-      text: sectionName,
-      onPress: () => {
-        Vibration.vibrate(50);
-
-        scrollToSection(sectionName)
-      },
-    }));
-
-    actions.push({
-      text: 'Cancel',
-      style: 'cancel',
+  const scrollToSpecificSection = useCallback((sectionName) => {
+    const sectionRef = sectionRefs.current[sectionName];
+    if (!sectionRef || !scrollViewRef.current) {
+      console.warn(`Ref not found for section: ${sectionName}`);
+      return;
+    }
+    sectionRef.measure((x, y, width, height, pageX, pageY) => {
+      if (scrollViewRef.current && pageY !== undefined) {
+        const offsetY = Math.max(0, pageY - 100);
+        scrollViewRef.current.scrollTo({
+          y: offsetY,
+          animated: true
+        });
+      }
     });
+  }, []);
 
-    Alert.alert('Go to Section', 'Select a section to jump to:', actions, {
-      cancelable: true,
+  const selectSection = useCallback((section) => {
+    setSelectedSection(section);
+    setIsDropdownOpen(false);
+
+    Animated.spring(dropdownAnimation, {
+      toValue: 0,
+      useNativeDriver: false,
+      tension: 100,
+      friction: 8,
+    }).start((finished) => {
+      if (finished) {
+        scrollToSpecificSection(section);
+      }
     });
-  };
+  }, [scrollToSpecificSection]);
 
+  const dropdownHeight = dropdownAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, Math.min(350, screenHeight * 0.4)],
+  });
+
+  const rotateIcon = dropdownAnimation.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '180deg'],
+  });
 
   const handleSaveDoc = async () => {
     Vibration.vibrate(50);
@@ -202,11 +257,20 @@ const GeneratedLessonPlan = () => {
     }
   };
 
-  const SectionHeader = ({ title }) => (
-    <Text style={{ fontSize: GetFontSize(16) }}
-      className="text-[16px] font-inter500 text-[#212B36] mt-4">
-      {title}
-    </Text>
+  const SectionHeader = ({ title, sectionKey }) => (
+    <View
+      ref={(ref) => {
+        if (ref) {
+          sectionRefs.current[sectionKey] = ref;
+        }
+      }}
+      style={{ marginTop: 16, marginBottom: 8 }}
+    >
+      <Text style={{ fontSize: GetFontSize(16) }}
+        className="font-inter500 text-[#212B36]">
+        {title}
+      </Text>
+    </View>
   );
 
   const BulletList = ({ items }) => (
@@ -220,23 +284,21 @@ const GeneratedLessonPlan = () => {
     </View>
   );
 
-  const ButtonsOptions = [
-    'Lesson Objectives',
-    'Key Terms',
-    'Pre-Requisites',
-    'Teaching Aids',
-    'Methodology',
-    'Suggested Flow',
-    'Learning Flow',
-    'Skills Applied',
-    'Activity Description',
-    'Practice Work',
-    'Inquiry Questions',
-    'Quick Assessments',
-    'Teacher Tips',
-    'Learning Outcomes',
-    'Values Inculcated',
-  ]
+  if (!lessonPlanData?.generatedContent) {
+    return (
+      <SafeAreaView className="flex-1 bg-white justify-center items-center">
+        <Text style={{ fontSize: GetFontSize(16) }} className="text-[#454F5B] text-center">
+          No lesson plan data found.{'\n'}
+          <Text style={{ fontSize: GetFontSize(15) }} className="text-[#1A9DDD]" onPress={() => {
+            Vibration.vibrate(50);  
+            navigation.goBack()
+          }}>
+            Go back
+          </Text>
+        </Text>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -371,33 +433,45 @@ const GeneratedLessonPlan = () => {
             </View>
 
             {/* Learning Objectives */}
-            <SectionHeader title="Learning Objectives" />
+            <SectionHeader title="Learning Objectives" sectionKey="Learning Objectives" />
             <BulletList items={lessonPlanDetails.learningObjectives} />
 
             {/* Key Terms */}
-            <SectionHeader title="Key Terms" />
+            <SectionHeader title="Key Terms" sectionKey="Key Terms" />
             <BulletList items={lessonPlanDetails.keyTerms} />
 
             {/* Pre-Requisites */}
             {lessonPlanDetails.preRequisite &&
               lessonPlanDetails.preRequisite.length > 0 && (
                 <>
-                  <SectionHeader title="Pre-Requisites" />
+                  <SectionHeader title="Pre-Requisites" sectionKey="Pre-Requisites" />
                   {lessonPlanDetails.preRequisite.map((prereq, index) => (
                     <View key={index} className="">
                       {prereq.priorKnowledge && (
-                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-gray-700">
-                          • Prior Knowledge: {prereq.priorKnowledge}
+                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-[#454F5B]">
+                          • Prior Knowledge:{' '}
+                          <Text style={{ fontSize: GetFontSize(13)}}
+                            className="text-[#454F5B]">
+                            {prereq.priorKnowledge}
+                          </Text>
                         </Text>
                       )}
                       {prereq.warmUp && (
-                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-gray-700">
-                          • Warm Up: {prereq.warmUp}
+                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-[#454F5B]">
+                          • Warm Up: 
+                          <Text style={{ fontSize: GetFontSize(13)}}
+                            className="text-[#454F5B]">
+                            {prereq.warmUp}
+                          </Text>
                         </Text>
                       )}
                       {prereq.quickConnect && (
-                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-gray-700">
-                          • Quick Connect: {prereq.quickConnect}
+                        <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#454F5B]">
+                          • Quick Connect: 
+                          <Text style={{ fontSize: GetFontSize(13)}}
+                            className="text-[#454F5B]">
+                            {prereq.quickConnect}
+                          </Text>
                         </Text>
                       )}
                     </View>
@@ -408,7 +482,7 @@ const GeneratedLessonPlan = () => {
             {/* Teaching Aids */}
             {lessonPlanDetails.teachingAids && (
               <>
-                <SectionHeader title="Teaching Aids" />
+                <SectionHeader title="Teaching Aids" sectionKey="Teaching Aids" />
                 <BulletList items={lessonPlanDetails.teachingAids} />
               </>
             )}
@@ -416,7 +490,7 @@ const GeneratedLessonPlan = () => {
             {/* Methodology */}
             {lessonPlanDetails.methodology && (
               <>
-                <SectionHeader title="Methodology" />
+                <SectionHeader title="Methodology" sectionKey="Methodology" />
                 <BulletList items={lessonPlanDetails.methodology} />
               </>
             )}
@@ -424,13 +498,13 @@ const GeneratedLessonPlan = () => {
             {/* Suggested Flow */}
             {lessonPlanDetails.suggestedFlow && (
               <>
-                <SectionHeader title="Suggested Flow" />
+                <SectionHeader title="Suggested Flow" sectionKey="Suggested Flow" />
                 {lessonPlanDetails.suggestedFlow.map((flow, index) => (
                   <View key={index} className="mb-4">
-                    <Text style={{ fontSize: GetFontSize(18) }} className="text-base font-inter600 text-[#0976A9] mb-1">
+                    <Text style={{ fontSize: GetFontSize(16) }} className="text-base font-inter600 text-[#454F5B] mb-1">
                       {flow.phase} ({flow.duration})
                     </Text>
-                    <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 text-gray-700 leading-6 ml-2">
+                    <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 text-[#637381] leading-6 ml-2">
                       {flow.description}
                     </Text>
                   </View>
@@ -441,10 +515,10 @@ const GeneratedLessonPlan = () => {
             {/* Learning Flow */}
             {lessonPlanDetails.learningFlow && (
               <>
-                <SectionHeader title="Learning Flow" />
+                <SectionHeader title="Learning Flow" sectionKey="Learning Flow" />
                 {Object.entries(lessonPlanDetails.learningFlow).map(
                   ([phase, items]) => (
-                    <View key={phase} className="mb-4">
+                    <View key={phase} className="mb-2">
                       <Text style={{ fontSize: GetFontSize(15) }} className=" font-inter500 text-[#212B36] mb-2 capitalize">
                         {phase}:
                       </Text>
@@ -458,7 +532,7 @@ const GeneratedLessonPlan = () => {
             {/* Skills Applied */}
             {lessonPlanDetails.skillsApplied && (
               <>
-                <SectionHeader title="Skills Applied" />
+                <SectionHeader title="Skills Applied" sectionKey="Skills Applied" />
                 <BulletList items={lessonPlanDetails.skillsApplied} />
               </>
             )}
@@ -466,8 +540,8 @@ const GeneratedLessonPlan = () => {
             {/* Activity Description */}
             {lessonPlanDetails.activityDescription && (
               <>
-                <SectionHeader title="Activity Description" />
-                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381] mb-4">
+                <SectionHeader title="Activity Description" sectionKey="Activity Description" />
+                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381]">
                   {lessonPlanDetails.activityDescription}
                 </Text>
               </>
@@ -476,8 +550,8 @@ const GeneratedLessonPlan = () => {
             {/* Practice Work */}
             {lessonPlanDetails.practiceWork && (
               <>
-                <SectionHeader title="Practice Work" />
-                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381] mb-4">
+                <SectionHeader title="Practice Work" sectionKey="Practice Work" />
+                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381]">
                   {lessonPlanDetails.practiceWork}
                 </Text>
               </>
@@ -486,7 +560,7 @@ const GeneratedLessonPlan = () => {
             {/* Inquiry Questions */}
             {lessonPlanDetails.inquiryQuestions && (
               <>
-                <SectionHeader title="Inquiry Questions" />
+                <SectionHeader title="Inquiry Questions" sectionKey="Inquiry Questions" />
                 <BulletList items={lessonPlanDetails.inquiryQuestions} />
               </>
             )}
@@ -494,9 +568,9 @@ const GeneratedLessonPlan = () => {
             {/* Quick Assessments */}
             {lessonPlanDetails.quickAssessments && (
               <>
-                <SectionHeader title="Quick Assessments" />
+                <SectionHeader title="Quick Assessments" sectionKey="Quick Assessments" />
                 {lessonPlanDetails.quickAssessments.map((assessment, index) => (
-                  <View key={index} className="mb-3">
+                  <View key={index} className="mb-2">
                     <Text style={{ fontSize: GetFontSize(15) }} className=" font-500 text-[#637381] mb-1">
                       • {assessment.question}
                     </Text>
@@ -511,7 +585,7 @@ const GeneratedLessonPlan = () => {
             {/* Teacher Tips */}
             {lessonPlanDetails.teacherTips && (
               <>
-                <SectionHeader title="Teacher Tips" />
+                <SectionHeader title="Teacher Tips" sectionKey="Teacher Tips" />
                 <BulletList items={lessonPlanDetails.teacherTips} />
               </>
             )}
@@ -519,7 +593,7 @@ const GeneratedLessonPlan = () => {
             {/* Learning Outcomes */}
             {lessonPlanDetails.learningOutcomes && (
               <>
-                <SectionHeader title="Learning Outcomes" />
+                <SectionHeader title="Learning Outcomes" sectionKey="Learning Outcomes" />
                 <BulletList items={lessonPlanDetails.learningOutcomes} />
               </>
             )}
@@ -527,39 +601,127 @@ const GeneratedLessonPlan = () => {
             {/* Values Inculcated */}
             {lessonPlanDetails.valuesInculcated && (
               <>
-                <SectionHeader title="Values Inculcated" />
+                <SectionHeader title="Values Inculcated" sectionKey="Values Inculcated" />
                 <BulletList items={lessonPlanDetails.valuesInculcated} />
               </>
             )}
           </View>
         </ScrollView>
 
-        <View className="absolute bottom-0 left-0 right-0 bg-white px-5 py-4 ">
-          <LinearGradient
-            colors={['#9C7B5B', '#E7B686']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={{ borderRadius: 24, padding: 2 }}
-          >
-
-            <TouchableOpacity
-              className="bg-white py-4 px-5 rounded-3xl items-center flex-row justify-center"
+        {/* Floating Section Selector */}
+        <View className="absolute bottom-0 left-0 right-0">
+          {/* Dropdown Content */}
+          {isDropdownOpen && (
+            <Animated.View
               style={{
-                borderLeftWidth: 2,
-                borderRightWidth: 2,
-                borderTopWidth: 1,
-                borderBottomWidth: 3,
+                height: dropdownHeight,
+                backgroundColor: '#F8F4E6',
+                marginHorizontal: 20,
+                marginBottom: 10,
+                borderRadius: 20,
+                borderWidth: 2,
                 borderColor: '#E7B686',
+                elevation: 8,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: -2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 8,
+                zIndex: 1000,
               }}
-              onPress={() => scrollToSection('sections')}
             >
-              <Text style={{ fontSize: GetFontSize(18) }} className="text-[#DC9047]  font-inter700 mr-2">
-                Lesson Plan Sections
-              </Text>
-              <ScrollUpArrow Width={12} Height={12} color="#DC9047" />
-            </TouchableOpacity>
-          </LinearGradient>
+              <ScrollView
+                style={{ flex: 1 }}
+                contentContainerStyle={{ padding: 8 }}
+                showsVerticalScrollIndicator={false}
+              >
+                {ButtonsOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    onPress={() => {
+                      Vibration.vibrate(50);
+                      selectSection(option)
+                    }}
+                    style={{
+                      backgroundColor: option === selectedSection ? '#FFE4B5' : 'white',
+                      marginVertical: 4,
+                      paddingVertical: 12,
+                      paddingHorizontal: 16,
+                      borderRadius: 12,
+                      borderWidth: 1,
+                      borderColor: option === selectedSection ? '#DC9047' : '#E7B686',
+                      elevation: 2,
+                      shadowColor: '#000',
+                      shadowOffset: { width: 0, height: 1 },
+                      shadowOpacity: 0.1,
+                      shadowRadius: 2,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: GetFontSize(14),
+                        color: option === selectedSection ? '#DC9047' : '#8B6914',
+                        fontWeight: option === selectedSection ? '600' : '500'
+                      }}
+                    >
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </Animated.View>
+          )}
+
+          {/* Main Section Button */}
+          <View className="bg-white px-5 py-4" style={{ zIndex: 999 }}>
+            <LinearGradient
+              colors={['#9C7B5B', '#E7B686']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={{ borderRadius: 24, padding: 2 }}
+            >
+
+              <TouchableOpacity
+                className="bg-white py-4 px-5 rounded-3xl items-center flex-row justify-center"
+                style={{
+                  borderLeftWidth: 2,
+                  borderRightWidth: 2,
+                  borderTopWidth: 1,
+                  borderBottomWidth: 3,
+                  borderColor: '#E7B686',
+                }}
+                onPress={toggleDropdown}
+              >
+                <Text style={{ fontSize: GetFontSize(18) }} className="text-[#DC9047]  font-inter700 mr-2 flex-1 text-center">
+                  Lesson Plan Sections
+                </Text>
+                <Animated.View
+                  style={{
+                    transform: [{ rotate: rotateIcon }]
+                  }}
+                >
+                  <ScrollUpArrow Width={12} Height={12} color="#DC9047" />
+                </Animated.View>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
         </View>
+
+        {/* Overlay to close dropdown when tapping outside */}
+        {isDropdownOpen && (
+          <TouchableOpacity
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0,0,0,0.1)',
+              zIndex: 500,
+            }}
+            activeOpacity={1}
+            onPress={toggleDropdown}
+          />
+        )}
       </View>
     </SafeAreaView>
   );

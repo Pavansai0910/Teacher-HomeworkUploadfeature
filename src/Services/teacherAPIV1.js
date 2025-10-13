@@ -134,3 +134,12 @@ export const getQuestionPaperById = async ({ questionPaperId }) => {
     headers
   );
 };
+
+
+export const getTopicPerformanceBySection = async ({ chapterId, sectionId, classId, subjectId, topicId, boardId }) => {
+  const headers = await getAuthHeader();
+  return apiConnector("GET",`/v1/teacher/get-analyzed-performance-for-learningObjective?classId=${classId}&sectionId=${sectionId}&subjectId=${subjectId}&chapterId=${chapterId}&topicId=${topicId}&boardId=${boardId}`,
+    null,
+    headers
+  );
+};
