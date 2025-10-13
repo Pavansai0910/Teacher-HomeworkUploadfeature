@@ -6,6 +6,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Modal,
+  Vibration
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -194,8 +195,12 @@ const LessonPlanner = () => {
                   }}
                 >
                   <TouchableOpacity
-                    onPress={() => setIsModalVisible(true)}
-                    className="bg-white rounded-lg px-4 py-4"
+                    onPress={() => {
+                                   Vibration.vibrate(50);
+
+                      setIsModalVisible(true)}
+                    }
+                      className="bg-white rounded-lg px-4 py-4"
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                       <Text
@@ -245,8 +250,11 @@ const LessonPlanner = () => {
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"
-            onPress={() => navigation.goBack()}
-          >
+            onPress={() => {
+                           Vibration.vibrate(50);
+
+              navigation.goBack()}
+            }>
             <LeftArrow color="#1EAFF7" />
             <Text
               style={{ fontSize: GetFontSize(16) }}
@@ -257,11 +265,13 @@ const LessonPlanner = () => {
           </TouchableOpacity>
           <TouchableOpacity
             disabled={!selectedChapterId}
-            onPress={() =>
+            onPress={() => {
+              Vibration.vibrate(50);
               navigation.navigate('LessonPlanTopics', {
                 chapterId: selectedChapterId,
               })
             }
+          }
             className={`flex-row gap-1 flex-1 py-3 rounded-xl justify-center items-center border-t-[1.5px] border-x-2 border-b-4 ${selectedChapterId
               ? 'bg-[#1EAFF7] border-[#0786C5]'
               : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
@@ -294,7 +304,11 @@ const LessonPlanner = () => {
                 Select Chapter
               </Text>
               <TouchableOpacity
-                onPress={() => setIsModalVisible(false)}
+                onPress={() => {
+              Vibration.vibrate(50);
+
+                  setIsModalVisible(false)}
+                } 
               >
                 <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
                   <Text className="text-white font-inter400">✕</Text>
@@ -318,6 +332,8 @@ const LessonPlanner = () => {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
+                                    Vibration.vibrate(50);
+
                       handleChapterSelect(chapter.name);
                       setIsModalVisible(false);
                     }}

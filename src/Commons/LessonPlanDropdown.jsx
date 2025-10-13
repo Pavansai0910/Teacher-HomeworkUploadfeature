@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Vibration } from 'react-native';
 import capitalize from '../Utils/Capitalize';
 import GetFontSize from './GetFontSize';
 import DropdownArrow from '../Images/LessonPlan/DropdownArrow';
@@ -8,10 +8,15 @@ import DropdownArrow from '../Images/LessonPlan/DropdownArrow';
 const LessonPlanDropdown = ({ options, placeholder, onSelect, selectedValue }) => {
   const [open, setOpen] = useState(false);
 
-  const toggleDropdown = () => setOpen(!open);
+  const toggleDropdown = () => {
+    Vibration.vibrate(50);
+    setOpen(!open)
+  };
 
   const handleSelect = (item) => {
     // 3. Call the onSelect prop instead of setting local state
+                  Vibration.vibrate(50);
+  
     if (onSelect) {
       onSelect(item);
     }
@@ -34,8 +39,8 @@ const LessonPlanDropdown = ({ options, placeholder, onSelect, selectedValue }) =
       >
         {/* 4. Use selectedValue for display */}
         <Text
-        style={{fontSize: GetFontSize(16)}}
-        className="font-inter700 text-[#DC9047]">
+          style={{ fontSize: GetFontSize(16) }}
+          className="font-inter700 text-[#DC9047]">
           {selectedValue || placeholder}
         </Text>
         <DropdownArrow color="#DC9047" />
@@ -52,18 +57,16 @@ const LessonPlanDropdown = ({ options, placeholder, onSelect, selectedValue }) =
                   <TouchableOpacity
                     key={index}
                     onPress={() => handleSelect(item)}
-                    className={`my-1 rounded-2xl ${
-                      isSelected
+                    className={`my-1 rounded-2xl ${isSelected
                         ? 'bg-white border-4 border-[#DC9047]'
                         : 'bg-white'
-                    }`}
+                      }`}
                   >
                     <Text
-                style={{fontSize: GetFontSize(16)}}
+                      style={{ fontSize: GetFontSize(16) }}
 
-                      className={`font-inter700 text-center py-3 ${
-                        isSelected ? 'text-[#DC9047] font-semibold ' : 'text-[#637381]'
-                      }`}
+                      className={`font-inter700 text-center py-3 ${isSelected ? 'text-[#DC9047] font-semibold ' : 'text-[#637381]'
+                        }`}
                     >
                       {capitalize(item)}
                     </Text>

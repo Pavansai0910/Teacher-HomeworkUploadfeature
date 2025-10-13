@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Modal,
   useWindowDimensions,
+  Vibration
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -110,6 +111,8 @@ const AssignTestDate = ({ route }) => {
 
   // When user clicks Assign Test button
   const handleAssign = () => {
+    Vibration.vibrate(50);
+
     setShowTestLoader(true);
   };
 
@@ -258,7 +261,7 @@ const AssignTestDate = ({ route }) => {
         // Check if it starts with data:application/pdf
         if (response.data.startsWith('data:application/pdf')) {
           base64Data = response.data.split(',')[1];
-        } 
+        }
         // Check if it's already base64 (starts with JVBERi which is %PDF in base64)
         else if (response.data.startsWith('JVBER')) {
           base64Data = response.data;
@@ -296,22 +299,22 @@ const AssignTestDate = ({ route }) => {
       const path = `${RNFS.CachesDirectoryPath}/temp_${Date.now()}.pdf`;
       await RNFS.writeFile(path, base64Data, 'base64');
       console.log('PDF saved to:', path);
-      
+
       // Verify file was written correctly
       const fileStats = await RNFS.stat(path);
       console.log('PDF file size:', fileStats.size);
-      
+
       if (fileStats.size === 0) {
         throw new Error('PDF file is empty after writing');
       }
-      
+
       setPdfUrl(`file://${path}`);
       setShowPdfViewer(true);
     } catch (error) {
       console.error('PDF Load Error:', error);
       console.error('Error details:', error.message);
-      Toast.show({ 
-        type: 'error', 
+      Toast.show({
+        type: 'error',
         text1: 'Failed to load PDF',
         text2: error.message || 'Please try again'
       });
@@ -463,6 +466,8 @@ const AssignTestDate = ({ route }) => {
                   paddingHorizontal: 14,
                 }}
                 onPress={() => {
+                  Vibration.vibrate(50);
+
                   setPickerTarget('due');
                   setShowPicker(true);
                 }}
@@ -520,7 +525,13 @@ const AssignTestDate = ({ route }) => {
                   borderBottomWidth: 3,
                   borderColor: '#DFAF02',
                 }}
-                onPress={() => handleViewPdf(questionPaper.questionPaperCode)}
+                onPress={() => {
+                  Vibration.vibrate(50);
+
+
+                  handleViewPdf(questionPaper.questionPaperCode)
+                }
+                }
                 disabled={downloadLoader} // Disable while loading
               >
                 {downloadLoader ? (
@@ -547,7 +558,10 @@ const AssignTestDate = ({ route }) => {
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#E5E5E5] bg-white px-6 py-3 flex-row items-center justify-center"
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigation.goBack()
+            }}
             disabled={showLoader}
           >
             <LeftArrow color="#FFB84D" />
@@ -617,7 +631,7 @@ const AssignTestDate = ({ route }) => {
           setShowPdfViewer(false);
           // Optionally clean up the temp file
           if (pdfUrl.startsWith('file://')) {
-            RNFS.unlink(pdfUrl.replace('file://', '')).catch(() => {});
+            RNFS.unlink(pdfUrl.replace('file://', '')).catch(() => { });
           }
         }}
         pdfUrl={pdfUrl}

@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -16,6 +16,7 @@ import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import DropdownArrow from '../../../Images/LessonPlan/DropdownArrow';
 import { Shadow } from 'react-native-shadow-2';
+import { useSound } from '../../../Context/SoundContext';
 const AssignTest = () => {
   const navigation = useNavigation();
   const { teacherProfile } = useContext(AuthContext);
@@ -27,7 +28,7 @@ const AssignTest = () => {
   const selectedAssignment = useSelector(
     (state) => state.assignment.selectedAssignment
   );
-
+  // const { playClickSound } = useSound();
   useEffect(() => {
     const fetchChapters = async () => {
       try {
@@ -80,27 +81,27 @@ const AssignTest = () => {
           {/* Progress Steps */}
           <View className="flex-row items-center justify-between mb-5">
             <View className="items-center">
-                <Shadow
-                                distance={3}
-                                startColor="#6FCE62"
-                                offset={[0, 3]}
-                                radius={20}
-                                style={{ borderRadius: 50 }}
-                              >
-              
-              <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center ">
-                <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
+              <Shadow
+                distance={3}
+                startColor="#6FCE62"
+                offset={[0, 3]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
+
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-2 py-2 border-2 border-[#CBF8A7] items-center ">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center mr-3 border border-[#CBF8A7]">
+                    <Text style={{ fontSize: GetFontSize(12) }}
+                      className="text-[#212B36] font-inter600">
+                      1
+                    </Text>
+                  </View>
                   <Text style={{ fontSize: GetFontSize(12) }}
-                    className="text-[#212B36] font-inter600">
-                    1
+                    className="text-white font-inter600">
+                    Choose Chapter
                   </Text>
                 </View>
-                <Text style={{ fontSize: GetFontSize(12) }}
-                  className="text-white font-inter600">
-                  Choose Chapter
-                </Text>
-              </View>
-            </Shadow>
+              </Shadow>
             </View>
 
             <View className="flex-1 h-[2px] bg-[#F7F7F5] " />
@@ -127,22 +128,22 @@ const AssignTest = () => {
             <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
 
             <View className="items-center">
-                <Shadow
-                                distance={1}
-                                startColor="#CDCDCD"
-                                offset={[0, 2]}
-                                radius={20}
-                                style={{ borderRadius: 50 }}
-                              >
+              <Shadow
+                distance={1}
+                startColor="#CDCDCD"
+                offset={[0, 2]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
 
-              <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
-                <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                  <Text style={{ fontSize: GetFontSize(12) }}
-                    className="text-white font-inter600">
-                    3
-                  </Text>
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                    <Text style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600">
+                      3
+                    </Text>
+                  </View>
                 </View>
-              </View>
               </Shadow>
             </View>
           </View>
@@ -202,7 +203,12 @@ const AssignTest = () => {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => setIsModalVisible(true)}
+                  onPress={() => {
+                    Vibration.vibrate(50);
+
+                    setIsModalVisible(true)
+                  }
+                  }
                   className="bg-white rounded-lg px-4 py-4 flex-row justify-between items-center"
                 >
                   <Text
@@ -255,7 +261,12 @@ const AssignTest = () => {
                 Select Chapter
               </Text>
               <TouchableOpacity
-                onPress={() => setIsModalVisible(false)}
+                onPress={() => {
+                  Vibration.vibrate(50);
+
+                  setIsModalVisible(false)
+                }
+                }
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
 
                 <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
@@ -280,7 +291,12 @@ const AssignTest = () => {
                 {allChapters.map((chapter, index) => (
                   <TouchableOpacity
                     key={index}
-                    onPress={() => handleChapterSelect(chapter.name)}
+                    onPress={() => {
+                      Vibration.vibrate(50);
+
+                      handleChapterSelect(chapter.name)
+                    }
+                    }
                     className={`p-4 mb-3 rounded-lg ${selectedChapterName === chapter.name
                       ? 'bg-[#FFF9E6]'
                       : 'bg-white'
@@ -319,7 +335,10 @@ const AssignTest = () => {
           <TouchableOpacity
             style={{ fontSize: GetFontSize(16) }}
             className="flex-row gap-1 rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] justify-center items-center px-4 py-3 font-inter600"
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigation.goBack();
+            }}
           >
             <LeftArrow color="#FED570" />
             <Text
@@ -332,11 +351,15 @@ const AssignTest = () => {
           <TouchableOpacity
             style={{ fontSize: GetFontSize(13) }}
             disabled={!selectedChapterId}
-            onPress={() =>
+            onPress={() => {
+              Vibration.vibrate(50);
+
+              // playClickSound();
               navigation.navigate('AssignTestTopics', {
                 chapterId: selectedChapterId,
                 chapterName: selectedChapterName,
               })
+            }
             }
             className={`flex-row gap-1 flex-1 py-3 rounded-xl border-t-[1.5px] border-x-2 border-b-4 justify-center items-center ${selectedChapterId
               ? 'bg-[#FED570] border-[#DFAF02]'

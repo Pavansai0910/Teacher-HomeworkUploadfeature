@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   FlatList,
+  Vibration
 } from 'react-native';
 import { AuthContext } from '../../../Context/AuthContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -88,7 +89,11 @@ const LessonPlanHistory = () => {
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      onPress={() => fetchLessonPlanDetails(item.id)}
+      onPress={() => {
+                    Vibration.vibrate(50);
+      
+        fetchLessonPlanDetails(item.id)}
+      }
       className="bg-white rounded-2xl py-3 px-6 mb-3 flex-row justify-between items-center"
       style={{
         borderTopWidth: 1,
@@ -161,7 +166,11 @@ const LessonPlanHistory = () => {
       {/* Back Button */}
       <View className="bg-white px-6">
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+              Vibration.vibrate(50);
+
+            navigation.goBack()}
+          } 
           style={{
             borderTopWidth: 1,
             borderRightWidth: 2,

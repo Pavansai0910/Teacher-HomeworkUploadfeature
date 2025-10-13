@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, useWindowDimensions, Vibration } from 'react-native';
 import TrophyIcon from '../../../Images/StudentInsights/TrophyIcon';
 import StudentIcon from '../../../Images/StudentInsights/StudentIcon';
 import ChartIcon from '../../../Images/StudentInsights/ChartIcon';
@@ -66,7 +66,11 @@ const StudentsInsightsCard = ({
           </View>
 
           <TouchableOpacity
-            onPress={onPress}
+            onPress={() => {
+                            Vibration.vibrate(50);
+              
+              onPress()
+            }}
             style={{
               borderTopWidth: 1,
               borderRightWidth: 2,

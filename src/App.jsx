@@ -4,6 +4,7 @@ import { initializeChapterStore } from "./store/Slices/chapterSlice"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import { AuthProvider } from './Context/AuthContext';
+// import { SoundProvider } from './Context/SoundContext';
 import AppNavigator from './Navigation/AppNavigator';
 import NetworkInfo from './Network/NetworkInfo';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -70,7 +71,9 @@ function App() {
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
           <AuthProvider>
+            {/* <SoundProvider> */}
             <AppContent />
+            {/* </SoundProvider> */}
           </AuthProvider>
         </PersistGate>
       </Provider>

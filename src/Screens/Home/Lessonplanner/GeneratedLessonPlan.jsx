@@ -6,8 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  PermissionsAndroid,
-  Platform,
+  Vibration,
   Alert,
   Animated,
   Dimensions
@@ -92,6 +91,7 @@ const GeneratedLessonPlan = () => {
   }, [ButtonsOptions]);
 
   const toggleDropdown = () => {
+    Vibration.vibrate(50);
     const toValue = isDropdownOpen ? 0 : 1;
     setIsDropdownOpen(!isDropdownOpen);
 
@@ -147,6 +147,8 @@ const GeneratedLessonPlan = () => {
   });
 
   const handleSaveDoc = async () => {
+    Vibration.vibrate(50);
+
     if (isSaved) {
       Toast.show({
         type: 'info',
@@ -287,7 +289,10 @@ const GeneratedLessonPlan = () => {
       <SafeAreaView className="flex-1 bg-white justify-center items-center">
         <Text style={{ fontSize: GetFontSize(16) }} className="text-[#454F5B] text-center">
           No lesson plan data found.{'\n'}
-          <Text style={{ fontSize: GetFontSize(15) }} className="text-[#1A9DDD]" onPress={() => navigation.goBack()}>
+          <Text style={{ fontSize: GetFontSize(15) }} className="text-[#1A9DDD]" onPress={() => {
+            Vibration.vibrate(50);  
+            navigation.goBack()
+          }}>
             Go back
           </Text>
         </Text>
@@ -313,7 +318,12 @@ const GeneratedLessonPlan = () => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('MainTabNavigator')}
+                onPress={() => {
+                  Vibration.vibrate(50);
+
+                  navigation.navigate('MainTabNavigator')
+                }
+                }
               >
                 <Text
                   style={{ fontSize: GetFontSize(14) }}
@@ -398,8 +408,12 @@ const GeneratedLessonPlan = () => {
               {/* Download Icon */}
               <TouchableOpacity
                 className="bg-white justify-center items-center"
-                onPress={() => handleLessonPlanDownload(generatedLessonPlanId)}
-              >
+                onPress={() => {
+                  Vibration.vibrate(50);
+
+                  handleLessonPlanDownload(generatedLessonPlanId)
+                }
+                }>
                 <View
                   className="justify-center items-center rounded-xl border border-[#E1F4FE] p-3"
                   style={{
@@ -623,7 +637,10 @@ const GeneratedLessonPlan = () => {
                 {ButtonsOptions.map((option) => (
                   <TouchableOpacity
                     key={option}
-                    onPress={() => selectSection(option)}
+                    onPress={() => {
+                      Vibration.vibrate(50);
+                      selectSection(option)
+                    }}
                     style={{
                       backgroundColor: option === selectedSection ? '#FFE4B5' : 'white',
                       marginVertical: 4,

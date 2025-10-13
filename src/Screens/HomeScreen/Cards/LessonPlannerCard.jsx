@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, useWindowDimensions, Vibration } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import PageIcon from '../../../Images/LessonPlanCard/Page';
 import GetFontSize from '../../../Commons/GetFontSize';
@@ -10,9 +10,9 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
 
   return (
     <Shadow
-      distance={isActive ? 12 : 0}               
-      offset={[2, isActive ? 12 : 0 ]}           
-      startColor={isActive ? '#1EAFF766' : '#00000000'}      
+      distance={isActive ? 12 : 0}
+      offset={[2, isActive ? 12 : 0]}
+      startColor={isActive ? '#1EAFF766' : '#00000000'}
       radius={isActive ? 20 : 0}
       style={{ borderRadius: 50 }}
     >
@@ -60,7 +60,11 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
 
           {/* Button */}
           <TouchableOpacity
-            onPress={onPress}
+            onPress={() => {
+              Vibration.vibrate(50);
+              onPress();
+            }
+            }
             style={{
               borderTopWidth: 1,
               borderRightWidth: 2,

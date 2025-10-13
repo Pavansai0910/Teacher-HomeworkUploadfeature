@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View, TouchableOpacity, Text, ActivityIndicator, Alert } from 'react-native';
+import { Modal, View, TouchableOpacity, Text, ActivityIndicator, Alert, Vibration } from 'react-native';
 import Pdf from 'react-native-pdf';
 import RNFS from 'react-native-fs';
 
@@ -65,8 +65,12 @@ const PdfViewerModal = ({ visible, onClose, pdfUrl }) => {
               {numberOfPages > 0 ? `Page ${currentPage}/${numberOfPages}` : 'Loading...'}
             </Text>
           </View>
-          <TouchableOpacity 
-            onPress={onClose}
+          <TouchableOpacity
+            onPress={() => {
+              Vibration.vibrate(50);
+              onClose();
+            }
+            }
             className="px-3 py-1.5 bg-[#CB9101] rounded-lg"
             accessibilityLabel="Close PDF viewer"
           >
@@ -75,7 +79,7 @@ const PdfViewerModal = ({ visible, onClose, pdfUrl }) => {
             </Text>
           </TouchableOpacity>
         </View>
-        
+
         {/* PDF Content */}
         {pdfUrl ? (
           <View className="flex-1 bg-white">
@@ -87,11 +91,11 @@ const PdfViewerModal = ({ visible, onClose, pdfUrl }) => {
                 </Text>
               </View>
             )}
-            
+
             <Pdf
               trustAllCerts={false}
-              source={{ 
-                uri: pdfUrl, 
+              source={{
+                uri: pdfUrl,
                 cache: true  // Enable cache for faster subsequent loads
               }}
               style={{ flex: 1, backgroundColor: '#fff' }}

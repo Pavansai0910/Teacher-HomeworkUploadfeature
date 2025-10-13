@@ -9,7 +9,8 @@ import {
     Platform,
     Alert,
     Animated,
-    Dimensions
+    Dimensions,
+    Vibration
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -55,8 +56,12 @@ const HistoryDetails = () => {
                     No lesson plan data found.{'\n'}
                     <Text style={{ fontSize: GetFontSize(15) }}
                         className="text-[#1A9DDD]"
-                        onPress={() => navigation.goBack()}
-                    >
+                        onPress={() => {
+                            Vibration.vibrate(50);
+
+                            navigation.goBack()
+                        }
+                        }>
                         Go back
                     </Text>
                 </Text>
@@ -77,10 +82,10 @@ const HistoryDetails = () => {
 
     const getAvailableSections = () => {
         const availableSections = [];
-        
+
         if (lessonPlanDetails.learningObjectives) availableSections.push('Learning Objectives');
         if (lessonPlanDetails.preRequisite) availableSections.push('Pre-Requisites');
-        if (lessonPlanDetails.keyTerms) availableSections.push('Key Terms');  
+        if (lessonPlanDetails.keyTerms) availableSections.push('Key Terms');
         if (lessonPlanDetails.teachingAids) availableSections.push('Teaching Aids');
         if (lessonPlanDetails.suggestedFlow) availableSections.push('Suggested Flow');
         if (lessonPlanDetails.learningFlow) availableSections.push('Learning Flow');
@@ -92,7 +97,7 @@ const HistoryDetails = () => {
         if (lessonPlanDetails.teacherTips) availableSections.push('Teacher Tips');
         if (lessonPlanDetails.learningOutcomes) availableSections.push('Learning Outcomes');
         if (lessonPlanDetails.valuesInculcated) availableSections.push('Values Inculcated');
-        
+
         return availableSections;
     };
 
@@ -105,6 +110,8 @@ const HistoryDetails = () => {
     }, [ButtonsOptions]);
 
     const toggleDropdown = () => {
+        Vibration.vibrate(50);
+
         const toValue = isDropdownOpen ? 0 : 1;
         setIsDropdownOpen(!isDropdownOpen);
 
@@ -147,16 +154,16 @@ const HistoryDetails = () => {
     const scrollToSpecificSection = (sectionName) => {
         console.log('Scrolling to section:', sectionName);
         const sectionRef = sectionRefs.current[sectionName];
-        
+
         if (sectionRef && scrollViewRef.current) {
             sectionRef.measure((x, y, width, height, pageX, pageY) => {
                 console.log('Section position:', { x, y, width, height, pageX, pageY });
                 if (scrollViewRef.current && pageY !== undefined) {
-                    const offsetY = Math.max(0, pageY - 100); 
+                    const offsetY = Math.max(0, pageY - 100);
                     console.log('Scrolling to Y:', offsetY);
-                    scrollViewRef.current.scrollTo({ 
-                        y: offsetY, 
-                        animated: true 
+                    scrollViewRef.current.scrollTo({
+                        y: offsetY,
+                        animated: true
                     });
                 }
             });
@@ -260,8 +267,11 @@ const HistoryDetails = () => {
                             </Text>
                             <TouchableOpacity
                                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                                onPress={() => navigation.goBack()}
-                            >
+                                onPress={() => {
+                                    Vibration.vibrate(50);
+                                    navigation.goBack()
+                                }
+                                }                            >
                                 <Text
                                     style={{ fontSize: GetFontSize(14) }}
                                     className="text-white"
@@ -309,7 +319,12 @@ const HistoryDetails = () => {
                         <View className="flex-row items-center mb-4">
                             <TouchableOpacity
                                 className="bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1"
-                                onPress={() => handleLessonPlanDownload(lessonPlanData._id)}
+                                onPress={() => {
+                                    Vibration.vibrate(50);
+
+                                    handleLessonPlanDownload(lessonPlanData._id)
+                                }
+                                }
                                 style={{
                                     borderRightWidth: 2,
                                     borderLeftWidth: 2,
@@ -552,7 +567,12 @@ const HistoryDetails = () => {
                                 {ButtonsOptions.map((option) => (
                                     <TouchableOpacity
                                         key={option}
-                                        onPress={() => selectSection(option)}
+                                        onPress={() => {
+                                            Vibration.vibrate(50);
+
+                                            selectSection(option)
+                                        }
+                                        }
                                         style={{
                                             backgroundColor: option === selectedSection ? '#FFE4B5' : 'white',
                                             marginVertical: 4,

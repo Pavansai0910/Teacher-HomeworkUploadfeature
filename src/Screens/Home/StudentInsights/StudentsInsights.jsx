@@ -6,7 +6,7 @@ import {
   ScrollView,
   Animated,
   Dimensions,
-  ActivityIndicator,
+  Vibration
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
@@ -141,6 +141,8 @@ const StudentsInsights = () => {
 
   // 🔄 Dropdown open/close animation
   const toggleDropdown = () => {
+    Vibration.vibrate(50);
+
     const toValue = isDropdownOpen ? 0 : 1;
     setIsDropdownOpen(!isDropdownOpen);
 
@@ -211,7 +213,10 @@ const StudentsInsights = () => {
             borderColor: '#77E425',
           }}
           className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
-          onPress={() => navigateToLearningTopic('completed')}
+          onPress={() => {
+            Vibration.vibrate(50);
+            navigateToLearningTopic('completed')}
+          }
           disabled={topicsLoading || !selectedChapter}
         >
           <View className="flex-row items-center">
@@ -245,7 +250,10 @@ const StudentsInsights = () => {
             borderColor: '#77E425',
           }}
           className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
-          onPress={() => navigateToLearningTopic('assigned')}
+          onPress={() => {
+           Vibration.vibrate(50);
+            navigateToLearningTopic('assigned')
+          }}
           disabled={topicsLoading || !selectedChapter}
         >
           <View className="flex-row items-center">
@@ -279,7 +287,10 @@ const StudentsInsights = () => {
             borderColor: '#77E425',
           }}
           className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
-          onPress={() => navigateToLearningTopic('pending')}
+          onPress={() => {
+            Vibration.vibrate(50);
+            navigateToLearningTopic('pending')}
+          } 
           disabled={topicsLoading || !selectedChapter}
         >
           <View className="flex-row items-center">
@@ -335,7 +346,11 @@ const StudentsInsights = () => {
                 return (
                   <TouchableOpacity
                     key={chapter.id}
-                    onPress={() => selectChapter(chapter)}
+                    onPress={() => {
+                      Vibration.vibrate(50);
+                      selectChapter(chapter)
+                    }
+                    }
                     style={{
                       backgroundColor: isSelected ? '#FFE4B5' : 'white',
                       marginVertical: 4,

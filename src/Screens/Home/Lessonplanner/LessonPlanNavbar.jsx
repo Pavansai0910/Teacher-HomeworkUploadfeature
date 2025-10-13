@@ -3,12 +3,11 @@ import { useContext } from 'react';
 import capitalize from '../../../Utils/Capitalize';
 import { useSelector } from 'react-redux';
 import { AuthContext } from '../../../Context/AuthContext';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Vibration } from 'react-native';
 import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { useNavigation } from '@react-navigation/native';
 import { getAllStudents } from '../../../Services/teacherAPIV1'
-
 
 const LessonPlanNavbar = () => {
   const navigation = useNavigation();
@@ -54,7 +53,11 @@ const LessonPlanNavbar = () => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('MainTabNavigator')}
+                onPress={() => {
+              Vibration.vibrate(50);
+
+                  navigation.navigate('MainTabNavigator')}
+                } 
               >
                 <Text
                   style={{ fontSize: GetFontSize(14) }}

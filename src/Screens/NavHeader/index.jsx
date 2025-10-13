@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Vibration } from 'react-native'
 import capitalize from '../../Utils/Capitalize'
 import { useSelector } from 'react-redux';
 import { getAllStudents } from '../../Services/teacherAPIV1';
@@ -8,8 +8,6 @@ import AssignTestDoc from '../../Images/AssignTestCard/AssignTestDoc';
 import GetFontSize from '../../Commons/GetFontSize';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
-
 
 function NavHeader() {
   const navigation = useNavigation();
@@ -53,8 +51,13 @@ function NavHeader() {
                 Assign Test
               </Text>
               <TouchableOpacity
+
                 className="w-6 h-6 bg-[#FEDB85] rounded-full justify-center items-center border-2 border-[#FDCA0C]"
-                onPress={() => navigation.navigate('MainTabNavigator')}
+                onPress={() => {
+                  Vibration.vibrate(50);
+                  navigation.navigate('MainTabNavigator')
+                }
+                }
               >
                 <Text
                   style={{ fontSize: GetFontSize(11), marginTop: -1 }}

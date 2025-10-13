@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Vibration } from 'react-native';
 import GetFontSize from './GetFontSize';
 import TopArrow from '../Images/LessonPlan/TopArrow';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +13,7 @@ const TopicDropdown = ({
   const navigation = useNavigation();
 
   const handleTopicToggle = topic => {
+    Vibration.vibrate(50);
     const isSelected = selectedTopics.some(t => t.id === topic.id);
     if (isSelected) {
       onTopicsSelect(selectedTopics.filter(t => t.id !== topic.id));
@@ -33,7 +34,11 @@ const TopicDropdown = ({
           borderBottomWidth: 4,
           borderColor: '#89D5FB',
         }}
-        onPress={() => navigation.navigate('LessonPlanHistory')}
+        onPress={() => {
+          Vibration.vibrate(50);
+          navigation.navigate('LessonPlanHistory')
+        }
+        }
       >
         <View className="flex-row justify-center items-center gap-2">
           <Text
@@ -67,9 +72,8 @@ const TopicDropdown = ({
               {/* Topic Name */}
               <Text
                 style={{ fontSize: GetFontSize(16) }}
-                className={`flex-1 font-inter700 ${
-                  isSelected ? 'text-[#DC9047]' : 'text-[#637381]'
-                }`}
+                className={`flex-1 font-inter700 ${isSelected ? 'text-[#DC9047]' : 'text-[#637381]'
+                  }`}
                 numberOfLines={1}
               >
                 {topic.name}

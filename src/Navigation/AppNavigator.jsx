@@ -23,7 +23,6 @@ import HistoryDetails from '../Screens/Home/Lessonplanner/HistoryDetails';
 import LearningTopic from '../Screens/Home/StudentInsights/LearningTopic';
 import LearningDetails from '../Screens/Home/StudentInsights/LearningDetails';
 
-
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
@@ -68,6 +67,7 @@ function AppNavigator() {
       >
         {isAuthenticated ? (
           <>
+
             <Stack.Screen
               name="MainTabNavigator"
               component={MainTabNavigator}
