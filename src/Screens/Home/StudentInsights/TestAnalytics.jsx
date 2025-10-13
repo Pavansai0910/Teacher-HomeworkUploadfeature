@@ -13,7 +13,7 @@ import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import { useRoute } from '@react-navigation/native';
 
 
-const TestAnalytics = () => {
+const TestAnalytics = ({ selectedTopic }) => {
     const navigation = useNavigation();
     const [studentData, setStudentData] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -27,6 +27,7 @@ const TestAnalytics = () => {
         (state) => state.assignment.selectedAssignment
     );
 
+
     useEffect(() => {
         const getData = async () => {
             try {
@@ -39,8 +40,6 @@ const TestAnalytics = () => {
                 });
                 const data = response.data?.data || [];
                 setStudentData(data);
-                // Assume each student has a 'completed' boolean field for this assessment
-                // Adjust based on actual API response structure
                 const completed = data.filter(student => student.completed).length;
                 const notCompleted = data.length - completed;
                 setCompletedCount(completed);
@@ -52,13 +51,8 @@ const TestAnalytics = () => {
         getData();
     }, [selectedAssignment]);
 
-    // Your page props (even if not used in the header, define them if needed)
-    const classDisplay = 'Class 10-A'; // Example prop if you want to use it
-    const subjectDisplay = 'Mathematics'; // Example prop
 
     const handleViewDetails = (type) => {
-        // Filter based on actual student data
-        // Assume studentData has {id, name, completed: boolean}
         const filtered = studentData.filter(student =>
             (type === 'completed' && student.completed) ||
             (type === 'notCompleted' && !student.completed)
@@ -136,8 +130,9 @@ const TestAnalytics = () => {
                 title={modalTitle}
                 students={filteredStudents}
                 modalType={modalType}
+                selectedTopic={selectedTopic}
             />
- 
+
         </View>
     );
 };

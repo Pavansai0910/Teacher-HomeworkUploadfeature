@@ -2,10 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { getTopicPerformanceBySection } from "../../../Services/teacherAPIV1";
 import { useSelector } from 'react-redux';
-import SkullIcon from '../../../Images/StudentInsights/SkullIcon';
+import GetFontSize from '../../../Commons/GetFontSize';
 import { AuthContext } from '../../../Context/AuthContext';
 import ExpandIcon from '../../../Images/StudentInsights/ExpandIcon';
-
 
 const TestDetails = ({
     chapterId,
@@ -13,7 +12,7 @@ const TestDetails = ({
 }) => {
     const [chapterData, setChapterData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [expanded, setExpanded] = useState(null);
+    const [expanded, setExpanded] = useState([]);
     const selectedAssignment = useSelector(
         (state) => state.assignment.selectedAssignment
     );
@@ -21,18 +20,31 @@ const TestDetails = ({
 
     useEffect(() => {
         const fetchSectionPerformance = async () => {
-            if (!chapterId || !selectedTopic) return;
+            if (!chapterId || !selectedTopic) {
+                console.log('Missing chapterId or selectedTopic:', { chapterId, selectedTopic });
+                return;
+            }
+            if (!selectedAssignment?.sectionId?._id || !selectedAssignment?.classId?._id || !selectedAssignment?.subjectId?._id) {
+                console.log('Missing selectedAssignment details:', selectedAssignment);
+                return;
+            }
+            if (!teacherProfile?.schoolId?.boardId) {
+                console.log('Missing teacherProfile boardId:', teacherProfile);
+                return;
+            }
             try {
                 setLoading(true);
                 const result = await getTopicPerformanceBySection({
                     sectionId: selectedAssignment?.sectionId?._id,
                     classId: selectedAssignment?.classId?._id,
                     subjectId: selectedAssignment?.subjectId?._id,
-                    chapterId,
+                    chapterId: chapterId,
                     topicId: selectedTopic,
                     boardId: teacherProfile?.schoolId?.boardId,
                 });
-                setChapterData(result.data?.data?.learningObjectives || []);
+                console.log('API Result:', result);
+                const data = result.data?.data?.learningObjectives || [];
+                setChapterData(data);
             } catch (error) {
                 console.error('Failed to fetch data:', error);
             } finally {
@@ -41,7 +53,7 @@ const TestDetails = ({
         };
 
         fetchSectionPerformance();
-    }, [chapterId, selectedAssignment, selectedTopic]);
+    }, [chapterId, selectedAssignment, selectedTopic, teacherProfile]);
 
     if (loading) {
         return (
@@ -51,51 +63,94 @@ const TestDetails = ({
         );
     }
 
+    if (!chapterData.length) {
+        return (
+            <View className="flex-1 justify-center items-center px-4 py-4">
+                <Text className="text-gray-500 text-center">No data available</Text>
+            </View>
+        );
+    }
+
+    const toggleExpand = (index) => {
+        if (expanded.includes(index)) {
+            setExpanded(expanded.filter(i => i !== index));
+        } else {
+            setExpanded([...expanded, index]);
+        }
+    };
+
     return (
         <ScrollView className="px-4 py-4">
             {chapterData.map((item, index) => {
-                const isExpanded = expanded === index;
+                const isExpanded = expanded.includes(index);
                 return (
-                    <View
-                        key={item.objectiveId}
-                        className={`bg-white rounded-2xl mb-4 ${isExpanded ? 'border border-gray-300' : ''
-                            }`}
-                    >
-                        <View className="flex-row justify-between items-start p-4">
-                            <Text className="flex-1 text-[15px] font-inter500 text-gray-800 leading-6">
-                                {item.objectiveName}
-                            </Text>
+                    <View key={item.objectiveId || index} className="mb-4">
+                        {isExpanded ? (
+                            <View 
+                                style={{
+                                    shadowColor: '#7C8DB5',
+                                    shadowOffset: { width: 0, height: 3 },
+                                    shadowOpacity: 0.16,
+                                    shadowRadius: 3,
+                                    elevation: 3,
+                                    borderRadius: 16,
+                                }}
+                            >
+                                <View className="w-[320] bg-white rounded-2xl">
+                                    <View className="flex-row justify-between items-center px-4 py-2 border-b border-[#E5E5E3] ">
+                                        <Text  style={{ fontSize: GetFontSize(15) }}className="flex-1  font-inter500 text-[#454F5B] leading-6  mt-2">
+                                            {item.objectiveName}
+                                        </Text>
 
-                            <TouchableOpacity onPress={() => setExpanded(isExpanded ? null : index)}>
-                                <ExpandIcon />
-                            </TouchableOpacity>
-                        </View>
+                                        <TouchableOpacity 
+                                            onPress={() => toggleExpand(index)}
+                                            className="justify-center items-center"
+                                        >
+                                            <ExpandIcon />
+                                        </TouchableOpacity>
+                                    </View>
 
-                        {isExpanded && (
-                            <View className="flex-row justify-between px-4 pb-4">
-                                <View className="items-center">
-                                    <Text className="text-[16px] font-bold text-gray-800">
-                                        {item.weakZoneStudents.toString().padStart(2, '0')}
-                                    </Text>
-                                    <Text className="text-[12px] text-gray-500">Attention</Text>
+                                    <View className="flex-row px-4 pb-4 pt-2">
+                                        <View className="flex-1 pr-2 items-start justify-start border-r border-[#E5E5E3]">
+                                            <Text  style={{ fontSize: GetFontSize(20) }}className=" font-inter700 text-[#212B36] text-left">
+                                                {item.weakZoneStudents.toString().padStart(2, '0')}
+                                            </Text>
+                                            <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left  ">Attention</Text>
+                                        </View>
+                                        <View className="flex-1 pl-2 pr-2 items-start justify-start border-r border-[#E5E5E3]">
+                                 <Text  style={{ fontSize: GetFontSize(20) }}className=" font-inter700 text-[#212B36] text-left ml-2">
+                                                {item.learningZoneStudents.toString().padStart(2, '0')}
+                                            </Text>
+                                            <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left ml-2">Improving</Text>
+                                        </View>
+                                        <View className="flex-1 pl-2 ml-2 pr-2 items-start justify-start border-r border-[#E5E5E3]">
+                                             <Text  style={{ fontSize: GetFontSize(20) }}className=" font-inter700 text-[#212B36] text-left">
+                                                {item.strongZoneStudents.toString().padStart(2, '0')}
+                                            </Text>
+                                            <Text style={{ fontSize: GetFontSize(11) }} className="font-inter500 text-[#919EAB] text-left">Understood</Text>
+                                        </View>
+                                        <View className="flex-1 pl-2 items-start justify-start">
+                                             <Text  style={{ fontSize: GetFontSize(20) }}className=" font-inter700 text-[#212B36] text-left ml-1">
+                                                {item.nonParticipantStudents.toString().padStart(2, '0')}
+                                            </Text>
+                                             <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left ml-1">Unattempt</Text>
+                                        </View>
+                                    </View>
                                 </View>
-                                <View className="items-center">
-                                    <Text className="text-[16px] font-bold text-gray-800">
-                                        {item.learningZoneStudents.toString().padStart(2, '0')}
+                            </View>
+                        ) : (
+                            <View className="w-[320] bg-white rounded-t-2xl">
+                                <View className="flex-row justify-between items-center px-4 py-2 border-b-2 border-[#E5E5E3]">
+                                    <Text className="flex-1 text-[15px] font-inter500 text-gray-800 leading-6">
+                                        {item.objectiveName}
                                     </Text>
-                                    <Text className="text-[12px] text-gray-500">Improving</Text>
-                                </View>
-                                <View className="items-center">
-                                    <Text className="text-[16px] font-bold text-gray-800">
-                                        {item.strongZoneStudents.toString().padStart(2, '0')}
-                                    </Text>
-                                    <Text className="text-[12px] text-gray-500">Understood</Text>
-                                </View>
-                                <View className="items-center">
-                                    <Text className="text-[16px] font-bold text-gray-800">
-                                        {item.nonParticipantStudents.toString().padStart(2, '0')}
-                                    </Text>
-                                    <Text className="text-[12px] text-gray-500">Unattempt</Text>
+
+                                    <TouchableOpacity 
+                                        onPress={() => toggleExpand(index)}
+                                        className="justify-center items-center"
+                                    >
+                                        <ExpandIcon />
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         )}
