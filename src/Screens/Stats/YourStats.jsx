@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Dimensions, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
@@ -110,7 +110,11 @@ const YourStats = () => {
       <View className="items-center py-5 px-5">
         <View className="flex-row items-center justify-between w-full mb-2">
           <TouchableOpacity 
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+                          Vibration.vibrate(50);
+
+              navigation.goBack()}
+            }
             className="p-2 rounded-full bg-white shadow-sm"
           >
             <Text className="text-lg">←</Text>
@@ -131,7 +135,11 @@ const YourStats = () => {
                 ? 'bg-blue-500 border-blue-500' 
                 : 'bg-white border-gray-200'
             }`}
-            onPress={() => setSelectedTimeframe(timeframe)}
+            onPress={() => {
+              Vibration.vibrate(50);
+
+              setSelectedTimeframe(timeframe)}
+            } 
           >
             <Text className={`text-xs ${
               selectedTimeframe === timeframe ? 'text-white font-semibold' : 'text-gray-600'

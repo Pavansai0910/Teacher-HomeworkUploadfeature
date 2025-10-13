@@ -8,7 +8,8 @@ import {
   ActivityIndicator,
   PermissionsAndroid,
   Platform,
-  Alert
+  Alert,
+  Vibration
 } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -41,7 +42,7 @@ const GeneratedLessonPlan = () => {
   } = route.params;
 
   const [isSaving, setIsSaving] = useState(false);
-  const [isSaved, setIsSaved] = useState(false); 
+  const [isSaved, setIsSaved] = useState(false);
   const [activeSection, setActiveSection] = useState(null);
   const [downloadStatus, setDownloadStatus] = useState(false);
   const [isSavedClicked, setIsSavedClicked] = useState(false);
@@ -72,7 +73,11 @@ const GeneratedLessonPlan = () => {
   const handleShowSections = () => {
     const actions = ButtonsOptions.map(sectionName => ({
       text: sectionName,
-      onPress: () => scrollToSection(sectionName),
+      onPress: () => {
+        Vibration.vibrate(50);
+
+        scrollToSection(sectionName)
+      },
     }));
 
     actions.push({
@@ -81,12 +86,14 @@ const GeneratedLessonPlan = () => {
     });
 
     Alert.alert('Go to Section', 'Select a section to jump to:', actions, {
-        cancelable: true,
+      cancelable: true,
     });
   };
 
 
   const handleSaveDoc = async () => {
+    Vibration.vibrate(50);
+
     if (isSaved) {
       Toast.show({
         type: 'info',
@@ -196,8 +203,8 @@ const GeneratedLessonPlan = () => {
   };
 
   const SectionHeader = ({ title }) => (
-    <Text style={{ fontSize: GetFontSize(16)}}
-    className="text-[16px] font-inter500 text-[#212B36] mt-4">
+    <Text style={{ fontSize: GetFontSize(16) }}
+      className="text-[16px] font-inter500 text-[#212B36] mt-4">
       {title}
     </Text>
   );
@@ -205,8 +212,8 @@ const GeneratedLessonPlan = () => {
   const BulletList = ({ items }) => (
     <View className="ml-0">
       {items?.map((item, index) => (
-        <Text style={{ fontSize: GetFontSize(14)}}
-        key={index} className="leading-6 mx-2 text-[#454F5B]">
+        <Text style={{ fontSize: GetFontSize(14) }}
+          key={index} className="leading-6 mx-2 text-[#454F5B]">
           • {item}
         </Text>
       ))}
@@ -249,7 +256,12 @@ const GeneratedLessonPlan = () => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
-                onPress={() => navigation.navigate('MainTabNavigator')}
+                onPress={() => {
+                  Vibration.vibrate(50);
+
+                  navigation.navigate('MainTabNavigator')
+                }
+                }
               >
                 <Text
                   style={{ fontSize: GetFontSize(14) }}
@@ -334,8 +346,12 @@ const GeneratedLessonPlan = () => {
               {/* Download Icon */}
               <TouchableOpacity
                 className="bg-white justify-center items-center"
-                onPress={() => handleLessonPlanDownload(generatedLessonPlanId)}
-              >
+                onPress={() => {
+                  Vibration.vibrate(50);
+
+                  handleLessonPlanDownload(generatedLessonPlanId)
+                }
+                }>
                 <View
                   className="justify-center items-center rounded-xl border border-[#E1F4FE] p-3"
                   style={{
@@ -348,7 +364,7 @@ const GeneratedLessonPlan = () => {
                   {downloadStatus ? (
                     <ActivityIndicator size="small" color="#1EAFF7" />
                   ) : (
-                  <Download width={24} height={24} color="#1EAFF7" />
+                    <Download width={24} height={24} color="#1EAFF7" />
                   )}
                 </View>
               </TouchableOpacity>
@@ -525,7 +541,7 @@ const GeneratedLessonPlan = () => {
             end={{ x: 1, y: 0 }}
             style={{ borderRadius: 24, padding: 2 }}
           >
-            
+
             <TouchableOpacity
               className="bg-white py-4 px-5 rounded-3xl items-center flex-row justify-center"
               style={{

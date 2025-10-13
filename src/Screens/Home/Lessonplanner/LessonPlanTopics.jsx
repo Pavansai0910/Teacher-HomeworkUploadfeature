@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Modal,
   FlatList,
+  Vibration
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -75,6 +76,8 @@ const LessonPlanTopics = ({ route }) => {
     fetchTopics();
   }, [chapterId]);
   const handleTopicToggle = topic => {
+                  Vibration.vibrate(50);
+
     const isSelected = selectedTopics.some(t => t.id === topic.id);
     if (isSelected) {
       setSelectedTopics(selectedTopics.filter(t => t.id !== topic.id));
@@ -84,6 +87,7 @@ const LessonPlanTopics = ({ route }) => {
   };
   const handleContinue = () => {
     if (selectedTopics.length === 0) return;
+    Vibration.vibrate(50);
     navigation.navigate('LessonPlanGeneration', {
       chapterId,
       selectedTopics: selectedTopics,
@@ -250,8 +254,11 @@ const LessonPlanTopics = ({ route }) => {
                 borderBottomWidth: 4,
                 borderColor: '#89D5FB',
               }}
-              onPress={() => navigation.navigate('LessonPlanHistory')}
-            >
+              onPress={() => {
+                             Vibration.vibrate(50);
+               
+                navigation.navigate('LessonPlanHistory')}
+              }>
               <View className="flex-row justify-center items-center gap-2">
                 <Text
                   style={{ fontSize: GetFontSize(14) }}
@@ -282,7 +289,11 @@ const LessonPlanTopics = ({ route }) => {
                 }}
               >
                 <TouchableOpacity
-                  onPress={() => setIsModalVisible(true)}
+                  onPress={() => {
+                                Vibration.vibrate(50);
+
+                    setIsModalVisible(true)}
+                  }
                   className="bg-white rounded-lg px-4 py-4"
                 >
                   <Text
@@ -325,7 +336,11 @@ const LessonPlanTopics = ({ route }) => {
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 border-[#DFE3E8] rounded-xl border-t-[1.5px] border-x-2 border-b-4 justify-center items-center px-4 py-3"
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              Vibration.vibrate(50);
+
+              navigation.goBack()}
+            }
           >
             <LeftArrow color="#1EAFF7" />
             <Text
@@ -362,14 +377,18 @@ const LessonPlanTopics = ({ route }) => {
         statusBarTranslucent={true}
       >
         <View style={{ flex: 1, backgroundColor: 'white' }}>
-          <SafeAreaView style={{ flex: 1}}>
+          <SafeAreaView style={{ flex: 1 }}>
             {/* Modal Header */}
             <View className="px-4 pt-4 flex-row justify-between items-center bg-[#E0F5FF]">
               <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
                 Select Topics
               </Text>
               <TouchableOpacity
-                onPress={() => setIsModalVisible(false)}
+                onPress={() => {
+              Vibration.vibrate(50);
+
+                  setIsModalVisible(false)}
+                } 
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
                 <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
                   <Text className="text-white font-inter400">✕</Text>
@@ -389,7 +408,7 @@ const LessonPlanTopics = ({ route }) => {
               end={{ x: 1, y: 1 }}
               style={{ flex: 1 }}
             >
-              <FlatList    
+              <FlatList
                 data={topics}
                 keyExtractor={item => item.id.toString()}
                 renderItem={renderTopicItem}
@@ -406,6 +425,8 @@ const LessonPlanTopics = ({ route }) => {
                   : 'bg-gray-400 '
                   }`}
                 onPress={() => {
+                                Vibration.vibrate(50);
+
                   setIsModalVisible(false);
                   if (selectedTopics.length > 0) {
                     handleContinue();

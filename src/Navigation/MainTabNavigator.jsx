@@ -8,7 +8,8 @@ import {
   Modal,
   Linking,
   ActivityIndicator,
-  TouchableOpacity
+  TouchableOpacity,
+  Vibration
 } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -46,11 +47,11 @@ function MainTabNavigator() {
   const [loading, setLoading] = useState(true);
   const { teacherProfile } = useContext(AuthContext);
   const [showUpdatePopup, setShowUpdatePopup] = useState(false);
-    const selectedAssignment = useSelector(
-      (state) => state.assignment.selectedAssignment
-    );
-  
-    async function loginEvent() {
+  const selectedAssignment = useSelector(
+    (state) => state.assignment.selectedAssignment
+  );
+
+  async function loginEvent() {
     try {
       const response = await teacherLoginEvent({
         teacherId: teacherProfile?._id,
@@ -132,6 +133,7 @@ function MainTabNavigator() {
               <TouchableOpacity
                 style={[styles.modalButton, styles.yesButton]}
                 onPress={() => {
+                  Vibration.vibrate(50);
                   const externalUrl = "https://adaptmate.in/download"; // 🔗 replace with your link
                   Linking.openURL(externalUrl).catch(err =>
                     console.error("Failed to open link", err)
@@ -164,7 +166,7 @@ function MainTabNavigator() {
             {props.children}
           </Pressable>
         ),
-      }}t
+      }} t
     >
       <Tab.Screen
         name="HomeStack"
@@ -223,7 +225,7 @@ const styles = StyleSheet.create({
   activeBackground: {
     backgroundColor: '#E2E8F5', // Active tab background color
   },
-    modalContainer: {
+  modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

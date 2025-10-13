@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -44,6 +44,8 @@ const LessonPlanGeneration = () => {
     'Not selected';
 
   const handleGenerate = async () => {
+                  Vibration.vibrate(50);
+
     if (!startDate || !endDate) return;
 
     setShowLoader(true);
@@ -304,6 +306,8 @@ const LessonPlanGeneration = () => {
                   borderColor: '#9B7A5A',
                 }}
                 onPress={() => {
+                                Vibration.vibrate(50);
+
                   setPickerTarget('start');
                   setShowPicker(true);
                 }}
@@ -330,6 +334,8 @@ const LessonPlanGeneration = () => {
                 }}
                 className="bg-white rounded-lg px-4 py-3 border border-[#E5E5E3] flex-row justify-between items-center"
                 onPress={() => {
+                                Vibration.vibrate(50);
+                  
                   setPickerTarget('end');
                   setShowPicker(true);
                 }}
@@ -364,7 +370,11 @@ const LessonPlanGeneration = () => {
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] justify-center items-center px-4 py-3"
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              Vibration.vibrate(50);
+
+              navigation.goBack()}
+            } 
           >
             <LeftArrow color="#1EAFF7" />
             <Text

@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import capitalize from '../../../Utils/Capitalize';
 import { useSelector } from 'react-redux';
 import { AuthContext } from '../../../Context/AuthContext';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Vibration } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import SkullIcon from '../../../Images/StudentInsights/SkullIcon';
 import GetFontSize from '../../../Commons/GetFontSize';
@@ -53,9 +53,13 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
               </Text>
               <TouchableOpacity
                 className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
-                onPress={() => navigation.navigate('MainTabNavigator')}
-              >
-                <Text
+                onPress={() => {
+              Vibration.vibrate(50);
+
+              navigation.navigate('MainTabNavigator')}
+            }
+                  >
+                  <Text
                   style={{ fontSize: GetFontSize(14) }}
                   className="text-white "
                 >

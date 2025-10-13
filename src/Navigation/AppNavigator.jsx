@@ -20,6 +20,7 @@ import AssignTestTopics from '../Screens/Home/AssignTest/AssignTestTopics';
 import AssignTestDate from '../Screens/Home/AssignTest/AssignTestDate';
 import LessonPlanHistory from '../Screens/Home/Lessonplanner/LessonPlanHistory';
 import HistoryDetails from '../Screens/Home/Lessonplanner/HistoryDetails';
+import TestAnalytics from '../Screens/Home/StudentInsights/TestAnalytics';
 
 
 const Stack = createNativeStackNavigator();
@@ -66,6 +67,9 @@ function AppNavigator() {
       >
         {isAuthenticated ? (
           <>
+
+          {/* <Stack.Screen name="TestAnaltics" component={TestAnalytics} /> */}
+
             <Stack.Screen
               name="MainTabNavigator"
               component={MainTabNavigator}

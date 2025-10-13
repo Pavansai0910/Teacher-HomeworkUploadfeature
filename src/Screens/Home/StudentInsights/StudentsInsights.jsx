@@ -11,6 +11,7 @@ import {
   Animated,
   Dimensions,
   ActivityIndicator,
+  Vibration
 } from 'react-native';
 import GetFontSize from '../../../Commons/GetFontSize';
 import ScrollUpArrow from '../../../Images/LessonPlan/ScrollUpArrow';
@@ -25,7 +26,7 @@ const StudentsInsights = () => {
   );
   const { teacherProfile } = useContext(AuthContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedChapterId, setSelectedChapterId] = useState(null); 
+  const [selectedChapterId, setSelectedChapterId] = useState(null);
   const [chapters, setChapters] = useState([]);
   const [loading, setLoading] = useState(false);
   const dropdownAnimation = useRef(new Animated.Value(0)).current;
@@ -93,6 +94,8 @@ const StudentsInsights = () => {
 
   // 🔄 Dropdown open/close animation
   const toggleDropdown = () => {
+    Vibration.vibrate(50);
+
     const toValue = isDropdownOpen ? 0 : 1;
     setIsDropdownOpen(!isDropdownOpen);
 
@@ -155,15 +158,15 @@ const StudentsInsights = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={{ borderTopWidth: 1, borderBottomWidth: 4, borderLeftWidth: 2, borderRightWidth: 2, borderColor: '#77E425' }}
-        className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white">
+          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white">
           <Text className="text-[#454F5B] font-inter500" style={{ fontSize: GetFontSize(16) }}>
             Assigned
           </Text>
           <RightArrowIcon color='#77E425' />
         </TouchableOpacity>
-        
+
         <TouchableOpacity style={{ borderTopWidth: 1, borderBottomWidth: 4, borderLeftWidth: 2, borderRightWidth: 2, borderColor: '#77E425' }}
-        className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white">
+          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white">
           <Text className="text-[#454F5B] font-inter500" style={{ fontSize: GetFontSize(16) }}>
             Pending
           </Text>
@@ -204,7 +207,12 @@ const StudentsInsights = () => {
                 return (
                   <TouchableOpacity
                     key={chapter.id}
-                    onPress={() => selectChapter(chapter)}
+                    onPress={() => {
+                      Vibration.vibrate(50);
+
+                      selectChapter(chapter)
+                    }
+                    }
                     style={{
                       backgroundColor: isSelected ? '#FFE4B5' : 'white',
                       marginVertical: 4,

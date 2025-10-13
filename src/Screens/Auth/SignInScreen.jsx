@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   KeyboardAvoidingView,
+  Vibration
 } from 'react-native';
 import EmailIcon from '../../Images/Login/EmailIcon';
 import GetFontSize from '../../Commons/GetFontSize';
@@ -33,7 +34,7 @@ const SignInScreen = () => {
       setLoading(true);
       const result = await loginTeacher({
         identifier: email.trim(),
-        password:password.trim(),
+        password: password.trim(),
         role: 'teacher',
       });
       updateProfile(result.data.profile);
@@ -74,7 +75,12 @@ const SignInScreen = () => {
             </View>
 
             <View className="flex flex-row items-center mt-[12px] w-[100%] h-[54px] rounded-[11px] bg-[#A7C4FF66]">
-              <TouchableOpacity onPress={() => setPasswordHidden(!passwordHidden)} className="mx-[9px]">
+              <TouchableOpacity onPress={() => {
+                Vibration.vibrate(50);
+                setPasswordHidden(!passwordHidden)
+              }
+              }
+                className="mx-[9px]">
                 {passwordHidden ? <EyeSlash /> : <Eye />}
               </TouchableOpacity>
 
@@ -84,7 +90,7 @@ const SignInScreen = () => {
                 placeholderTextColor="#33569F"
                 value={password}
                 onChangeText={text => setPassword(text)}
-                secureTextEntry={passwordHidden} 
+                secureTextEntry={passwordHidden}
                 className="text-[#33569F] w-[254px] font-inter500"
               />
 

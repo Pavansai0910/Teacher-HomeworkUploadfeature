@@ -9,6 +9,7 @@ import {
   Modal,
   useWindowDimensions,
   StyleSheet,
+  Vibration
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -136,7 +137,10 @@ const Home = () => {
       <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white">
         <TouchableOpacity
           className="flex-row items-center"
-          onPress={() => navigation.navigate('Settings')}
+          onPress={() => {
+          Vibration.vibrate(50);
+            navigation.navigate('Settings')}
+          }
         >
           <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
             <Text
@@ -184,7 +188,12 @@ const Home = () => {
               borderColor: '#A17F5E',
             }
             }
-            onPress={() => setClassModalVisible(true)}
+            onPress={() => {
+
+                            Vibration.vibrate(50);
+
+              setClassModalVisible(true)}
+            } 
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}
@@ -207,6 +216,8 @@ const Home = () => {
               borderColor: '#A17F5E',
             }}
             onPress={() => {
+                            Vibration.vibrate(50);
+
               if (!selectedClass && !selectedAssignment) {
                 alert('Please select a class first');
                 return;
@@ -248,6 +259,8 @@ const Home = () => {
                   <TouchableOpacity
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
+                                    Vibration.vibrate(50);
+
                       // Filter subjects for the selected class-section
                       const relatedSubjects = teacherProfile?.assignments
                         ?.filter(
@@ -299,8 +312,10 @@ const Home = () => {
 
               <TouchableOpacity
                 className="mt-4 bg-red-500 py-2 rounded-lg"
-                onPress={() => setClassModalVisible(false)}
-              >
+                onPress={() => {
+                                Vibration.vibrate(50);
+setClassModalVisible(false)}
+                              }              >
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white text-center font-inter700"
@@ -331,6 +346,8 @@ const Home = () => {
                   <TouchableOpacity
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
+                                    Vibration.vibrate(50);
+
                       const updatedAssignment = {
                         ...selectedAssignment,
                         subjectId: item,
@@ -358,8 +375,10 @@ const Home = () => {
 
               <TouchableOpacity
                 className="mt-4 bg-red-500 py-2 rounded-lg"
-                onPress={() => setSubjectModalVisible(false)}
-              >
+                onPress={() => {
+                                Vibration.vibrate(50);
+setSubjectModalVisible(false)}
+                              }              >
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white text-center font-inter700"
@@ -387,21 +406,32 @@ const Home = () => {
             }}
           >
             <StudentsInsightsCard
-              onPress={() => navigation.navigate('StudentsInsights')}
-              isActive={currentIndex === 0}
+              onPress={() => {
+                              Vibration.vibrate(50);
+navigation.navigate('StudentsInsights')}
+                            }
+                                          isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             />
             <LessonPlannerCard
-              onPress={() => navigation.navigate('LessonPlanner')}
+              onPress={() =>{
+              Vibration.vibrate(50);
+
+                navigation.navigate('LessonPlanner')}
+              }
               isActive={currentIndex === 1}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             />
            
             <AssignTestCard
-              onPress={() => navigation.navigate('AssignTest')}
-              isActive={currentIndex === 2}
+              onPress={() => {
+                             Vibration.vibrate(50);
+
+                navigation.navigate('AssignTest')}
+               } 
+               isActive={currentIndex === 2}
               cardWidth={cardWidth}
               cardSpacing={0}
             /> 

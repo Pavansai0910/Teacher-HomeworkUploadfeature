@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, useWindowDimensions } from 'react-native';
+import { View, Text, TouchableOpacity, useWindowDimensions, Vibration } from 'react-native';
 import PenIcon from '../../../Images/AssignTestCard/PenIcon';
 import ParaIcon from '../../../Images/AssignTestCard/ParaIcon';
 import GetFontSize from '../../../Commons/GetFontSize';
@@ -55,7 +55,11 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
           </View>
 
           <TouchableOpacity
-            onPress={onPress}
+            onPress={() => {
+              Vibration.vibrate(50);
+              onPress()
+            }
+            }
             style={{
               borderTopWidth: 1,
               borderRightWidth: 2,

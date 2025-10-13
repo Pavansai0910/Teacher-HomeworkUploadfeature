@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../Context/AuthContext';
@@ -12,14 +12,18 @@ const Settings = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="absolute top-0 z-10 w-full h-[37.44%] bg-[#F7EBFF] gap-[29px] items-center justify-center left-0 opacity-100 relative">
+      <View className="absolute top-0 z-10 w-full h-[37.44%] bg-[#F7EBFF] gap-[29px] items-center justify-center left-0 opacity-100">
         {/* New Top Layout Bar */}
         <View className="w-full h-6 flex-row justify-between items-center px-5 opacity-100">
           {/* Left: Settings Text */}
           <Text style={{ fontSize: GetFontSize(16) }} className="text-[#637381] font-inter500">Settings</Text>
           {/* Right: Circular Element */}
           <TouchableOpacity 
-            onPress={() => navigation.navigate('Home')}
+            onPress={() => {
+              Vibration.vibrate(50);
+
+              navigation.navigate('Home')}
+            } 
             className="w-6 h-6 rounded-[20px] border-2 bg-[#CE82FF] border-[#BF5CFF] p-1 opacity-100 relative items-center justify-center"
           >
             <Text 
@@ -126,7 +130,11 @@ const Settings = () => {
 
         {/* Logout */}
         <TouchableOpacity 
-          onPress={logout} 
+          onPress={() => {
+                          Vibration.vibrate(50);
+
+            logout()
+          }} 
           className="bg-[#ffffff] rounded-xl p-4 mt-3 flex-row justify-center"
           style={{
             borderTopWidth: 1,

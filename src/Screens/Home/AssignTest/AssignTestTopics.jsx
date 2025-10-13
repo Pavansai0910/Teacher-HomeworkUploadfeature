@@ -4,7 +4,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  ActivityIndicator,
+  Vibration,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -79,6 +79,7 @@ const AssignTestTopics = ({ route }) => {
 
   const handleContinue = () => {
     if (!selectedTopic) return;
+    Vibration.vibrate(50);
     const payload = { questionPaper: selectedTopic };
     navigation.navigate('AssignTestDate', payload);
   };
@@ -212,7 +213,11 @@ const AssignTestTopics = ({ route }) => {
               >
                 <TouchableOpacity
                   className="bg-white rounded-xl px-6 py-4 flex-row items-center justify-between w-full"
-                  onPress={() => setShowModal(true)}
+                  onPress={() =>{
+                                  Vibration.vibrate(50);
+
+                                  setShowModal(true)}
+                                }
                 >
                   <View className="flex-1">
                     <Text
@@ -255,7 +260,10 @@ const AssignTestTopics = ({ route }) => {
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] justify-center items-center px-4 py-3"
-            onPress={() => navigation.goBack()}
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigation.goBack()
+            }}
           >
             <LeftArrow color="#FED570" />
             <Text
