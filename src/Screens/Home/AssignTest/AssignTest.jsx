@@ -7,7 +7,6 @@ import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import { useState, useEffect, useContext } from 'react';
-import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { getChapters } from '../../../Services/teacherAPIV1';
@@ -16,7 +15,7 @@ import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import DropdownArrow from '../../../Images/LessonPlan/DropdownArrow';
 import { Shadow } from 'react-native-shadow-2';
-import { useSound } from '../../../Context/SoundContext';
+
 const AssignTest = () => {
   const navigation = useNavigation();
   const { teacherProfile } = useContext(AuthContext);

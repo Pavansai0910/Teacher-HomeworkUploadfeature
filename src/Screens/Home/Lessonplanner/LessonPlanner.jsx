@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
@@ -12,7 +12,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
-import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
@@ -21,33 +20,66 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import DropdownArrow from '../../../Images/LessonPlan/DropdownArrow';
 import LessonPlanNavbar from './LessonPlanNavbar';
 import { Shadow } from 'react-native-shadow-2';
+import { getChapters } from '../../../Services/teacherAPIV1';
+import { AuthContext } from '../../../Context/AuthContext';
+
+
 
 const LessonPlanner = () => {
   const navigation = useNavigation();
   const selectedAssignment = useSelector(
     state => state.assignment.selectedAssignment,
   );
-  const { chapters, loading } = useSelector(state => state.chapters);
   const [selectedChapterName, setSelectedChapterName] = useState(null);
   const [selectedChapterId, setSelectedChapterId] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [allChapters, setAllChapters] = useState([]);
+  const { teacherProfile } = useContext(AuthContext);
+
 
   useEffect(() => {
-    if (selectedChapterName && chapters && chapters.length > 0) {
-      // Find the full chapter object using the selected name
-      const chapterObject = chapters.find(c => c.name === selectedChapterName);
+    const fetchChapters = async () => {
+      try {
+        const response = await getChapters({
+          classId: selectedAssignment?.classId?._id,
+          subjectId: selectedAssignment?.subjectId?._id,
+          boardId: teacherProfile?.schoolId?.boardId,
+        });
+        setAllChapters(response.data.chapters);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        if (error.response.status != 400 && error.response.status != 404) {
+          Toast.show({
+            type: 'error',
+            text1: "Unable to fetch chapters"
+          });
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChapters();
+  }, [selectedAssignment]);
+
+  useEffect(() => {
+    if (selectedChapterName && allChapters.length > 0) {
+      const chapterObject = allChapters.find(c => c.name === selectedChapterName);
       if (chapterObject) {
-        setSelectedChapterId(chapterObject.id);
+        setSelectedChapterId(chapterObject.id || chapterObject._id);
       } else {
         setSelectedChapterId(null);
       }
     }
-  }, [selectedChapterName, chapters]);
+  }, [selectedChapterName, allChapters]);
 
-  // 2. Updated: The handler only sets the name (the immediate action)
   const handleChapterSelect = chapterName => {
     setSelectedChapterName(chapterName);
+    setIsModalVisible(false);
   };
+
 
   // Prepare class and subject display
   const classDisplay = selectedAssignment
@@ -58,8 +90,7 @@ const LessonPlanner = () => {
     capitalize(selectedAssignment?.subjectId?.subjectName) ||
     'Not selected';
 
-  // 3. Updated: Map chapters for dropdown options (only names)
-  const chapterOptions = chapters?.map(chapter => chapter.name) || [];
+  const chapterOptions = allChapters?.map(chapter => chapter.name) || [];
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -329,7 +360,7 @@ const LessonPlanner = () => {
                 contentContainerStyle={{ padding: 16 }}
                 showsVerticalScrollIndicator={true}
               >
-                {chapters.map((chapter, index) => (
+                {allChapters.map((chapter, index) => (
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
