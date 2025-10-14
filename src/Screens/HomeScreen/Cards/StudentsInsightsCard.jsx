@@ -4,6 +4,7 @@ import TrophyIcon from '../../../Images/StudentInsights/TrophyIcon';
 import StudentIcon from '../../../Images/StudentInsights/StudentIcon';
 import ChartIcon from '../../../Images/StudentInsights/ChartIcon';
 import { Shadow } from 'react-native-shadow-2';
+import GetFontSize from '../../../Commons/GetFontSize';
 const StudentsInsightsCard = ({
   onPress,
   isActive,
@@ -15,9 +16,9 @@ const StudentsInsightsCard = ({
 
   return (
     <Shadow
-      distance={isActive ? 12 : 0}               
-      offset={[2, isActive ? 12 : 0 ]}           
-      startColor={isActive ? '#BBF192' : '#00000000'}      
+      distance={isActive ? 12 : 0}
+      offset={[2, isActive ? 12 : 0]}
+      startColor={isActive ? '#BBF192' : '#00000000'}
       radius={isActive ? 20 : 0}
       style={{ borderRadius: 50 }}
     >
@@ -34,7 +35,7 @@ const StudentsInsightsCard = ({
         <View
           style={{
             backgroundColor: '#A5ED6F',
-            flex: 2,
+            flex: 1.5,
 
           }}
           className="rounded-t-3xl justify-center items-center px-6"
@@ -57,18 +58,20 @@ const StudentsInsightsCard = ({
 
         <View className="bg-white flex-1 px-6 py-6 rounded-b-3xl">
           <View className="flex-1 justify-center">
-            <Text className="text-[#212B36] text-[19px] font-bold text-center mb-3">
+            <Text style={{ fontSize: GetFontSize(19) }}
+            className="text-[#212B36] font-inter600 text-center mb-1">
               Test insights
             </Text>
-            <Text className="text-[#454F5B] text-[13px] text-center leading-6">
+            <Text style={{ fontSize: GetFontSize(14) }}
+            className="text-[#454F5B] font-inter400 text-center leading-6">
               Generate comprehensive lesson plans with objectives and activities
             </Text>
           </View>
 
           <TouchableOpacity
             onPress={() => {
-                            Vibration.vibrate(50);
-              
+              Vibration.vibrate(50);
+
               onPress()
             }}
             style={{

@@ -29,7 +29,7 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
         <View
           style={{
             backgroundColor: '#FED570',
-            flex: 2,
+            flex: 1.5,
           }}
           className="rounded-t-3xl justify-center items-center "
         >
@@ -48,8 +48,8 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
               className="text-[#212B36] font-inter600 text-center mb-3">
               Assign Test
             </Text>
-            <Text style={{ fontSize: GetFontSize(13) }}
-              className="text-[#454F5B] font-inter400 text-center leading-6">
+            <Text style={{ fontSize: GetFontSize(14) }}
+            className="text-[#454F5B] font-inter400 text-center leading-6">
               Generate comprehensive lesson plans with objectives and activities
             </Text>
           </View>
