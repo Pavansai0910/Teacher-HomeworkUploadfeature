@@ -61,7 +61,7 @@ const LearningDetails = () => {
                         className="text-[#454F5B] font-inter500 text-center"
                         style={{ fontSize: GetFontSize(16), lineHeight: 22 }}
                     >
-                        Assign the test to see the analytics.
+                       Student has not completed the test yet.
                     </Text>
                 </View>
             );
@@ -215,7 +215,7 @@ const LearningDetails = () => {
                     }}
                 >
                     <Text style={{ fontSize: GetFontSize(16) }} className="text-[#357A20] font-inter600">
-                        Flip
+                        Next
                     </Text>
                 </TouchableOpacity>
             </View>
