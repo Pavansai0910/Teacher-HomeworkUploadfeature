@@ -8,41 +8,85 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import TestAnalytics from './TestAnalytics';
 import TestDetails from './TestDetails';
 
-
 const LearningDetails = () => {
     const { width, height } = Dimensions.get('window');
     const navigation = useNavigation();
     const route = useRoute();
-    const { topicname } = route.params || {};
+    const { topicname, status, assignedDate, dueDate } = route.params || {};
+
+    console.log('fggggggggggggggggggggggggggg', { topicname, status, assignedDate, dueDate });
 
     const scrollRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Animated rotation value
     const rotation = useRef(new Animated.Value(0)).current;
-
-    // Interpolate rotation to degrees
     const rotateY = rotation.interpolate({
         inputRange: [0, 1],
         outputRange: ['0deg', '360deg'],
     });
 
     const handleFlip = () => {
-        const nextIndex = (currentIndex + 1) % 2;
-
-        // Animate rotation
+        const nextIndex = currentIndex === 0 ? 1 : 0;
+        rotation.setValue(currentIndex === 0 ? 0 : 1);
         Animated.timing(rotation, {
-            toValue: currentIndex === 0 ? 1 : 0, // flip between 0 and 1
+            toValue: nextIndex === 0 ? 0 : 1,
             duration: 600,
             useNativeDriver: true,
             easing: Easing.inOut(Easing.ease),
         }).start();
-
-        // Scroll to next card after a small delay to sync with rotation
         setTimeout(() => {
             scrollRef.current.scrollTo({ x: nextIndex * width, animated: true });
             setCurrentIndex(nextIndex);
-        }, 300); // half of animation duration
+        }, 300);
+    };
+
+    const renderAnalyticsContent = () => {
+        if (status === 'completed') {
+            return <TestAnalytics selectedTopic={route.params?.topicId} />;
+        } else if (status === 'assigned') {
+            return (
+                <View className="flex-1 justify-center items-center px-6">
+                    <Text
+                        className="text-[#454F5B] font-inter500 text-center"
+                        style={{ fontSize: GetFontSize(16), lineHeight: 22 }}
+                    >
+                        Assigned this test to see the analytics
+                    </Text>
+                </View>
+            );
+        } else if (status === 'pending') {
+            return (
+                <View className="flex-1 justify-center items-center px-6">
+                    <Text
+                        className="text-[#454F5B] font-inter500 text-center"
+                        style={{ fontSize: GetFontSize(16), lineHeight: 22 }}
+                    >
+                        Assign the test to see the analytics.
+                    </Text>
+                </View>
+            );
+        } else {
+            return (
+                <View className="flex-1 justify-center items-center px-6">
+                    <Text
+                        className="text-[#454F5B] font-inter500 text-center"
+                        style={{ fontSize: GetFontSize(16), lineHeight: 22 }}
+                    >
+                        No analytics available for this topic.
+                    </Text>
+                </View>
+            );
+        }
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return "N/A";
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        });
     };
 
     return (
@@ -62,7 +106,7 @@ const LearningDetails = () => {
                                 className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
                                 onPress={() => {
                                     Vibration.vibrate(50);
-                                    navigation.navigate('MainTabNavigator')
+                                    navigation.navigate('MainTabNavigator');
                                 }}
                             >
                                 <Text style={{ fontSize: GetFontSize(14) }} className="text-white">
@@ -78,7 +122,7 @@ const LearningDetails = () => {
             </View>
 
             {/* Topic Info */}
-            <View className="mt-6 mx-10 flex-row justify-between items-start gap-4">
+            <View className="mt-6 mx-10 flex-row justify-between items-start gap-4 border-b-2 border-[#E5E5E3] pb-4">
                 <View className="flex-1 pr-3">
                     <Text
                         className="font-inter500 text-[#454F5B]"
@@ -88,35 +132,38 @@ const LearningDetails = () => {
                         {topicname}
                     </Text>
                 </View>
-                <View className="items-end">
-                    <Text className="text-[#919EAB] font-inter400" style={{ fontSize: GetFontSize(13) }}>
-                        Assigned on - Aug 4, 2025
-                    </Text>
-                    <Text className="text-[#637381] font-inter400" style={{ fontSize: GetFontSize(13) }}>
-                        Due on - Aug 5, 2025
-                    </Text>
-                </View>
+                {(status === 'pending' || status === 'completed') && (
+                    <View className="items-end">
+                        <Text className="text-[#919EAB] font-inter400" style={{ fontSize: GetFontSize(13) }}>
+                            Assigned on - {formatDate(assignedDate)}
+                        </Text>
+                        <Text className="text-[#637381] font-inter400" style={{ fontSize: GetFontSize(13) }}>
+                            Due date - {formatDate(dueDate)}
+                        </Text>
+                    </View>
+                )}
             </View>
 
-            {/* Dashed Line */}
-            {/* <View className="border-b-2 border-dashed border-[#E5E5E3] mx-6 mt-4 mb-4" /> */}
 
-            {/* Animated Scroll Cards */}
+            {/* Animated Scroll */}
             <ScrollView
                 ref={scrollRef}
                 horizontal
                 pagingEnabled
                 showsHorizontalScrollIndicator={false}
+                onMomentumScrollEnd={(e) => {
+                    const index = Math.round(e.nativeEvent.contentOffset.x / width);
+                    setCurrentIndex(index);
+                    rotation.setValue(index === 0 ? 0 : 1);
+                }}
                 scrollEventThrottle={16}
                 className="mb-4"
             >
                 {/* Card 1 */}
                 <Animated.View
                     style={{
-                        width: width * 1,
+                        width: width,
                         height: height * 0.6,
-                        borderRadius: 16,
-                        // backgroundColor: '#FFFFFF',
                         justifyContent: 'center',
                         alignItems: 'center',
                         transform: [{ rotateY }],
@@ -132,29 +179,26 @@ const LearningDetails = () => {
                 {/* Card 2 */}
                 <Animated.View
                     style={{
-                        width: width * 1,
+                        width: width,
                         height: height * 0.6,
-                        borderRadius: 16,
-                        backgroundColor: '#D0F5B3',
                         justifyContent: 'center',
                         alignItems: 'center',
                         transform: [{ rotateY }],
                     }}
                 >
-                    <TestAnalytics
-                        selectedTopic={route.params?.topicId}
-                    />
+                    {renderAnalyticsContent()}
                 </Animated.View>
             </ScrollView>
 
-            <View className="border-b-2 border-[#E5E5E3] mt-4 mb-4" />
-            {/* Buttons */}
+            <View className="border-b-2 border-[#E5E5E3] mb-4" />
+
+            {/* Bottom Buttons */}
             <View className="px-6 mb-4 flex-row justify-between items-center">
                 <TouchableOpacity
                     className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"
                     onPress={() => {
                         Vibration.vibrate(50);
-                        navigation.goBack()
+                        navigation.goBack();
                     }}
                 >
                     <LeftArrow color="#357A20" />
@@ -175,8 +219,6 @@ const LearningDetails = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
-
-
         </SafeAreaView>
     );
 };

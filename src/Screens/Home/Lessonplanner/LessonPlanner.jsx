@@ -107,7 +107,6 @@ const LessonPlanner = () => {
               <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
               {/* Step 2 */}
               <View className="items-center">
-
                 <Shadow
                   distance={1}
                   startColor="#CDCDCD"
@@ -171,7 +170,7 @@ const LessonPlanner = () => {
                 </Text>
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
-                  className="text-white font-inter400 leading-5 px-2"
+                  className="text-white font-inter400 leading-5 px-2 text-center"
                 >
                   Select a chapter for which you want to generate a lesson plan
                   or quickly view your saved plans for this class.
@@ -196,11 +195,11 @@ const LessonPlanner = () => {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                                   Vibration.vibrate(50);
-
-                      setIsModalVisible(true)}
+                      Vibration.vibrate(50);
+                      setIsModalVisible(true)
                     }
-                      className="bg-white rounded-lg px-4 py-4"
+                    }
+                    className="bg-white rounded-lg px-4 py-4"
                   >
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                       <Text
@@ -210,7 +209,7 @@ const LessonPlanner = () => {
                           fontFamily: 'Inter',
                           fontWeight: '700',
                           lineHeight: GetFontSize(16) * 1.35,
-                          letterSpacing: GetFontSize(16) * -0.02  // -2% of fontSize
+                          letterSpacing: GetFontSize(16) * -0.02
                         }}
                         className="font-inter700"
                       >
@@ -251,9 +250,10 @@ const LessonPlanner = () => {
           <TouchableOpacity
             className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"
             onPress={() => {
-                           Vibration.vibrate(50);
+              Vibration.vibrate(50);
 
-              navigation.goBack()}
+              navigation.goBack()
+            }
             }>
             <LeftArrow color="#1EAFF7" />
             <Text
@@ -271,7 +271,7 @@ const LessonPlanner = () => {
                 chapterId: selectedChapterId,
               })
             }
-          }
+            }
             className={`flex-row gap-1 flex-1 py-3 rounded-xl justify-center items-center border-t-[1.5px] border-x-2 border-b-4 ${selectedChapterId
               ? 'bg-[#1EAFF7] border-[#0786C5]'
               : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
@@ -305,10 +305,11 @@ const LessonPlanner = () => {
               </Text>
               <TouchableOpacity
                 onPress={() => {
-              Vibration.vibrate(50);
+                  Vibration.vibrate(50);
 
-                  setIsModalVisible(false)}
-                } 
+                  setIsModalVisible(false)
+                }
+                }
               >
                 <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
                   <Text className="text-white font-inter400">✕</Text>
@@ -332,7 +333,7 @@ const LessonPlanner = () => {
                   <TouchableOpacity
                     key={index}
                     onPress={() => {
-                                    Vibration.vibrate(50);
+                      Vibration.vibrate(50);
 
                       handleChapterSelect(chapter.name);
                       setIsModalVisible(false);

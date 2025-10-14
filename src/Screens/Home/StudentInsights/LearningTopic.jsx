@@ -62,11 +62,12 @@ const LearningTopic = () => {
                 key={topic._id || topic.id || index}
                 onPress={() => {
                   Vibration.vibrate(50);
-                  handleTopicPress(topic)}}
+                  handleTopicPress(topic)
+                }}
                 className={`border-2 mb-2 p-3 rounded-xl ${isSelected ? 'border-[#77E425] bg-[#E8FADB]' : 'border-[#DC9047] bg-white'}`}
               >
                 <Text className={`font-medium ${isSelected ? 'text-[#454F5B]' : 'text-[#454F5B]'}`} style={{ fontSize: GetFontSize(16) }}>
-                  {topic.name || topic.topicName || `Topic ${index + 1}`}
+                  {topic.name}
                 </Text>
                 {/* {topic.description && (
                   <Text className="text-gray-500 mt-1" style={{ fontSize: GetFontSize(12) }}>
@@ -88,7 +89,8 @@ const LearningTopic = () => {
             className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"
             onPress={() => {
               Vibration.vibrate(50);
-              navigation.goBack()}}
+              navigation.goBack()
+            }}
           >
             <LeftArrow color="#357A20" />
             <Text
@@ -110,11 +112,14 @@ const LearningTopic = () => {
                   topic: selectedTopic,
                   topicId: selectedTopicId,
                   chapterId: chapterId,
-                  topicname: selectedTopic?.name || selectedTopic?.topicName || '',
+                  topicname: selectedTopic?.name,
                   chapterName,
                   classDisplay,
-                  subjectDisplay
+                  subjectDisplay,
+                  assignedDate: selectedTopic?.assignedDate,
+                  dueDate: selectedTopic?.deadline,
                 });
+
               }
             }}
             className={`flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#71E31C] flex-1 py-3 rounded-xl justify-center items-center ${selectedTopicId ? 'bg-[#B0EF80]' : 'bg-[#B0EF80]/60'}`}

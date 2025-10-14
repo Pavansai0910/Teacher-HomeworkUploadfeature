@@ -190,7 +190,7 @@ const LessonPlanGeneration = () => {
               <View className="items-center">
                 <Shadow
                   distance={1}
-                  startColor="#CDCDCD"
+                  startColor="#6FCE62"
                   offset={[0, 2]}
                   radius={20}
                   style={{ borderRadius: 50 }}
@@ -212,7 +212,7 @@ const LessonPlanGeneration = () => {
               <View className="items-center">
                 <Shadow
                   distance={1}
-                  startColor="#CDCDCD"
+                  startColor="#6FCE62"
                   offset={[0, 2]}
                   radius={20}
                   style={{ borderRadius: 50 }}

@@ -96,20 +96,19 @@ const AssignTestTopics = ({ route }) => {
           <View className="bg-[#FED570] rounded-2xl px-3 py-6">
             {/* Content Header */}
             <View className="flex-row items-center justify-between mb-5">
-              <View className="items-center">
+             <View className="items-center">
                 <Shadow
                   distance={1}
-                  startColor="#CDCDCD"
+                  startColor="#6FCE62"
                   offset={[0, 2]}
                   radius={20}
                   style={{ borderRadius: 50 }}
                 >
-
                   <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
                     <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
                       <Text
                         style={{ fontSize: GetFontSize(12) }}
-                        className="text-black font-inter600"
+                        className="font-inter600"
                       >
                         1
                       </Text>
@@ -149,27 +148,27 @@ const AssignTestTopics = ({ route }) => {
 
               <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
 
-              <View className="items-center">
-                <Shadow
-                  distance={1}
-                  startColor="#CDCDCD"
-                  offset={[0, 2]}
-                  radius={20}
-                  style={{ borderRadius: 50 }}
-                >
+             <View className="items-center">
+              <Shadow
+                distance={1}
+                startColor="#CDCDCD"
+                offset={[0, 2]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
 
-                  <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
-                    <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                      <Text
-                        style={{ fontSize: GetFontSize(12) }}
-                        className="text-white font-inter600"
-                      >
-                        3
-                      </Text>
-                    </View>
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
+                      3
+                    </Text>
                   </View>
-                </Shadow>
-              </View>
+                </View>
+              </Shadow>
+            </View>
             </View>
 
             <View

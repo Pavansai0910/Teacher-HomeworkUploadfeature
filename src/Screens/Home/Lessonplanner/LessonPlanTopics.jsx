@@ -151,7 +151,7 @@ const LessonPlanTopics = ({ route }) => {
               <View className="items-center">
                 <Shadow
                   distance={1}
-                  startColor="#CDCDCD"
+                  startColor="#6FCE62"
                   offset={[0, 2]}
                   radius={20}
                   style={{ borderRadius: 50 }}
@@ -237,7 +237,7 @@ const LessonPlanTopics = ({ route }) => {
                 </Text>
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
-                  className="text-white font-inter400 leading-5 px-2"
+                  className="text-white font-inter400 leading-5 px-2 text-center"
                 >
                   Select one or more topics from the list to generate a
                   comprehensive lesson plan.

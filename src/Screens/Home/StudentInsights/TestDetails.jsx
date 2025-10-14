@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, Vibration } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
 import { getTopicPerformanceBySection } from "../../../Services/teacherAPIV1";
 import { useSelector } from 'react-redux';
 import GetFontSize from '../../../Commons/GetFontSize';
@@ -42,7 +42,6 @@ const TestDetails = ({
                     topicId: selectedTopic,
                     boardId: teacherProfile?.schoolId?.boardId,
                 });
-                console.log('API Result:', result);
                 const data = result.data?.data?.learningObjectives || [];
                 setChapterData(data);
             } catch (error) {
@@ -84,9 +83,9 @@ const TestDetails = ({
             {chapterData.map((item, index) => {
                 const isExpanded = expanded.includes(index);
                 return (
-                    <View key={item.objectiveId || index} className="mb-4">
+                    <View key={item.objectiveId || index} className="mt-2">
                         {isExpanded ? (
-                            <View 
+                            <View
                                 style={{
                                     shadowColor: '#7C8DB5',
                                     shadowOffset: { width: 0, height: 3 },
@@ -97,67 +96,60 @@ const TestDetails = ({
                                 }}
                             >
                                 <View className="w-[320] bg-white rounded-2xl">
-                                    <View className="flex-row justify-between items-center px-4 py-2 border-b border-[#E5E5E3] ">
-                                        <Text  style={{ fontSize: GetFontSize(15) }}className="flex-1  font-inter500 text-[#454F5B] leading-6  mt-2">
-                                            {item.objectiveName}
-                                        </Text>
-
-                                        <TouchableOpacity 
-                                            onPress={() => {
-                                                Vibration.vibrate(50);
-                                                toggleExpand(index);
-                                            }}
-                                            className="justify-center items-center"
-                                        >
+                                    <TouchableOpacity
+                                        onPress={() => toggleExpand(index)}
+                                        className="justify-center items-center"
+                                    >
+                                        <View className="flex-row justify-between items-center px-4 py-2 ">
+                                            <Text style={{ fontSize: GetFontSize(15) }} className="flex-1  font-inter500 text-[#454F5B] leading-6">
+                                                {item.objectiveName}
+                                            </Text>
                                             <ExpandIcon />
-                                        </TouchableOpacity>
-                                    </View>
-
-                                    <View className="flex-row px-4 pb-4 pt-2">
-                                        <View className="flex-1 pr-2 items-start justify-start border-r border-[#E5E5E3]">
-                                            <Text  style={{ fontSize: GetFontSize(20) }}className=" font-inter700 text-[#212B36] text-left">
-                                                {item.weakZoneStudents.toString().padStart(2, '0')}
-                                            </Text>
-                                            <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left  ">Attention</Text>
                                         </View>
-                                        <View className="flex-1 pl-2 pr-2 items-start justify-start border-r border-[#E5E5E3]">
-                                 <Text  style={{ fontSize: GetFontSize(20) }}className=" font-inter700 text-[#212B36] text-left ml-2">
-                                                {item.learningZoneStudents.toString().padStart(2, '0')}
-                                            </Text>
-                                            <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left ml-2">Improving</Text>
+                                        <View className="flex-row px-2 pb-4 pt-2">
+                                            <View className="flex-1 pr-2 items-start justify-start border-r border-[#E5E5E3]">
+                                                <Text style={{ fontSize: GetFontSize(20) }} className=" font-inter700 text-[#212B36] text-left">
+                                                    {item.weakZoneStudents}
+                                                </Text>
+                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">Attention</Text>
+                                            </View>
+                                            <View className="flex-1 pl-2 pr-2 items-start justify-start border-r border-[#E5E5E3]">
+                                                <Text style={{ fontSize: GetFontSize(20) }} className=" font-inter700 text-[#212B36] text-left">
+                                                    {item.learningZoneStudents}
+                                                </Text>
+                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">Improving</Text>
+                                            </View>
+                                            <View className="flex-1 pl-2 ml-2 pr-2 items-start justify-start border-r border-[#E5E5E3]">
+                                                <Text style={{ fontSize: GetFontSize(20) }} className=" font-inter700 text-[#212B36] text-left">
+                                                    {item.strongZoneStudents}
+                                                </Text>
+                                                <Text style={{ fontSize: GetFontSize(11) }} className="font-inter500 text-[#919EAB] text-left">Understood</Text>
+                                            </View>
+                                            <View className="flex-1 pl-2 items-start justify-start">
+                                                <Text style={{ fontSize: GetFontSize(20) }} className=" font-inter700 text-[#212B36] text-left">
+                                                    {item.nonParticipantStudents}
+                                                </Text>
+                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">Unattempt</Text>
+                                            </View>
                                         </View>
-                                        <View className="flex-1 pl-2 ml-2 pr-2 items-start justify-start border-r border-[#E5E5E3]">
-                                             <Text  style={{ fontSize: GetFontSize(20) }}className=" font-inter700 text-[#212B36] text-left">
-                                                {item.strongZoneStudents.toString().padStart(2, '0')}
-                                            </Text>
-                                            <Text style={{ fontSize: GetFontSize(11) }} className="font-inter500 text-[#919EAB] text-left">Understood</Text>
-                                        </View>
-                                        <View className="flex-1 pl-2 items-start justify-start">
-                                             <Text  style={{ fontSize: GetFontSize(20) }}className=" font-inter700 text-[#212B36] text-left ml-1">
-                                                {item.nonParticipantStudents.toString().padStart(2, '0')}
-                                            </Text>
-                                             <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left ml-1">Unattempt</Text>
-                                        </View>
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         ) : (
                             <View className="w-[320] bg-white rounded-t-2xl">
-                                <View className="flex-row justify-between items-center px-4 py-2 border-b-2 border-[#E5E5E3]">
-                                    <Text className="flex-1 text-[15px] font-inter500 text-gray-800 leading-6">
-                                        {item.objectiveName}
-                                    </Text>
+                                <TouchableOpacity
+                                    onPress={() => toggleExpand(index)}
+                                    className="justify-center items-center"
+                                >
+                                    <View className="flex-row justify-between items-center px-4 py-2 border-b-2 border-[#E5E5E3]">
+                                        <Text style={{ fontSize: GetFontSize(15) }}
+                                            className="flex-1 font-inter500 text-gray-800 leading-6">
+                                            {item.objectiveName}
+                                        </Text>
 
-                                    <TouchableOpacity 
-                                        onPress={() => {
-                                            Vibration.vibrate(50);
-                                            toggleExpand(index);
-                                        }}
-                                        className="justify-center items-center"
-                                    >
                                         <ExpandIcon />
-                                    </TouchableOpacity>
-                                </View>
+                                    </View>
+                                </TouchableOpacity>
                             </View>
                         )}
                     </View>

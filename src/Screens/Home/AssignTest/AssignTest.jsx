@@ -114,10 +114,12 @@ const AssignTest = () => {
                 style={{ borderRadius: 50 }}
               >
 
-                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text style={{ fontSize: GetFontSize(12) }}
-                      className="text-white font-inter600">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
                       2
                     </Text>
                   </View>
@@ -136,10 +138,12 @@ const AssignTest = () => {
                 style={{ borderRadius: 50 }}
               >
 
-                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text style={{ fontSize: GetFontSize(12) }}
-                      className="text-white font-inter600">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
                       3
                     </Text>
                   </View>
@@ -178,7 +182,6 @@ const AssignTest = () => {
               <View className="px-2">
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
-
                   className="text-[#B68201] font-inter500 text-center">
                   Select a chapter for which you want to assign a test.
                 </Text>
@@ -186,46 +189,47 @@ const AssignTest = () => {
             </View>
           </View>
           {/* Choose Chapter Button */}
-          <View className="w-full">
-            {loading ? (
-              <ActivityIndicator size="large" color="#ffffff" />
-            ) : (
-              <LinearGradient
-                colors={['#E8B787', '#9B7A5A']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{
-                  borderRadius: 8,
-                  paddingTop: 3,
-                  paddingRight: 3,
-                  paddingBottom: 6,
-                  paddingLeft: 3,
-                }}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    Vibration.vibrate(50);
-
-                    setIsModalVisible(true)
-                  }
-                  }
-                  className="bg-white rounded-lg px-4 py-4 flex-row justify-between items-center"
+            <View className="w-full">
+              {loading ? (
+                <ActivityIndicator size="large" color="#ffffff" />
+              ) : (
+                <LinearGradient
+                  colors={['#A17F5E', '#B8916B']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={{
+                    borderRadius: 8,
+                    paddingTop: 3,
+                    paddingRight: 3,
+                    paddingBottom: 6,
+                    paddingLeft: 3,
+                  }}
                 >
-                  <Text
-                    style={{
-                      fontSize: GetFontSize(17),
-                      color: '#DC9047',
-                      fontFamily: 'Inter',
-                      fontWeight: '700',
-                      lineHeight: GetFontSize(16) * 1.35,
-                      letterSpacing: GetFontSize(16) * -0.02  // -2% of fontSize
-                    }}
-                    className="font-inter700 flex-1"
+               <TouchableOpacity
+                    onPress={() => {
+                      Vibration.vibrate(50);
+                      setIsModalVisible(true)
+                    }
+                    }
+                    className="bg-white rounded-lg px-4 py-4"
                   >
-                    {selectedChapterName || "Choose a chapter to get started..."}
-                  </Text>
-                  <DropdownArrow color="#DC9047" />
-                </TouchableOpacity>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Text
+                        style={{
+                          fontSize: GetFontSize(17),
+                          color: '#DC9047',
+                          fontFamily: 'Inter',
+                          fontWeight: '700',
+                          lineHeight: GetFontSize(16) * 1.35,
+                          letterSpacing: GetFontSize(16) * -0.02
+                        }}
+                        className="font-inter700"
+                      >
+                        {selectedChapterName || "Choose a chapter to get started..."}
+                      </Text>
+                      <DropdownArrow color="#DC9047" />
+                    </View>
+                  </TouchableOpacity>
               </LinearGradient>
             )}
           </View>
