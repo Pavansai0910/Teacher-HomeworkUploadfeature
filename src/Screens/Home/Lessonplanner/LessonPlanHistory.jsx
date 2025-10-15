@@ -164,7 +164,7 @@ const LessonPlanHistory = () => {
       <View className="h-[2px] border-t border-[#E3E8EE] my-4" />
 
       {/* Back Button */}
-      <View className="bg-white px-6">
+      <View className="bg-white px-6 mb-4">
         <TouchableOpacity
           onPress={() => {
               Vibration.vibrate(50);

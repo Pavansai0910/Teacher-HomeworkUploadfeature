@@ -61,7 +61,7 @@ const LearningDetails = () => {
                         className="text-[#454F5B] font-inter500 text-center"
                         style={{ fontSize: GetFontSize(16), lineHeight: 22 }}
                     >
-                       Student has not completed the test yet.
+                        Student has not completed the test yet.
                     </Text>
                 </View>
             );
@@ -198,27 +198,35 @@ const LearningDetails = () => {
                     className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"
                     onPress={() => {
                         Vibration.vibrate(50);
-                        navigation.goBack();
+                        if (currentIndex === 1) {
+                            handleFlip();
+                        } else {
+                            navigation.goBack();
+                        }
                     }}
                 >
                     <LeftArrow color="#357A20" />
                     <Text style={{ fontSize: GetFontSize(16) }} className="text-[#357A20] font-inter600">
-                        Back
+                        {currentIndex === 1 ? 'Back to Details' : 'Back'}
                     </Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                    className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#71E31C] rounded-xl justify-center items-center px-4 py-3 bg-[#B0EF80]"
-                    onPress={() => {
-                        Vibration.vibrate(50);
-                        handleFlip();
-                    }}
-                >
-                    <Text style={{ fontSize: GetFontSize(16) }} className="text-[#357A20] font-inter600">
-                        Next
-                    </Text>
-                </TouchableOpacity>
+                {/* Right Button: only show on first page */}
+                {currentIndex === 0 && (
+                    <TouchableOpacity
+                        className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#71E31C] bg-[#B0EF80] rounded-xl justify-center items-center px-4 py-3"
+                        onPress={() => {
+                            Vibration.vibrate(50);
+                            handleFlip();
+                        }}
+                    >
+                        <Text style={{ fontSize: GetFontSize(16) }} className="font-inter600 text-[#357A20]">
+                            See More
+                        </Text>
+                    </TouchableOpacity>
+                )}
             </View>
+
         </SafeAreaView>
     );
 };

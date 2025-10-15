@@ -22,7 +22,7 @@ import LessonPlanNavbar from './LessonPlanNavbar';
 import { Shadow } from 'react-native-shadow-2';
 import { getChapters } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
-
+import TopArrow from '../../../Images/LessonPlan/TopArrow';
 
 
 const LessonPlanner = () => {
@@ -227,12 +227,11 @@ const LessonPlanner = () => {
                   <TouchableOpacity
                     onPress={() => {
                       Vibration.vibrate(50);
-                      setIsModalVisible(true)
-                    }
-                    }
+                      setIsModalVisible(true);
+                    }}
                     className="bg-white rounded-lg px-4 py-4"
                   >
-                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <View className="flex-row items-center justify-between">
                       <Text
                         style={{
                           fontSize: GetFontSize(17),
@@ -240,11 +239,15 @@ const LessonPlanner = () => {
                           fontFamily: 'Inter',
                           fontWeight: '700',
                           lineHeight: GetFontSize(16) * 1.35,
-                          letterSpacing: GetFontSize(16) * -0.02
+                          letterSpacing: GetFontSize(16) * -0.02,
+                          flex: 1, // Takes available space
+                          flexWrap: 'wrap', // Allows text to wrap
+                          marginRight: 8, // Space between text and icon
                         }}
                         className="font-inter700"
+                        numberOfLines={2} // Limits to 2 lines max
                       >
-                        {selectedChapterName || "Choose a chapter to get started..."}
+                        {selectedChapterName || "Choose a chapter to get started"}
                       </Text>
                       <DropdownArrow color="#DC9047" />
                     </View>
@@ -252,8 +255,35 @@ const LessonPlanner = () => {
                 </LinearGradient>
               )}
             </View>
+
+            <TouchableOpacity
+              className="bg-white rounded-xl p-3 mt-6 items-center "
+              style={{
+                borderTopWidth: 1,
+                borderLeftWidth: 2,
+                borderRightWidth: 2,
+                borderBottomWidth: 4,
+                borderColor: '#89D5FB',
+              }}
+              onPress={() => {
+                Vibration.vibrate(50);
+
+                navigation.navigate('LessonPlanHistory')
+              }
+              }>
+              <View className="flex-row justify-center items-center gap-2">
+                <Text
+                  style={{ fontSize: GetFontSize(14) }}
+                  className="text-[#1EAFF7] font-inter600"
+                >
+                  Saved Lesson plans
+                </Text>
+                <TopArrow color="#1EAFF7" />
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
+
 
 
         {/* Pro Tip */}

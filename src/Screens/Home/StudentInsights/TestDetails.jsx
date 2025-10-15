@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { getTopicPerformanceBySection } from "../../../Services/teacherAPIV1";
 import { useSelector } from 'react-redux';
 import GetFontSize from '../../../Commons/GetFontSize';
@@ -17,6 +17,7 @@ const TestDetails = ({
         (state) => state.assignment.selectedAssignment
     );
     const { teacherProfile } = useContext(AuthContext);
+    const { width } = useWindowDimensions();
 
     useEffect(() => {
         const fetchSectionPerformance = async () => {
@@ -95,7 +96,7 @@ const TestDetails = ({
                                     borderRadius: 16,
                                 }}
                             >
-                                <View className="w-[320] bg-white rounded-2xl">
+                                <View className="w-[100%] bg-white rounded-2xl">
                                     <TouchableOpacity
                                         onPress={() => toggleExpand(index)}
                                         className="justify-center items-center"
@@ -136,12 +137,12 @@ const TestDetails = ({
                                 </View>
                             </View>
                         ) : (
-                            <View className="w-[320] bg-white rounded-t-2xl">
+                            <View className="bg-white rounded-t-2xl">
                                 <TouchableOpacity
                                     onPress={() => toggleExpand(index)}
                                     className="justify-center items-center"
                                 >
-                                    <View className="flex-row justify-between items-center px-4 py-2 border-b-2 border-[#E5E5E3]">
+                                    <View className="w-[100%] flex-row justify-between items-center px-4 py-2 border-b-2 border-[#E5E5E3]">
                                         <Text style={{ fontSize: GetFontSize(15) }}
                                             className="flex-1 font-inter500 text-gray-800 leading-6">
                                             {item.objectiveName}
