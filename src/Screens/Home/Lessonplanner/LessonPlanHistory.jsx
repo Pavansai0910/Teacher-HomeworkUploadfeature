@@ -61,9 +61,8 @@ const LessonPlanHistory = () => {
         navigation.navigate('HistoryDetails', {
           lessonPlanData,
           chapterId: lessonPlanData.chapterId || lessonPlanId,
-          selectedTopics: [{
-            name: lessonPlanData.topic || lessonPlanData.topicName?.[0]
-          }]
+          chapterName: lessonPlanData.chapter || lessonPlanData.chapterName,
+          selectedTopics: [{ name: lessonPlanData.topic || lessonPlanData.topicName?.[0] }]
         });
       } else {
         Toast.show({
@@ -90,9 +89,10 @@ const LessonPlanHistory = () => {
   const renderItem = ({ item }) => (
     <TouchableOpacity
       onPress={() => {
-                    Vibration.vibrate(50);
-      
-        fetchLessonPlanDetails(item.id)}
+        Vibration.vibrate(50);
+
+        fetchLessonPlanDetails(item.id)
+      }
       }
       className="bg-white rounded-2xl py-3 px-6 mb-3 flex-row justify-between items-center"
       style={{
@@ -167,10 +167,11 @@ const LessonPlanHistory = () => {
       <View className="bg-white px-6 mb-4">
         <TouchableOpacity
           onPress={() => {
-              Vibration.vibrate(50);
+            Vibration.vibrate(50);
 
-            navigation.goBack()}
-          } 
+            navigation.goBack()
+          }
+          }
           style={{
             borderTopWidth: 1,
             borderRightWidth: 2,

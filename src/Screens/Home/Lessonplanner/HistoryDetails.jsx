@@ -42,11 +42,8 @@ const HistoryDetails = () => {
         (state) => state.lessonPlanner?.lessonPlannerData
     );
 
-    const {
-        lessonPlanData,
-        chapterId,
-        selectedTopics,
-    } = route.params || {};
+const { lessonPlanData, chapterName, selectedTopics } = route.params || {};
+
 
     if (!lessonPlanData) {
         return (
@@ -77,8 +74,6 @@ const HistoryDetails = () => {
         lessonPlanData?.topicName?.[0] ||
         'Topic';
 
-    const chapterName =
-        lessonPlanData?.chapter || 'Chapter';
 
     const getAvailableSections = () => {
         const availableSections = [];
@@ -311,7 +306,7 @@ const HistoryDetails = () => {
                         style={{ fontSize: GetFontSize(14) }}
                         className="text-[#454F5B] mb-3"
                     >
-                        Chapter: {chapterName}
+                        {/* Chapter: {chapterName} */}
                     </Text>
 
                     {/* Download Button */}
