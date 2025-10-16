@@ -50,7 +50,7 @@ const GeneratedLessonPlan = () => {
   const [isSavedClicked, setIsSavedClicked] = useState(false);
   const [generatedLessonPlanId, setGeneratedLessonPlanId] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedSection, setSelectedSection] = useState('Learning Objectives');
+  const [selectedSection, setSelectedSection] = useState(null);
 
   const lessonPlanDetails = lessonPlanData?.generatedContent || {};
   const topicName =
@@ -85,10 +85,20 @@ const GeneratedLessonPlan = () => {
   const ButtonsOptions = getAvailableSections();
 
   useEffect(() => {
-    if (ButtonsOptions.length > 0 && !ButtonsOptions.includes(selectedSection)) {
+    if (selectedSection && ButtonsOptions.length > 0 && !ButtonsOptions.includes(selectedSection)) {
       setSelectedSection(ButtonsOptions[0]);
     }
   }, [ButtonsOptions]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setSelectedSection(null);
+      setIsDropdownOpen(false);
+      dropdownAnimation.setValue(0);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const toggleDropdown = () => {
     Vibration.vibrate(50);
@@ -692,7 +702,7 @@ const GeneratedLessonPlan = () => {
                 onPress={toggleDropdown}
               >
                 <Text style={{ fontSize: GetFontSize(18) }} className="text-[#DC9047]  font-inter700 mr-2 flex-1 text-center">
-                  Lesson Plan Sections
+                  {selectedSection || 'Lesson Plan Sections'}
                 </Text>
                 <Animated.View
                   style={{
