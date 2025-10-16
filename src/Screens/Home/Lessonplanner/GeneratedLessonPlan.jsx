@@ -191,7 +191,7 @@ const GeneratedLessonPlan = () => {
       setGeneratedLessonPlanId(response.data?.savedPlan._id);
     } catch (error) {
       if (error.response?.status === 409) {
-        setIsSaved(true); 
+        setIsSaved(true);
         Toast.show({
           type: 'info',
           text1: 'Already Saved',
@@ -297,7 +297,7 @@ const GeneratedLessonPlan = () => {
         <Text style={{ fontSize: GetFontSize(16) }} className="text-[#454F5B] text-center">
           No lesson plan data found.{'\n'}
           <Text style={{ fontSize: GetFontSize(15) }} className="text-[#1A9DDD]" onPress={() => {
-            Vibration.vibrate(50);  
+            Vibration.vibrate(50);
             navigation.goBack()
           }}>
             Go back
@@ -332,14 +332,14 @@ const GeneratedLessonPlan = () => {
                 }
                 }
               >
-                <CrossIcon /> 
+                <CrossIcon />
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
               className="text-[#454F5B] font-inter400 w-[85%]"
             >
-              Generate a comprehensive lesson{'\n'} plan in seconds
+              Generate a comprehensive lesson plan in seconds
             </Text>
           </View>
         </View>
@@ -358,18 +358,22 @@ const GeneratedLessonPlan = () => {
           showsVerticalScrollIndicator={false}
         >
           {/* Topic Header */}
-          <View className="">
-            <Text
-              style={{ fontSize: GetFontSize(18) }}
-              className=" font-inter600 text-[#212B36] mb-1"
-            >
-              {topicName}
-            </Text>
+          <View className="mb-4">
+            {selectedTopics?.map((topic, index) => (
+              <Text
+                key={index}
+                style={{ fontSize: GetFontSize(16) }}
+                className="font-inter500 text-[#212B36] mb-1"
+              >
+                • {topic?.name || topic?.topicName || 'Untitled Topic'}
+              </Text>
+            ))}
+
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className=" font-inter400 text-[#454F5B] mb-5"
+              className="font-inter400 text-[#454F5B] mt-2"
             >
-              Chapter :- {chapterName}
+              Chapter: {chapterName}
             </Text>
           </View>
 
@@ -452,7 +456,7 @@ const GeneratedLessonPlan = () => {
                       {prereq.priorKnowledge && (
                         <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-[#454F5B]">
                           • Prior Knowledge:{' '}
-                          <Text style={{ fontSize: GetFontSize(13)}}
+                          <Text style={{ fontSize: GetFontSize(13) }}
                             className="text-[#454F5B]">
                             {prereq.priorKnowledge}
                           </Text>
@@ -460,8 +464,8 @@ const GeneratedLessonPlan = () => {
                       )}
                       {prereq.warmUp && (
                         <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-[#454F5B]">
-                          • Warm Up: 
-                          <Text style={{ fontSize: GetFontSize(13)}}
+                          • Warm Up:
+                          <Text style={{ fontSize: GetFontSize(13) }}
                             className="text-[#454F5B]">
                             {prereq.warmUp}
                           </Text>
@@ -469,8 +473,8 @@ const GeneratedLessonPlan = () => {
                       )}
                       {prereq.quickConnect && (
                         <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#454F5B]">
-                          • Quick Connect: 
-                          <Text style={{ fontSize: GetFontSize(13)}}
+                          • Quick Connect:
+                          <Text style={{ fontSize: GetFontSize(13) }}
                             className="text-[#454F5B]">
                             {prereq.quickConnect}
                           </Text>

@@ -74,55 +74,55 @@ const Settings = () => {
         <Text style={{ fontSize: GetFontSize(16) }} className="text-lg font-inter500 text-[#212B36]">
           {teacherProfile?.name || 'Teacher'}
         </Text>
-      <View className="bg-white rounded-[16px] w-[311px] h-[53px] px-3 py-1 justify-center">
- <View className="flex-row justify-center">
-  <Text 
-    style={{ 
-      fontSize: GetFontSize(12), 
-    }} 
-    className="text-[#637381] font-inter500"
-  >
-    Your Adaptmate rank is 
-  </Text>
-  <Text 
-    style={{ 
-      fontSize: GetFontSize(12), 
-    }} 
-    className="text-[#637381] font-inter500"
-  >
-    <Text 
-      style={{ 
-        fontSize: GetFontSize(14), 
-      }} 
-      className="font-inter600"
-    >
-      16
-    </Text>
-    /36
-  </Text>
-</View>
-  <View className="flex-row justify-center">
-    <Text 
-      style={{ 
-        fontSize: GetFontSize(10), 
-  
-      }} 
-      className="text-[#637381]  font-inter400 leading-[135%]"
-    >
-      Higher score, better leads!
-    </Text>
-    <Text 
-      style={{ 
-        fontSize: GetFontSize(10),
-        color:'#B747FF' 
-      
-      }} 
-      className=" font-inter500 "
-    >
-      Improve yours now
-    </Text>
-  </View>
-</View>
+        <View className="bg-white rounded-[16px] px-4 py-1 justify-center">
+          {/* <View className="flex-row justify-center">
+            <Text
+              style={{
+                fontSize: GetFontSize(12),
+              }}
+              className="text-[#637381] font-inter500"
+            >
+              Your Adaptmate rank is{" "}
+            </Text>
+            <Text
+              style={{
+                fontSize: GetFontSize(12),
+              }}
+              className="text-[#637381] font-inter500"
+            >
+              <Text
+                style={{
+                  fontSize: GetFontSize(14),
+                }}
+                className="font-inter600"
+              >
+                16
+              </Text>
+              /36
+            </Text>
+          </View> */}
+          <View className="flex-row justify-center">
+            <Text
+              style={{
+                fontSize: GetFontSize(10),
+
+              }}
+              className="text-[#637381] font-inter400 leading-[135%]"
+            >
+              Higher score, better leads!{" "}
+            </Text>
+            <Text
+              style={{
+                fontSize: GetFontSize(10),
+                color: '#B747FF'
+
+              }}
+              className=" font-inter500 "
+            >
+              Improve yours now
+            </Text>
+          </View>
+        </View>
       </View>
 
       <ScrollView className="flex-1 px-5 ">
@@ -148,58 +148,58 @@ const Settings = () => {
           className="mt-6"
         >
           {/* Account Details */}
-          <View className="pt-6 pb-3 px-4">
-            <Text  style={{ fontSize: GetFontSize(12), color: '#919EAB' }}className="font-inter600  mb-2">ACCOUNT DETAILS</Text>
+          {/* <View className="pt-6 pb-3 px-4">
+            <Text style={{ fontSize: GetFontSize(12), color: '#919EAB' }} className="font-inter600  mb-2">ACCOUNT DETAILS</Text>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               className="bg-white rounded-xl p-4 mb-3 flex-row justify-between items-center border-t-[1px] border-r-[2px] border-b-[4px] border-l-[2px] border-solid border-[#DFE3E8]"
             >
               <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }} className="font-inter600">Personal Information</Text>
               <Text className="text-[#637381]">{'>'}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               className="bg-white rounded-xl p-4 mb-3 flex-row justify-between items-center border-t-[1px] border-r-[2px] border-b-[4px] border-l-[2px] border-solid border-[#DFE3E8]"
             >
-              <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }}className="font-inter600">Professional Details</Text>
+              <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }} className="font-inter600">Professional Details</Text>
               <Text className="text-[#637381]">{'>'}</Text>
             </TouchableOpacity>
-          </View> 
+          </View> */}
 
           {/* Help & Support */}
-          <View className="pt-1 pb-6 px-4">
-            <Text style={{ fontSize: GetFontSize(12), color: '#919EAB' }} className="font-inter600  mb-2">HELP AND SUPPORT</Text>
+          <View className="py-4 px-4">
+            {/* <Text style={{ fontSize: GetFontSize(12), color: '#919EAB' }} className="font-inter600  mb-2">HELP AND SUPPORT</Text>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               className="bg-white rounded-xl p-4 mb-3 flex-row justify-between items-center border-t-[1px] border-r-[2px] border-b-[4px] border-l-[2px] border-solid border-[#DFE3E8]"
             >
-              <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }}className="font-inter600">Support</Text>
+              <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }} className="font-inter600">Support</Text>
               <Text className="text-[#637381]">{'>'}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               className="bg-white rounded-xl p-4 mb-3 flex-row justify-between items-center border-t-[1px] border-r-[2px] border-b-[4px] border-l-[2px] border-solid border-[#DFE3E8]"
             >
-              <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }}className="font-inter600">FAQ</Text>
+              <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }} className="font-inter600">FAQ</Text>
               <Text className="text-[#637381]">{'>'}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity 
+            <TouchableOpacity
               className="bg-white rounded-xl p-4 mb-3 flex-row justify-between items-center border-t-[1px] border-r-[2px] border-b-[4px] border-l-[2px] border-solid border-[#DFE3E8]"
             >
-              <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }}className="font-inter600">Feedback</Text>
+              <Text style={{ fontSize: GetFontSize(14), color: '#454F5B' }} className="font-inter600">Feedback</Text>
               <Text className="text-[#637381]">{'>'}</Text>
+            </TouchableOpacity> */}
+            <TouchableOpacity
+              onPress={logout}
+              className="bg-[#ffffff] rounded-xl p-4 flex-row justify-center border-t-[1px] border-r-[2px] border-b-[4px] border-l-[2px] border-solid border-[#DFE3E8]"
+            >
+              <Text style={{ fontSize: GetFontSize(16) }} className="text-red-500 font-inter700">Log Out</Text>
             </TouchableOpacity>
-              <TouchableOpacity
-          onPress={logout}
-          className="bg-[#ffffff] rounded-xl p-4 mt-3 flex-row justify-center border-t-[1px] border-r-[2px] border-b-[4px] border-l-[2px] border-solid border-[#DFE3E8]"
-        >
-          <Text style={{ fontSize: GetFontSize(16) }} className="text-red-500 font-inter700">Log Out</Text>
-        </TouchableOpacity>
-          </View> 
+          </View>
         </View>
 
-      
+
       </ScrollView>
     </SafeAreaView>
   );
