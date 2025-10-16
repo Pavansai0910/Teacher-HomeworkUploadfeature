@@ -59,11 +59,17 @@ const StudentsInsightsCard = ({
         <View className="bg-white flex-1 px-6 py-6 rounded-b-3xl">
           <View className="flex-1 justify-center">
             <Text style={{ fontSize: GetFontSize(19) }}
-            className="text-[#212B36] font-inter600 text-center mb-1">
+              className="text-[#212B36] font-inter600 text-center mb-1">
               Test insights
             </Text>
-            <Text style={{ fontSize: GetFontSize(14) }}
-            className="text-[#454F5B] font-inter400 text-center leading-6">
+            <Text
+              style={{
+                fontFamily: 'Inter-Regular',
+                letterSpacing: 0.15,
+                lineHeight: GetFontSize(13) * 1.5, 
+              }}
+              className="text-[#454F5B] font-normal text-[13px] text-center"
+            >
               Generate comprehensive lesson plans with objectives and activities
             </Text>
           </View>

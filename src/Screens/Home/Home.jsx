@@ -176,10 +176,10 @@ const Home = () => {
         end={{ x: 0, y: 1 }}
       >
         {/* Dropdowns */}
-        <View className="flex-row justify-between px-6 pt-4 pb-6">
+        <View className="flex-row justify-between px-5 pt-4 pb-6 gap-4">
           {/* Class Dropdown */}
           <TouchableOpacity
-            className="flex-1 mr-2 rounded-[16px] py-3 px-4 flex-row justify-between items-center shadow-sm"
+            className="flex-1 rounded-[16px] py-3 px-2 flex-row justify-between items-center"
             style={{
               backgroundColor: '#FFF',
               borderTopWidth: 3,
@@ -192,13 +192,12 @@ const Home = () => {
             onPress={() => {
 
               Vibration.vibrate(50);
-
               setClassModalVisible(true)
             }
             }
           >
             <Text
-              style={{ fontSize: GetFontSize(16) }}
+              style={{ fontSize: GetFontSize(15) }}
               className="text-[#DC9047] font-inter700"
             >
               Class: {getClassDisplayText()}
@@ -208,7 +207,7 @@ const Home = () => {
 
           {/* Subject Dropdown */}
           <TouchableOpacity
-            className="flex-1 rounded-[16px] py-3 px-4 flex-row justify-between items-center"
+            className="flex-1 rounded-[16px] py-3 px-2 flex-row justify-between items-center"
             style={{
               backgroundColor: '#FFF',
               borderTopWidth: 3,
@@ -230,7 +229,7 @@ const Home = () => {
           >
             <View style={{ maxWidth: '80%' }}>
               <Text
-                style={{ fontSize: GetFontSize(16) }}
+                style={{ fontSize: GetFontSize(15) }}
                 className="text-[#DC9047] font-inter700"
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -263,7 +262,6 @@ const Home = () => {
                     onPress={() => {
                       Vibration.vibrate(50);
 
-                      // Filter subjects for the selected class-section
                       const relatedSubjects = teacherProfile?.assignments
                         ?.filter(
                           a =>
@@ -273,14 +271,13 @@ const Home = () => {
                         .map(a => a.subjectId)
                         .filter(Boolean);
 
-                      // Pick first subject if available
                       const firstSubject = relatedSubjects?.[0] || null;
 
                       const updatedAssignment = {
                         ...selectedAssignment,
                         classId: item.classId,
                         sectionId: item.sectionId,
-                        subjectId: firstSubject, // ✅ automatically assign first subject
+                        subjectId: firstSubject,
                       };
 
                       setSelectedClass({
@@ -288,9 +285,7 @@ const Home = () => {
                         sectionId: item.sectionId,
                       });
                       setSelectedSubject(firstSubject);
-
                       dispatch(setAssignment(updatedAssignment));
-
                       setClassModalVisible(false);
                     }}
                   >
@@ -357,10 +352,7 @@ const Home = () => {
                       };
 
                       setSelectedSubject(item);
-
-                      // update redux
                       dispatch(setAssignment(updatedAssignment));
-
                       setSubjectModalVisible(false);
                     }}
                   >
