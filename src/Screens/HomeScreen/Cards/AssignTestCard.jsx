@@ -50,13 +50,14 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
             </Text>
             <Text
               style={{
+                fontSize: GetFontSize(14),
                 fontFamily: 'Inter-Regular',
                 letterSpacing: 0.15,
-                lineHeight: GetFontSize(13) * 1.5, 
+                lineHeight: GetFontSize(14) * 1.5,
               }}
-              className="text-[#454F5B] font-normal text-[13px] text-center"
+              className="text-[#454F5B] font-inter400 text-center"
             >
-              Generate comprehensive lesson plans with objectives and activities
+              Seamlessly assign tests and review detailed performance analytics
             </Text>
           </View>
 

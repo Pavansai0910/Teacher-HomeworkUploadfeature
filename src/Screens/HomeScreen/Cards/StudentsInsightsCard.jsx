@@ -64,13 +64,14 @@ const StudentsInsightsCard = ({
             </Text>
             <Text
               style={{
+                fontSize: GetFontSize(14),
                 fontFamily: 'Inter-Regular',
                 letterSpacing: 0.15,
-                lineHeight: GetFontSize(13) * 1.5, 
+                lineHeight: GetFontSize(14) * 1.5,
               }}
-              className="text-[#454F5B] font-normal text-[13px] text-center"
+              className="text-[#454F5B] font-inter400 text-center"
             >
-              Generate comprehensive lesson plans with objectives and activities
+              View detailed analytics to evaluate test outcomes effectively
             </Text>
           </View>
 
@@ -88,7 +89,8 @@ const StudentsInsightsCard = ({
             }}
             className="bg-white rounded-xl border-[#E4E4E2] shadow-sm self-center mt-4"
           >
-            <Text className="text-[#82E638] text-sm font-semibold py-3 px-16 text-center">
+            <Text style={{ fontSize: GetFontSize(14) }}
+            className="text-[#82E638] font-inter700 py-3 px-16 text-center">
               Test insights
             </Text>
           </TouchableOpacity>

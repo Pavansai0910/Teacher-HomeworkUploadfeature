@@ -54,11 +54,12 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
             </Text>
             <Text
               style={{
+                fontSize: GetFontSize(14),
                 fontFamily: 'Inter-Regular',
                 letterSpacing: 0.15,
-                lineHeight: GetFontSize(13) * 1.5, 
+                lineHeight: GetFontSize(14) * 1.5, 
               }}
-              className="text-white font-normal text-[13px] text-center"
+              className="text-white font-inter400 text-center"
             >
               Generate comprehensive lesson plans with objectives and activities
             </Text>
