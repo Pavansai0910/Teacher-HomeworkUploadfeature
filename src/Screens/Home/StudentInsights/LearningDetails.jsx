@@ -7,6 +7,7 @@ import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import GetFontSize from '../../../Commons/GetFontSize';
 import TestAnalytics from './TestAnalytics';
 import TestDetails from './TestDetails';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const LearningDetails = () => {
     const { width, height } = Dimensions.get('window');
@@ -106,34 +107,36 @@ const LearningDetails = () => {
                                 className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
                                 onPress={() => {
                                     Vibration.vibrate(50);
-                                    navigation.navigate('MainTabNavigator');
-                                }}
+                                    navigation.navigate('MainTabNavigator')
+                                }
+                                }
                             >
-                                <Text style={{ fontSize: GetFontSize(14) }} className="text-white">
-                                    ✕
-                                </Text>
+                                <CrossIcon />
                             </TouchableOpacity>
                         </View>
-                        <Text style={{ fontSize: GetFontSize(14) }} className="text-[#454F5B] font-inter400">
-                            Boost your students' progress in {'\n'} just a few taps!
+                        <Text style={{ fontSize: GetFontSize(14) }} className="text-[#454F5B] font-inter400 w-[80%]">
+                            Boost your student's progress in just a few taps!
                         </Text>
                     </View>
                 </View>
             </View>
 
             {/* Topic Info */}
-            <View className="mt-6 mx-10 flex-row justify-between items-start gap-4 border-b-2 border-[#E5E5E3] pb-4">
-                <View className="flex-1 pr-3">
+            {/* <View className="mt-6 mx-6  gap-4 border-b-2 border-[#E5E5E3] pb-4"> */}
+                <View className="mx-6 mt-4 border-b-2 border-[#E5E5E3] pb-2">
                     <Text
                         className="font-inter500 text-[#454F5B]"
                         style={{ fontSize: GetFontSize(16), lineHeight: GetFontSize(20) }}
                         numberOfLines={3}
                     >
-                        {topicname}
+                       Topic:- {topicname}
                     </Text>
                 </View>
+            {/* </View> */}
+
+            <View>
                 {(status === 'pending' || status === 'completed') && (
-                    <View className="items-end">
+                    <View className="mx-6 mt-2 border-b-2 border-[#E5E5E3] pb-2">
                         <Text className="text-[#919EAB] font-inter400" style={{ fontSize: GetFontSize(13) }}>
                             Assigned on - {formatDate(assignedDate)}
                         </Text>
@@ -190,10 +193,11 @@ const LearningDetails = () => {
                 </Animated.View>
             </ScrollView>
 
-            <View className="border-b-2 border-[#E5E5E3] mb-4" />
+            {/* <View className="border-b-2 border-[#E5E5E3] mb-4" /> */}
+
 
             {/* Bottom Buttons */}
-            <View className="px-6 mb-4 flex-row justify-between items-center">
+            <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8] flex-row justify-between items-center">
                 <TouchableOpacity
                     className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"
                     onPress={() => {

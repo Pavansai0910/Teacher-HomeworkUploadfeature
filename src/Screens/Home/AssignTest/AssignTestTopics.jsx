@@ -255,7 +255,7 @@ const AssignTestTopics = ({ route }) => {
       </ScrollView>
 
       {/* Fixed Bottom Buttons */}
-      <View className="px-6 pb-6 pt-5 bg-white border-t border-gray-200">
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] justify-center items-center px-4 py-3"

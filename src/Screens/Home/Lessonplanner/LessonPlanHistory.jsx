@@ -16,6 +16,7 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import RightArrowIcon from '../../../Images/LessonPlan/RightArrowIcon';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import Toast from 'react-native-toast-message';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const LessonPlanHistory = () => {
   const navigation = useNavigation();
@@ -90,35 +91,34 @@ const LessonPlanHistory = () => {
     <TouchableOpacity
       onPress={() => {
         Vibration.vibrate(50);
-
-        fetchLessonPlanDetails(item.id)
-      }
-      }
-      className="bg-white rounded-2xl py-3 px-6 mb-3 flex-row justify-between items-center"
-      style={{
-        borderTopWidth: 1,
-        borderRightWidth: 2,
-        borderBottomWidth: 4,
-        borderLeftWidth: 2,
-        borderColor: '#DBE1E6',
+        fetchLessonPlanDetails(item.id);
       }}
+      className="bg-white rounded-2xl py-3 px-6 mb-3 flex-row items-center border-t border-r-2 border-b-4 border-l-2 border-[#DBE1E6]"
     >
-      <Text
-        style={{ fontSize: GetFontSize(16) }}
-        className="text-[#637381] font-inter500"
-        numberOfLines={1}
-        ellipsizeMode="tail"
-      >
-        {item.topic}
-      </Text>
-      <RightArrowIcon color={"#1A9DDD"} />
+      {/* Text Container */}
+      <View className="flex-1 mr-3">
+        <Text
+          style={{ fontSize: GetFontSize(16) }}
+          className="text-[#637381] font-inter500"
+          numberOfLines={2}          // Limit to 2 lines
+          ellipsizeMode="tail"        // Add "..." if text overflows
+        >
+          {item.topic}
+        </Text>
+      </View>
+
+      {/* Icon Container */}
+      <View className="justify-center items-end">
+        <RightArrowIcon color="#1A9DDD" />
+      </View>
     </TouchableOpacity>
   );
+
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="flex-row items-center p-6 bg-[#E0F5FF]">
+      <View className="flex-row items-center p-5 bg-[#E0F5FF]">
         <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
           <Bluepage />
         </View>
@@ -130,12 +130,21 @@ const LessonPlanHistory = () => {
             >
               Saved Lesson Plans
             </Text>
+            <TouchableOpacity
+              className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
+              onPress={() => {
+                Vibration.vibrate(50);
+                navigation.goBack()
+              }
+              }                            >
+              <CrossIcon />
+            </TouchableOpacity>
           </View>
           <Text
             style={{ fontSize: GetFontSize(14) }}
-            className="text-[#454F5B] font-inter400"
+            className="text-[#454F5B] font-inter400 w-[85%]"
           >
-            Generate a comprehensive lesson {'\n'} plan in seconds
+            Generate a comprehensive lesson plan in seconds
           </Text>
         </View>
       </View>
@@ -161,10 +170,10 @@ const LessonPlanHistory = () => {
         )}
       </View>
 
-      <View className="h-[2px] border-t border-[#E3E8EE] my-4" />
+      {/* <View className="h-[2px] border-t border-[#E3E8EE] my-4" /> */}
 
       {/* Back Button */}
-      <View className="bg-white px-6 mb-4">
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <TouchableOpacity
           onPress={() => {
             Vibration.vibrate(50);

@@ -24,6 +24,7 @@ import { downloadLessonPlan, saveLessonPlan } from '../../../Services/teacherAPI
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../../Context/AuthContext';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const GeneratedLessonPlan = () => {
   const route = useRoute();
@@ -189,17 +190,14 @@ const GeneratedLessonPlan = () => {
       setIsSavedClicked(true);
       setGeneratedLessonPlanId(response.data?.savedPlan._id);
     } catch (error) {
-
-      // Handle 409 conflict (already exists)
       if (error.response?.status === 409) {
-        setIsSaved(true); // Mark as saved since it exists on server
+        setIsSaved(true); 
         Toast.show({
           type: 'info',
           text1: 'Already Saved',
           visibilityTime: 3000,
         });
       } else {
-        // Handle other errors
         const errorMessage = error.response?.data?.message || 'Unable to save lesson plan. Please try again.';
         Toast.show({
           type: 'error',
@@ -213,7 +211,6 @@ const GeneratedLessonPlan = () => {
     }
   };
 
-  // Handle download
   const handleLessonPlanDownload = async (generatedLessonPlanId) => {
 
     if (!isSavedClicked) {
@@ -313,7 +310,7 @@ const GeneratedLessonPlan = () => {
   return (
     <SafeAreaView className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#E0F5FF] px-6 py-6">
+      <View className="bg-[#E0F5FF] p-5">
         <View className="flex-row items-center">
           <View className="w-[54px] h-10 rounded-xl mr-3 justify-center items-center">
             <Bluepage />
@@ -335,17 +332,12 @@ const GeneratedLessonPlan = () => {
                 }
                 }
               >
-                <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white "
-                >
-                  ✕
-                </Text>
+                <CrossIcon /> 
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] "
+              className="text-[#454F5B] font-inter400 w-[85%]"
             >
               Generate a comprehensive lesson{'\n'} plan in seconds
             </Text>

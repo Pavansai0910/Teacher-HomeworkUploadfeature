@@ -44,7 +44,7 @@ const LearningTopic = () => {
 
       {/* Topics List */}
       <ScrollView
-        className="flex-1 p-4 mx-6 mt-6 border border-[#E5E5E3] rounded-xl"
+        className="flex-1 p-4 mx-6 mt-6 border border-[#E5E5E3] rounded-xl mb-3"
         contentContainerStyle={{ paddingBottom: 20 }}
         showsVerticalScrollIndicator={false}
       >
@@ -80,10 +80,10 @@ const LearningTopic = () => {
         )}
       </ScrollView>
 
-      <View className="h-[2px] bg-[#DFE3E8] mt-2 mb-2" />
+      {/* <View className="h-[2px] bg-[#DFE3E8] mt-2 mb-2" /> */}
 
       {/* Bottom Buttons */}
-      <View className="px-6 mb-4">
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] rounded-xl justify-center items-center px-4 py-3"

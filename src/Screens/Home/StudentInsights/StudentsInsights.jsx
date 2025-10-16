@@ -9,7 +9,6 @@ import {
   Vibration,
   ActivityIndicator
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
@@ -206,7 +205,7 @@ const StudentsInsights = () => {
   const getTopicCount = (status) => topicsData[status]?.length || 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       <LearningNavbar
         classDisplay={classDisplay}
         subjectDisplay={subjectDisplay}
@@ -445,7 +444,7 @@ const StudentsInsights = () => {
           onPress={toggleDropdown}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -335,48 +335,48 @@ const AssignTestDate = ({ route }) => {
           style={{ padding: 24 }}
         >
           <View className="flex-row items-center justify-between">
-             <View className="items-center">
-                <Shadow
-                  distance={1}
-                  startColor="#6FCE62"
-                  offset={[0, 2]}
-                  radius={20}
-                  style={{ borderRadius: 50 }}
-                >
-                  <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
-                    <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                      <Text
-                        style={{ fontSize: GetFontSize(12) }}
-                        className="font-inter600"
-                      >
-                        1
-                      </Text>
-                    </View>
+            <View className="items-center">
+              <Shadow
+                distance={1}
+                startColor="#6FCE62"
+                offset={[0, 2]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="font-inter600"
+                    >
+                      1
+                    </Text>
                   </View>
-                </Shadow>
-              </View>
+                </View>
+              </Shadow>
+            </View>
 
             <View className="flex-1 h-[3px] bg-white" />
-             <View className="items-center">
-                <Shadow
-                  distance={1}
-                  startColor="#6FCE62"
-                  offset={[0, 2]}
-                  radius={20}
-                  style={{ borderRadius: 50 }}
-                >
-                  <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
-                    <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
-                      <Text
-                        style={{ fontSize: GetFontSize(12) }}
-                        className="font-inter600"
-                      >
-                        2
-                      </Text>
-                    </View>
+            <View className="items-center">
+              <Shadow
+                distance={1}
+                startColor="#6FCE62"
+                offset={[0, 2]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
+                <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                  <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="font-inter600"
+                    >
+                      2
+                    </Text>
                   </View>
-                </Shadow>
-              </View>
+                </View>
+              </Shadow>
+            </View>
 
             <View className="flex-1 h-[2px] bg-white" />
             <View className="items-center">
@@ -555,7 +555,7 @@ const AssignTestDate = ({ route }) => {
       </ScrollView>
 
       {/* Fixed Bottom Buttons */}
-      <View className="px-6 pb-6 pt-5 bg-white border-t border-gray-200">
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#E5E5E5] bg-white px-6 py-3 flex-row items-center justify-center"

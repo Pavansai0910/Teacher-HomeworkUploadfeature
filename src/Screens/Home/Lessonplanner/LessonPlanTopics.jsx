@@ -332,10 +332,11 @@ const LessonPlanTopics = ({ route }) => {
             Select multiple topics to create a comprehensive lesson plan!
           </Text>
         </View>
-        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" />
+        {/* <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" /> */}
       </ScrollView>
+
       {/* Navigation Buttons */}
-      <View className="px-6 mb-4">
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 border-[#DFE3E8] rounded-xl border-t-[1.5px] border-x-2 border-b-4 justify-center items-center px-4 py-3"

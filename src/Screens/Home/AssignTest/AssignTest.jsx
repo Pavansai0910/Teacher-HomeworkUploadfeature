@@ -332,11 +332,11 @@ const AssignTest = () => {
 
 
           </SafeAreaView>
-        </View>
+        </View>        
       </Modal>
 
       {/* Fixed Bottom Buttons */}
-      <View className="px-4 py-4 bg-white border-t border-[#DFE3E8]" style={{ height: 92, gap: 12 }}>
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <View className="flex-row gap-3">
           <TouchableOpacity
             style={{ fontSize: GetFontSize(16) }}

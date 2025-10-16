@@ -80,7 +80,7 @@ const TestDetails = ({
     };
 
     return (
-        <ScrollView className="px-4 py-4">
+        <ScrollView className="px-4 py-">
             {chapterData.map((item, index) => {
                 const isExpanded = expanded.includes(index);
                 return (
