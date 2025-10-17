@@ -85,7 +85,7 @@ const AssignTestTopics = ({ route }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
 
       {/* Class-Section-Subject Display */}
       <NavHeader />
@@ -302,7 +302,7 @@ const AssignTestTopics = ({ route }) => {
         setActiveFilter={setActiveFilter}
         chapterName={chapterName}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

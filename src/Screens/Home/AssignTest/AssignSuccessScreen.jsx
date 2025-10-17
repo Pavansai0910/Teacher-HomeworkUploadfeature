@@ -9,7 +9,7 @@ const AssignSuccessScreen = ({
   onClose,
 }) => {
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       
       {/* Header */}
@@ -68,7 +68,7 @@ const AssignSuccessScreen = ({
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

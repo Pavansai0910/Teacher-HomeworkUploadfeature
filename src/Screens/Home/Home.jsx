@@ -132,7 +132,7 @@ const Home = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 pt-5 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white">
         <TouchableOpacity
@@ -145,10 +145,16 @@ const Home = () => {
         >
           <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
             <Text
-              style={{ fontSize: GetFontSize(16) }}
-              className="text-white font-poppins400"
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-white font-inter600"
             >
-              {teacherProfile?.name?.[0] || 'T'}
+              {teacherProfile?.name
+                ? teacherProfile.name
+                  .split(' ')
+                  .slice(0, 2)
+                  .map(word => word[0].toUpperCase())
+                  .join('')
+                : 'T'}
             </Text>
           </View>
           <View>
@@ -462,7 +468,7 @@ const Home = () => {
 
         </View>
       </LinearGradient>
-    </SafeAreaView>
+    </View>
   );
 };
 

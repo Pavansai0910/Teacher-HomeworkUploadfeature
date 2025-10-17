@@ -112,7 +112,6 @@ const AssignTestDate = ({ route }) => {
   // When user clicks Assign Test button
   const handleAssign = () => {
     Vibration.vibrate(50);
-
     setShowTestLoader(true);
   };
 
@@ -324,7 +323,7 @@ const AssignTestDate = ({ route }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#FFFFFF]">
+    <View className="flex-1 bg-[#FFFFFF]">
       {/* Scrollable Content */}
       <ScrollView>
         <NavHeader />
@@ -637,7 +636,7 @@ const AssignTestDate = ({ route }) => {
         }}
         pdfUrl={pdfUrl}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

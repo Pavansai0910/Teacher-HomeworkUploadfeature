@@ -37,7 +37,7 @@ const LessonPlanNavbar = () => {
   }, [selectedAssignment]);
 
   return (
-    <>
+    <View>
       {/* Header */}
       <View className="bg-[#E0F5FF] p-5">
         <View className="flex-row items-center">
@@ -99,7 +99,7 @@ const LessonPlanNavbar = () => {
         </View>
       </View>
 
-    </>
+    </View>
   );
 };
 

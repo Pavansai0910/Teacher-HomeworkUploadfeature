@@ -136,7 +136,7 @@ const LessonPlanTopics = ({ route }) => {
     );
   };
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
       <LessonPlanNavbar
         classDisplay={classDisplay}
@@ -452,7 +452,7 @@ const LessonPlanTopics = ({ route }) => {
           </SafeAreaView>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 export default LessonPlanTopics; 

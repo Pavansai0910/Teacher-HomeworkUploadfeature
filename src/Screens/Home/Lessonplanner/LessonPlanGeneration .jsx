@@ -174,7 +174,7 @@ const LessonPlanGeneration = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
       <LessonPlanNavbar
         classDisplay={classDisplay}
@@ -415,7 +415,7 @@ const LessonPlanGeneration = () => {
           minimumDate={new Date()}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

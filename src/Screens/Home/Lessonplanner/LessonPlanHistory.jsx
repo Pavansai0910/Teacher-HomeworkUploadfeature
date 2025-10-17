@@ -116,7 +116,7 @@ const LessonPlanHistory = () => {
 
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row items-center p-5 bg-[#E0F5FF]">
         <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
@@ -199,7 +199,7 @@ const LessonPlanHistory = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

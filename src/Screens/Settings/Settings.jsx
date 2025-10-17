@@ -4,47 +4,79 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../Context/AuthContext';
 import GetFontSize from '../../Commons/GetFontSize';
+import CrossIcon from '../../Images/Home/CrossIcon';
+
+// Helper function to get initials from name
+const getInitials = (name) => {
+  if (!name) return 'T';
+  const parts = name.trim().split(' ');
+  if (parts.length === 1) {
+    // If only one word, take first two letters
+    return parts[0].substring(0, 2).toUpperCase();
+  }
+  // Otherwise, take first letter of first and last word
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
 
 const Settings = () => {
   const { teacherProfile, logout } = useContext(AuthContext);
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="absolute top-0 z-10 w-full h-[30%] bg-[#F7EBFF] gap-[5px] items-center justify-center left-0 opacity-100 relative">
-        {/* New Top Layout Bar */}
-        <View className="w-full h-6 flex-row justify-between items-center px-5 opacity-100">
-          {/* Left: Settings Text */}
-          <Text style={{ fontSize: GetFontSize(16) }} className="text-[#637381] font-inter500">Settings</Text>
-          {/* Right: Circular Element */}
+    <View className="flex-1 bg-white">
+      {/* Header Section */}
+      <View
+        style={{
+          backgroundColor: '#F7EBFF',
+          paddingTop: 30, // For safe area and spacing
+          paddingBottom: 20,
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 5,
+        }}
+      >
+        {/* Top Bar */}
+        <View
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            marginBottom: 10,
+          }}
+        >
+          <Text style={{ fontSize: GetFontSize(16) }} className="text-[#637381] font-inter500">
+            {/* Settings */}
+          </Text>
           <TouchableOpacity
             onPress={() => navigation.navigate('MainTabNavigator')}
-            className="w-6 h-6 rounded-[20px] border-2 bg-[#CE82FF] border-[#BF5CFF] p-1 opacity-100 relative items-center justify-center"
+            style={{
+              width: 24,
+              height: 24,
+              borderRadius: 12,
+              borderWidth: 2,
+              backgroundColor: '#CE82FF',
+              borderColor: '#BF5CFF',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
             <Text
-              className="text-white text-center absolute"
               style={{
-                width: 10.503851890563965,
-                height: 10.504477500915527,
-                top: 2.75,
-                left: 2.75,
-                opacity: 1,
-                transform: [{ rotate: '0deg' }],
-                fontSize: 8,
-                lineHeight: 10.504477500915527,
+                color: 'white',
+                fontSize: 14,
                 textAlign: 'center',
-                includeFontPadding: false
+                lineHeight: 22,
               }}
             >
-              ✕
+              <CrossIcon />
             </Text>
           </TouchableOpacity>
         </View>
 
         {/* Profile Icon with Border */}
-        <View className="items-center justify-center">
-          {/* Profile Avatar with Border */}
+        <View className="items-center justify-center" style={{ marginBottom: 8 }}>
           <View
             className="rounded-full items-center justify-center"
             style={{
@@ -52,7 +84,9 @@ const Settings = () => {
               height: 66,
               borderWidth: 6,
               borderColor: '#CE82FF',
-              opacity: 1,
+              borderRadius: 33,
+              justifyContent: 'center',
+              alignItems: 'center',
               backgroundColor: 'transparent'
             }}
           >
@@ -61,11 +95,12 @@ const Settings = () => {
               style={{
                 width: 50,
                 height: 50,
-                backgroundColor: '#FFFFFF'  // Changed to white
+                borderRadius: 25,
+                backgroundColor: '#FFFFFF'
               }}
             >
               <Text style={{ fontSize: GetFontSize(24), color: '#CE82FF' }} className="font-inter600">
-                {teacherProfile?.name?.charAt(0) ?? 'T'}
+                {getInitials(teacherProfile?.name)}
               </Text>
             </View>
           </View>
@@ -74,7 +109,7 @@ const Settings = () => {
         <Text style={{ fontSize: GetFontSize(16) }} className="text-lg font-inter500 text-[#212B36]">
           {teacherProfile?.name || 'Teacher'}
         </Text>
-        <View className="bg-white rounded-[16px] px-4 py-1 justify-center">
+        <View className="bg-white rounded-[16px] px-4 py-1 justify-center" style={{ marginBottom: 4 }}>
           {/* <View className="flex-row justify-center">
             <Text
               style={{
@@ -105,7 +140,6 @@ const Settings = () => {
             <Text
               style={{
                 fontSize: GetFontSize(10),
-
               }}
               className="text-[#637381] font-inter400 leading-[135%]"
             >
@@ -115,7 +149,6 @@ const Settings = () => {
               style={{
                 fontSize: GetFontSize(10),
                 color: '#B747FF'
-
               }}
               className=" font-inter500 "
             >
@@ -125,12 +158,14 @@ const Settings = () => {
         </View>
       </View>
 
-      <ScrollView className="flex-1 px-5 ">
+      {/* Main Content */}
+      <ScrollView className="flex-1 px-5">
         {/* Dashed Line Below Header */}
         <View
-          className="w-[394.03173828125px] h-0 border-b-2 border-dashed border-[#CE82FF] opacity-100 -left-[1px]"
+          className="h-0 border-b-2 border-dashed border-[#CE82FF] opacity-100 -left-[1px]"
           style={{
-            transform: [{ rotate: '0deg' }]
+            transform: [{ rotate: '0deg' }],
+            marginBottom: 12
           }}
         />
 
@@ -143,7 +178,8 @@ const Settings = () => {
             borderLeftWidth: 2.5,
             borderStyle: 'solid',
             borderColor: '#F7EBFF',
-            borderRadius: 20
+            borderRadius: 20,
+            marginTop: 8,
           }}
           className="mt-6"
         >
@@ -198,10 +234,8 @@ const Settings = () => {
             </TouchableOpacity>
           </View>
         </View>
-
-
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -49,7 +49,7 @@ const SignInScreen = () => {
   };
 
   return (
-    <SafeAreaView className=" h-screen bg-white">
+    <View className=" h-screen bg-white">
       <KeyboardAvoidingView behavior="padding" className="flex-1">
         <View className="flex-1 justify-center items-center mx-[5%] bg-[#FFFFFF]">
           <View className="mt-[20px] w-[100%] max-w-[450px]">
@@ -110,7 +110,7 @@ const SignInScreen = () => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </View>
   );
 };
 

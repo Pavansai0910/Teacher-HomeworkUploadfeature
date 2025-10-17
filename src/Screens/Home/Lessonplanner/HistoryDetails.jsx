@@ -246,7 +246,7 @@ const { lessonPlanData, chapterName, selectedTopics } = route.params || {};
     );
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 bg-white">
             {/* Header */}
             <View className="bg-[#E0F5FF] p-5">
                 <View className="flex-row items-center">
@@ -648,7 +648,7 @@ const { lessonPlanData, chapterName, selectedTopics } = route.params || {};
                     />
                 )}
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

@@ -127,31 +127,55 @@ const TestDetails = ({
                                             </View>
                                         </View>
                                         <View className="flex-row w-full px-2 pb-4 pt-2">
-                                            <View style={{ width: '25%', paddingRight: 8, alignItems: 'flex-start', justifyContent: 'flex-start', borderRightWidth: 1, borderRightColor: '#E5E5E3' }}>
+                                            <View
+                                                style={{ width: '25%' }}
+                                                className="pr-1 items-start justify-start border-r border-[#E5E5E3]"
+                                            >
                                                 <Text style={{ fontSize: GetFontSize(20) }} className="font-inter700 text-[#212B36] text-left">
                                                     {item.weakZoneStudents}
                                                 </Text>
-                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">Attention</Text>
+                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">
+                                                    Attention
+                                                </Text>
                                             </View>
-                                            <View style={{ width: '25%', paddingLeft: 8, paddingRight: 8, alignItems: 'flex-start', justifyContent: 'flex-start', borderRightWidth: 1, borderRightColor: '#E5E5E3' }}>
+
+                                            <View
+                                                style={{ width: '25%' }}
+                                                className="px-2 items-start justify-start border-r border-[#E5E5E3]"
+                                            >
                                                 <Text style={{ fontSize: GetFontSize(20) }} className="font-inter700 text-[#212B36] text-left">
                                                     {item.learningZoneStudents}
                                                 </Text>
-                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">Improving</Text>
+                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">
+                                                    Improving
+                                                </Text>
                                             </View>
-                                            <View style={{ width: '25%', paddingLeft: 8, paddingRight: 8, alignItems: 'flex-start', justifyContent: 'flex-start', borderRightWidth: 1, borderRightColor: '#E5E5E3' }}>
+
+                                            <View
+                                                style={{ width: '25%' }}
+                                                className="px-2 items-start justify-start border-r border-[#E5E5E3]"
+                                            >
                                                 <Text style={{ fontSize: GetFontSize(20) }} className="font-inter700 text-[#212B36] text-left">
                                                     {item.strongZoneStudents}
                                                 </Text>
-                                                <Text style={{ fontSize: GetFontSize(11) }} className="font-inter500 text-[#919EAB] text-left">Understood</Text>
+                                                <Text style={{ fontSize: GetFontSize(11) }} className="font-inter500 text-[#919EAB] text-left">
+                                                    Understood
+                                                </Text>
                                             </View>
-                                            <View style={{ width: '25%', paddingLeft: 8, alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+
+                                            <View
+                                                style={{ width: '25%' }}
+                                                className="pl-2 items-start justify-start"
+                                            >
                                                 <Text style={{ fontSize: GetFontSize(20) }} className="font-inter700 text-[#212B36] text-left">
                                                     {item.nonParticipantStudents}
                                                 </Text>
-                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">Unattempt</Text>
+                                                <Text style={{ fontSize: GetFontSize(12) }} className="font-inter500 text-[#919EAB] text-left">
+                                                    Unattempt
+                                                </Text>
                                             </View>
                                         </View>
+
                                     </TouchableOpacity>
                                 </View>
                             </View>

@@ -91,7 +91,7 @@ const LearningDetails = () => {
     };
 
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 bg-white">
             {/* Header */}
             <View className="bg-[#E8FADB] px-6 py-6">
                 <View className="flex-row items-center">
@@ -166,7 +166,7 @@ const LearningDetails = () => {
                 <Animated.View
                     style={{
                         width: width,
-                        height: height * 0.6,
+                        height: height * 0.7,
                         justifyContent: 'center',
                         alignItems: 'center',
                         transform: [{ rotateY }],
@@ -183,7 +183,7 @@ const LearningDetails = () => {
                 <Animated.View
                     style={{
                         width: width,
-                        height: height * 0.6,
+                        height: height * 0.7,
                         justifyContent: 'center',
                         alignItems: 'center',
                         transform: [{ rotateY }],
@@ -215,7 +215,6 @@ const LearningDetails = () => {
                     </Text>
                 </TouchableOpacity>
 
-                {/* Right Button: only show on first page */}
                 {currentIndex === 0 && (
                     <TouchableOpacity
                         className="flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#71E31C] bg-[#B0EF80] rounded-xl justify-center items-center px-4 py-3"
@@ -231,7 +230,7 @@ const LearningDetails = () => {
                 )}
             </View>
 
-        </SafeAreaView>
+        </View>
     );
 };
 

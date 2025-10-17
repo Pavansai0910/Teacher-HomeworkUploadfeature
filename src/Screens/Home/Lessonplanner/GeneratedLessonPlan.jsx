@@ -308,7 +308,7 @@ const GeneratedLessonPlan = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
       <View className="bg-[#E0F5FF] p-5">
         <View className="flex-row items-center">
@@ -729,7 +729,7 @@ const GeneratedLessonPlan = () => {
           />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

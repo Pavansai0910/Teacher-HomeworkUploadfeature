@@ -93,7 +93,7 @@ const LessonPlanner = () => {
   const chapterOptions = allChapters?.map(chapter => chapter.name) || [];
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
       <LessonPlanNavbar
         classDisplay={classDisplay}
@@ -430,7 +430,7 @@ const LessonPlanner = () => {
           </SafeAreaView>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 

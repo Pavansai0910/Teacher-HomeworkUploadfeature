@@ -72,7 +72,6 @@ const AssignTest = () => {
 
   const renderHeader = () => (
     <View>
-
       <NavHeader />
 
       <View className="px-4 mt-3">
@@ -241,7 +240,7 @@ const AssignTest = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
 
       {/* Scrollable Content */}
       <FlatList
@@ -382,7 +381,7 @@ const AssignTest = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

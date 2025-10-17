@@ -35,7 +35,7 @@ const LearningTopic = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       <LearningNavbar
         classDisplay={classDisplay}
         subjectDisplay={subjectDisplay}
@@ -134,7 +134,7 @@ const LearningTopic = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
