@@ -15,21 +15,24 @@ const TestLoader = ({ isVisible, onClose }) => {
   const [completedTopics, setCompletedTopics] = useState(new Set());
   const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
   const screenWidth = Dimensions.get('window').width;
-  const circleSize = 120;
-  const strokeWidth = 12;
+  const screenHeight = Dimensions.get('window').height;
+  const isTablet = screenWidth > 600;
+
+  const circleSize = isTablet ? 180 : 120;
+  const strokeWidth = isTablet ? 16 : 12;
 
   const progressAnim = useRef(new Animated.Value(0)).current;
   const rotationAnim = useRef(new Animated.Value(0)).current;
 
-const topics = [
-  { number: 1, text: 'Selecting the subject and topic...' },
-  { number: 2, text: 'Choosing the test type and duration...' },
-  { number: 3, text: 'Adding questions to the test...' },
-  { number: 4, text: 'Setting difficulty levels...' },
-  { number: 5, text: 'Reviewing and finalizing the test...' },
-  { number: 6, text: 'Assigning test to students...' },
-  { number: 7, text: 'Generating test summary...' },
-];
+  const topics = [
+    { number: 1, text: 'Selecting the subject and topic...' },
+    { number: 2, text: 'Choosing the test type and duration...' },
+    { number: 3, text: 'Adding questions to the test...' },
+    { number: 4, text: 'Setting difficulty levels...' },
+    { number: 5, text: 'Reviewing and finalizing the test...' },
+    { number: 6, text: 'Assigning test to students...' },
+    { number: 7, text: 'Generating test summary...' },
+  ];
 
   // Spinner animation
   useEffect(() => {
@@ -105,67 +108,82 @@ const topics = [
   return (
     <SafeAreaView className="flex-1 bg-white">
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        className="pt-16 pb-6 px-4"
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          paddingVertical: isTablet ? 32 : 16,
+          paddingHorizontal: isTablet ? 40 : 16,
+        }}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View className="p-5 bg-white">
-          <Text className="text-[#212B36] font-semibold text-lg text-center mb-1">
+        <View className="bg-white w-full">
+          <Text
+            className="text-[#212B36] font-semibold text-center mb-1"
+            style={{ fontSize: isTablet ? 22 : 18 }}
+          >
             Assigning the test
           </Text>
-          <Text className="text-[#637381] text-sm text-center mb-4">
+          <Text
+            className="text-[#637381] text-center mb-6"
+            style={{ fontSize: isTablet ? 16 : 13 }}
+          >
             AI is preparing and assigning the test to selected students
           </Text>
 
           {/* Circular Progress */}
           <View className="items-center justify-center">
-            <View className="bg-white">
-              <View style={{ width: circleSize, height: circleSize }}>
-                <Svg width={circleSize} height={circleSize}>
-                  <Defs>
-                    <LinearGradient
-                      id="progressGradient"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="100%"
-                    >
-                      <Stop offset="4.62%" stopColor="#1EAFF7" />
-                      <Stop offset="93.01%" stopColor="#0679B1" />
-                    </LinearGradient>
-                  </Defs>
-                  <Circle
-                    cx={circleSize / 2}
-                    cy={circleSize / 2}
-                    r={radius}
-                    stroke="#E8F4FD"
-                    strokeWidth={strokeWidth}
-                    fill="white"
-                  />
-                  <Circle
-                    cx={circleSize / 2}
-                    cy={circleSize / 2}
-                    r={radius}
-                    stroke="url(#progressGradient)"
-                    strokeWidth={strokeWidth}
-                    fill="none"
-                    strokeDasharray={`${circumference} ${circumference}`}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    transform={`rotate(-90 ${circleSize / 2} ${circleSize / 2})`}
-                  />
-                </Svg>
+            <View style={{ width: circleSize, height: circleSize }}>
+              <Svg width={circleSize} height={circleSize}>
+                <Defs>
+                  <LinearGradient
+                    id="progressGradient"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
+                    <Stop offset="4.62%" stopColor="#1EAFF7" />
+                    <Stop offset="93.01%" stopColor="#0679B1" />
+                  </LinearGradient>
+                </Defs>
+                <Circle
+                  cx={circleSize / 2}
+                  cy={circleSize / 2}
+                  r={radius}
+                  stroke="#E8F4FD"
+                  strokeWidth={strokeWidth}
+                  fill="white"
+                />
+                <Circle
+                  cx={circleSize / 2}
+                  cy={circleSize / 2}
+                  r={radius}
+                  stroke="url(#progressGradient)"
+                  strokeWidth={strokeWidth}
+                  fill="none"
+                  strokeDasharray={`${circumference} ${circumference}`}
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                  transform={`rotate(-90 ${circleSize / 2} ${circleSize / 2})`}
+                />
+              </Svg>
 
-                {/* % Text */}
-                <View className="absolute inset-0 items-center justify-center">
-                  <Animated.Text className="text-[#1EAFF7] font-bold text-2xl">
-                    {Math.round(progress)}%
-                  </Animated.Text>
-                  <Text className="text-[#67717a] text-[11px] mt-1">
-                    Complete
-                  </Text>
-                </View>
+              {/* % Text */}
+              <View className="absolute inset-0 items-center justify-center">
+                <Animated.Text
+                  className="text-[#1EAFF7] font-bold"
+                  style={{ fontSize: isTablet ? 26 : 20 }}
+                >
+                  {Math.round(progress)}%
+                </Animated.Text>
+                <Text
+                  className="text-[#67717a] mt-1"
+                  style={{ fontSize: isTablet ? 13 : 10 }}
+                >
+                  Complete
+                </Text>
               </View>
             </View>
           </View>
@@ -173,11 +191,17 @@ const topics = [
 
         {/* Topics Section */}
         <View
-          className="self-center rounded-2xl bg-white p-3 px-4 shadow-md"
-          style={{ width: Math.min(330, screenWidth - 32) }}
+          className="rounded-2xl bg-white p-4 shadow-md"
+          style={{
+            width: isTablet ? '90%' : Math.min(330, screenWidth - 32),
+            maxWidth: isTablet ? 600 : 340,
+          }}
         >
-          <Text className="text-[#212B36] font-semibold text-base text-center mb-4">
-             Crafting Your Perfect Test
+          <Text
+            className="text-[#212B36] font-semibold text-center mb-4"
+            style={{ fontSize: isTablet ? 18 : 15 }}
+          >
+            Crafting Your Perfect Test
           </Text>
 
           <View className="gap-2">
@@ -189,7 +213,7 @@ const topics = [
                 'rounded-xl p-3 flex-row items-center border';
               let numberCircleClasses =
                 'w-8 h-8 rounded-full justify-center items-center mr-3';
-              let textClasses = 'flex-1 text-sm';
+              let textClasses = 'flex-1';
               let showSpinner = false;
               let showCheckmark = false;
 
@@ -217,7 +241,12 @@ const topics = [
                     </Text>
                   </View>
 
-                  <Text className={textClasses}>{topic.text}</Text>
+                  <Text
+                    className={textClasses}
+                    style={{ fontSize: isTablet ? 15 : 13 }}
+                  >
+                    {topic.text}
+                  </Text>
 
                   {showSpinner && (
                     <Animated.View

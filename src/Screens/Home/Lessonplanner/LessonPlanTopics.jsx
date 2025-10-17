@@ -24,6 +24,7 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import TopArrow from '../../../Images/LessonPlan/TopArrow';
 import LessonPlanNavbar from './LessonPlanNavbar';
 import { Shadow } from 'react-native-shadow-2';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -397,7 +398,7 @@ const LessonPlanTopics = ({ route }) => {
                 }
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
                 <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
-                  <Text className="text-white font-inter400">✕</Text>
+                  <CrossIcon />
                 </View>
               </TouchableOpacity>
             </View>

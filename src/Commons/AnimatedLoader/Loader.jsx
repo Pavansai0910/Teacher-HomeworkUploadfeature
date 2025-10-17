@@ -4,22 +4,24 @@ import {
   Text,
   ScrollView,
   Animated,
-  Dimensions,
   Easing,
+  useWindowDimensions,
 } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Stop } from 'react-native-svg';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Loader = ({ isVisible, onClose }) => {
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const [progress, setProgress] = useState(0);
   const [completedTopics, setCompletedTopics] = useState(new Set());
   const [currentTopicIndex, setCurrentTopicIndex] = useState(0);
-  const screenWidth = Dimensions.get('window').width;
-  const circleSize = 120;
-  const strokeWidth = 12;
 
   const progressAnim = useRef(new Animated.Value(0)).current;
   const rotationAnim = useRef(new Animated.Value(0)).current;
+
+  // 🔹 Responsive sizes
+  const circleSize = Math.min(screenWidth * 0.4, 180); 
+  const strokeWidth = circleSize * 0.08; 
+  const cardWidth = Math.min(screenWidth * 0.9, 450); 
 
   const topics = [
     { number: 1, text: 'Analyzing curriculum standards...' },
@@ -47,7 +49,7 @@ const Loader = ({ isVisible, onClose }) => {
     return () => rotationAnim.stopAnimation();
   }, [isVisible]);
 
-  // Auto progress through topics
+  // Auto progress
   useEffect(() => {
     if (!isVisible) return;
 
@@ -56,7 +58,7 @@ const Loader = ({ isVisible, onClose }) => {
     setProgress(0);
     progressAnim.setValue(0);
 
-    const processTopic = index => {
+    const processTopic = (index) => {
       if (index >= topics.length) {
         setCurrentTopicIndex(-1);
         setTimeout(onClose, 1000);
@@ -66,7 +68,7 @@ const Loader = ({ isVisible, onClose }) => {
       setCurrentTopicIndex(index);
 
       setTimeout(() => {
-        setCompletedTopics(prev => {
+        setCompletedTopics((prev) => {
           const newCompleted = new Set(prev);
           newCompleted.add(index);
           return newCompleted;
@@ -103,69 +105,89 @@ const Loader = ({ isVisible, onClose }) => {
   });
 
   return (
-    <View className="flex-1 bg-white ">
+    <View
+      className="flex-1 bg-white"
+      style={{ width: screenWidth, height: screenHeight }}
+    >
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        className="pb-6 px-4"
+        contentContainerStyle={{
+          flexGrow: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          paddingVertical: screenHeight * 0.05,
+        }}
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View className="p-5 bg-white">
-          <Text className="text-[#212B36] font-semibold text-lg text-center mb-1">
+        <View className="bg-white w-full items-center px-4">
+          <Text
+            className="text-[#212B36] font-semibold text-lg text-center mb-1"
+            style={{ fontSize: screenWidth * 0.045 }}
+          >
             Generating Lesson Plan
           </Text>
-          <Text className="text-[#637381] text-sm text-center mb-4">
+          <Text
+            className="text-[#637381] text-sm text-center mb-4"
+            style={{ fontSize: screenWidth * 0.035 }}
+          >
             AI is analyzing best teaching practices for your topic
           </Text>
 
           {/* Circular Progress */}
-          <View className="items-center justify-center">
-            <View className="bg-white">
-              <View style={{ width: circleSize, height: circleSize }}>
-                <Svg width={circleSize} height={circleSize}>
-                  <Defs>
-                    <LinearGradient
-                      id="progressGradient"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="100%"
-                    >
-                      <Stop offset="4.62%" stopColor="#1EAFF7" />
-                      <Stop offset="93.01%" stopColor="#0679B1" />
-                    </LinearGradient>
-                  </Defs>
-                  <Circle
-                    cx={circleSize / 2}
-                    cy={circleSize / 2}
-                    r={radius}
-                    stroke="#E8F4FD"
-                    strokeWidth={strokeWidth}
-                    fill="white"
-                  />
-                  <Circle
-                    cx={circleSize / 2}
-                    cy={circleSize / 2}
-                    r={radius}
-                    stroke="url(#progressGradient)"
-                    strokeWidth={strokeWidth}
-                    fill="none"
-                    strokeDasharray={`${circumference} ${circumference}`}
-                    strokeDashoffset={strokeDashoffset}
-                    strokeLinecap="round"
-                    transform={`rotate(-90 ${circleSize / 2} ${circleSize / 2})`}
-                  />
-                </Svg>
+          <View
+            className="items-center justify-center"
+            style={{ marginBottom: screenHeight * 0.03 }}
+          >
+            <View style={{ width: circleSize, height: circleSize }}>
+              <Svg width={circleSize} height={circleSize}>
+                <Defs>
+                  <LinearGradient
+                    id="progressGradient"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="100%"
+                  >
+                    <Stop offset="4.62%" stopColor="#1EAFF7" />
+                    <Stop offset="93.01%" stopColor="#0679B1" />
+                  </LinearGradient>
+                </Defs>
+                <Circle
+                  cx={circleSize / 2}
+                  cy={circleSize / 2}
+                  r={radius}
+                  stroke="#E8F4FD"
+                  strokeWidth={strokeWidth}
+                  fill="white"
+                />
+                <Circle
+                  cx={circleSize / 2}
+                  cy={circleSize / 2}
+                  r={radius}
+                  stroke="url(#progressGradient)"
+                  strokeWidth={strokeWidth}
+                  fill="none"
+                  strokeDasharray={`${circumference} ${circumference}`}
+                  strokeDashoffset={strokeDashoffset}
+                  strokeLinecap="round"
+                  transform={`rotate(-90 ${circleSize / 2} ${circleSize / 2})`}
+                />
+              </Svg>
 
-                {/* % Text */}
-                <View className="absolute inset-0 items-center justify-center">
-                  <Animated.Text className="text-[#1EAFF7] font-bold text-2xl">
-                    {Math.round(progress)}%
-                  </Animated.Text>
-                  <Text className="text-[#67717a] text-[11px] mt-1">
-                    Complete
-                  </Text>
-                </View>
+              {/* % Text */}
+              <View className="absolute inset-0 items-center justify-center">
+                <Animated.Text
+                  className="text-[#1EAFF7] font-bold"
+                  style={{ fontSize: screenWidth * 0.07 }}
+                >
+                  {Math.round(progress)}%
+                </Animated.Text>
+                <Text
+                  className="text-[#67717a]"
+                  style={{ fontSize: screenWidth * 0.03, marginTop: 4 }}
+                >
+                  Complete
+                </Text>
               </View>
             </View>
           </View>
@@ -173,14 +195,17 @@ const Loader = ({ isVisible, onClose }) => {
 
         {/* Topics Section */}
         <View
-          className="self-center rounded-2xl bg-white p-3 px-4 shadow-md"
-          style={{ width: Math.min(330, screenWidth - 32) }}
+          className="rounded-2xl bg-white p-4 shadow-md"
+          style={{ width: cardWidth }}
         >
-          <Text className="text-[#212B36] font-semibold text-base text-center mb-4">
+          <Text
+            className="text-[#212B36] font-semibold text-base text-center mb-4"
+            style={{ fontSize: screenWidth * 0.04 }}
+          >
             Crafting Your Perfect Lesson
           </Text>
 
-          <View className="gap-2">
+          <View className="gap-3">
             {topics.map((topic, index) => {
               const isCompleted = completedTopics.has(index);
               const isCurrent = index === currentTopicIndex;
@@ -212,23 +237,46 @@ const Loader = ({ isVisible, onClose }) => {
               return (
                 <Animated.View key={index} className={containerClasses}>
                   <View className={numberCircleClasses}>
-                    <Text className="text-white font-semibold text-sm">
+                    <Text
+                      className="text-white font-semibold text-sm"
+                      style={{ fontSize: screenWidth * 0.035 }}
+                    >
                       {topic.number}
                     </Text>
                   </View>
 
-                  <Text className={textClasses}>{topic.text}</Text>
+                  <Text
+                    className={textClasses}
+                    style={{ fontSize: screenWidth * 0.035 }}
+                  >
+                    {topic.text}
+                  </Text>
 
                   {showSpinner && (
                     <Animated.View
-                      style={{ transform: [{ rotate: spin }] }}
-                      className="w-5 h-5 rounded-full border-2 border-[#1EAFF7] ml-2"
+                      style={{
+                        transform: [{ rotate: spin }],
+                        width: screenWidth * 0.045,
+                        height: screenWidth * 0.045,
+                      }}
+                      className="rounded-full border-2 border-[#1EAFF7] ml-2"
                     />
                   )}
 
                   {showCheckmark && (
-                    <View className="w-5 h-5 rounded-full bg-[#7FD45A] items-center justify-center ml-2">
-                      <Text className="text-white text-xs font-bold">✓</Text>
+                    <View
+                      style={{
+                        width: screenWidth * 0.045,
+                        height: screenWidth * 0.045,
+                      }}
+                      className="rounded-full bg-[#7FD45A] items-center justify-center ml-2"
+                    >
+                      <Text
+                        className="text-white font-bold"
+                        style={{ fontSize: screenWidth * 0.03 }}
+                      >
+                        ✓
+                      </Text>
                     </View>
                   )}
                 </Animated.View>

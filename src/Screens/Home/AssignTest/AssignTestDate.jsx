@@ -226,11 +226,7 @@ const AssignTestDate = ({ route }) => {
   const handleViewPdf = async (questionPaperCode) => {
     try {
       setDownloadLoader(true);
-
-      // Request the PDF from backend
       const response = await downloadExam({ questionPaperCode });
-      console.log('downloadExam response type:', typeof response?.data);
-      console.log('downloadExam response:', response);
 
       let base64Data = '';
 
