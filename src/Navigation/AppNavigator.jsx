@@ -105,10 +105,10 @@ function AppNavigator() {
           </>
         ) : (
           <>
-            <Stack.Screen
+            {/* <Stack.Screen
               name="GetStartedScreen"
               component={GetStartedScreen}
-            />
+            /> */}
             <Stack.Screen name="SignInScreen" component={SignInScreen} />
             
           </>

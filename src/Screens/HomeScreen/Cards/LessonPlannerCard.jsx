@@ -80,8 +80,8 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
             }}
             className="bg-white rounded-xl border-[#89D5FB] shadow-sm self-center"
           >
-            <Text style={{ fontSize: GetFontSize(14) }}
-              className="text-[#1EAFF7] font-inter700 py-3 px-10 text-center">
+            <Text style={{ fontSize: GetFontSize(15) }}
+              className="font-inter700 py-3 px-10 text-center">
               Create Lesson Plan
             </Text>
           </TouchableOpacity>

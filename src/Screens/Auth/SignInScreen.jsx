@@ -16,6 +16,8 @@ import { AuthContext } from '../../Context/AuthContext';
 import Toast from 'react-native-toast-message';
 import Eye from '../../Images/Login/Eye';
 import EyeSlash from '../../Images/Login/EyeSlash';
+import AdaptmateBlueLogo from '../../Images/Logo/AdaptmateBlueLogo.png';
+import { Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const SignInScreen = () => {
@@ -51,15 +53,24 @@ const SignInScreen = () => {
   return (
     <View className=" h-screen bg-white">
       <KeyboardAvoidingView behavior="padding" className="flex-1">
-        <View className="flex-1 justify-center items-center mx-[5%] bg-[#FFFFFF]">
+        <View className="absolute mt-[85px] w-screen items-center">
+          <View className=' w-full h-[6vh]'>
+            <Image
+              source={AdaptmateBlueLogo}
+              style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
+              className=''
+            />
+          </View>
+        </View>
+        <View className="flex-1 justify-center items-center mx-[5%] bg-[#FFFFFF] mt-[40%]">
           <View className="mt-[20px] w-[100%] max-w-[450px]">
             <Text
               style={{ fontSize: GetFontSize(30) }}
-              className="font-inter700 text-center text-[#33569F] tracking-[-0.40] ">
+              className="font-inter700 text-center text-[#33569F] tracking-[-0.40] mb-4">
               Login
             </Text>
 
-            <View className="flex flex-row items-center mt-[27px] w-[100%] h-[54px] rounded-[11px] bg-[#A7C4FF66]">
+            <View className="flex flex-row items-center w-[100%] h-[54px] rounded-[11px] bg-[#A7C4FF66]">
               <View className="mx-[9px]">
                 <EmailIcon />
               </View>

@@ -182,13 +182,13 @@ const AssignTestTopics = ({ route }) => {
               </View>
               <Text
                 style={{ fontSize: GetFontSize(16) }}
-                className="text-[#B68201] font-inter600 mb-1 text-center"
+                className="text-[#664400] font-inter600 mb-1 text-center"
               >
                 Zoom in and pick your focus!
               </Text>
               <Text
                 style={{ fontSize: GetFontSize(13) }}
-                className="text-[#B68201] text-center font-inter500 mb-6">
+                className="text-[#664400] text-center font-inter500 mb-6">
                 Here is the list of topics from{' '}
                 <Text className="font-inter700">{chapterName}</Text>.{'\n'}
                 {'\n'}

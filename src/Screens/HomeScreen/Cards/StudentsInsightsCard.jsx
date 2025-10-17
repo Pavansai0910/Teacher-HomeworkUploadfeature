@@ -89,8 +89,8 @@ const StudentsInsightsCard = ({
             }}
             className="bg-white rounded-xl border-[#E4E4E2] shadow-sm self-center mt-4"
           >
-            <Text style={{ fontSize: GetFontSize(14) }}
-            className="text-[#82E638] font-inter700 py-3 px-16 text-center">
+            <Text style={{ fontSize: GetFontSize(15) }}
+            className=" font-inter700 py-3 px-16 text-center">
               Test insights
             </Text>
           </TouchableOpacity>

@@ -263,7 +263,7 @@ const LessonPlanner = () => {
                 borderLeftWidth: 2,
                 borderRightWidth: 2,
                 borderBottomWidth: 4,
-                borderColor: '#89D5FB',
+                borderColor: '#A17F5E',
               }}
               onPress={() => {
                 Vibration.vibrate(50);
@@ -273,12 +273,12 @@ const LessonPlanner = () => {
               }>
               <View className="flex-row justify-center items-center gap-2">
                 <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-[#1EAFF7] font-inter600"
+                  style={{ fontSize: GetFontSize(15) }}
+                  className="text-[#DC9047] font-inter700"
                 >
                   Saved Lesson plans
                 </Text>
-                <TopArrow color="#1EAFF7" />
+                <TopArrow color="#DC9047" />
               </View>
             </TouchableOpacity>
           </View>

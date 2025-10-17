@@ -283,13 +283,21 @@ const GeneratedLessonPlan = () => {
   const BulletList = ({ items }) => (
     <View className="ml-0">
       {items?.map((item, index) => (
-        <Text style={{ fontSize: GetFontSize(14) }}
-          key={index} className="leading-6 mx-2 text-[#454F5B]">
-          • {item}
-        </Text>
+        <View key={index} className="flex-row mx-2 mb-1">
+          <Text style={{ fontSize: GetFontSize(14), lineHeight: 22 }} className="text-[#454F5B] mr-2">
+            •
+          </Text>
+          <Text
+            style={{ fontSize: GetFontSize(14), lineHeight: 22, flex: 1 }}
+            className="text-[#454F5B]"
+          >
+            {item}
+          </Text>
+        </View>
       ))}
     </View>
   );
+
 
   if (!lessonPlanData?.generatedContent) {
     return (
@@ -352,29 +360,55 @@ const GeneratedLessonPlan = () => {
           className="flex-1"
           contentContainerStyle={{
             paddingHorizontal: 20,
-            paddingTop: 20,
+            paddingTop: 4,
             paddingBottom: 100,
           }}
           showsVerticalScrollIndicator={false}
         >
-          {/* Topic Header */}
-          <View className="mb-4">
-            {selectedTopics?.map((topic, index) => (
-              <Text
-                key={index}
-                style={{ fontSize: GetFontSize(16) }}
-                className="font-inter500 text-[#212B36] mb-1"
-              >
-                • {topic?.name || topic?.topicName || 'Untitled Topic'}
-              </Text>
-            ))}
 
+          <View className="mb-4">
             <Text
-              style={{ fontSize: GetFontSize(14) }}
-              className="font-inter400 text-[#454F5B] mt-2"
+              style={{ fontSize: GetFontSize(16) }}
+              className="font-inter700 text-[#454F5B]"
             >
               Chapter: {chapterName}
             </Text>
+
+            {/* Topic Header */}
+            {/* <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="font-inter700 text-[#454F5B]"
+            >
+              Topic:-
+            </Text> */}
+            {selectedTopics?.map((topic, index) => (
+              <View
+                key={index}
+                className="flex-row items-start mx-3"
+                style={{ marginBottom: 4 }}
+              >
+                {/* Bullet */}
+                <Text
+                  style={{ fontSize: GetFontSize(14), lineHeight: GetFontSize(20) }}
+                  className="font-inter500 text-[#212B36]"
+                >
+                  •
+                </Text>
+
+                {/* Text */}
+                <Text
+                  style={{
+                    fontSize: GetFontSize(14),
+                    lineHeight: GetFontSize(20),
+                    flexShrink: 1,
+                  }}
+                  className="font-inter500 text-[#212B36] ml-2"
+                >
+                  {topic?.name || topic?.topicName || 'Untitled Topic'}
+                </Text>
+              </View>
+            ))}
+
           </View>
 
           {/* Save Button with Download Icon */}
@@ -400,8 +434,8 @@ const GeneratedLessonPlan = () => {
                   />
                 ) : (
                   <Text
-                    style={{ fontSize: GetFontSize(14) }}
-                    className="text-[#1EAFF7] font-inter500 justify-center items-center"
+                    style={{ fontSize: GetFontSize(15) }}
+                    className="text-[#1EAFF7] font-inter700 justify-center items-center"
                   >
                     {isSaved ? 'Saved ✓' : 'Save Lesson Plan'}
                   </Text>
@@ -510,7 +544,7 @@ const GeneratedLessonPlan = () => {
                     <Text style={{ fontSize: GetFontSize(16) }} className="text-base font-inter600 text-[#454F5B] mb-1">
                       {flow.phase} ({flow.duration})
                     </Text>
-                    <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 text-[#637381] leading-6 ml-2">
+                    <Text style={{ fontSize: GetFontSize(14) }} className="text-[#637381] leading-6 ml-2">
                       {flow.description}
                     </Text>
                   </View>
@@ -547,7 +581,7 @@ const GeneratedLessonPlan = () => {
             {lessonPlanDetails.activityDescription && (
               <>
                 <SectionHeader title="Activity Description" sectionKey="Activity Description" />
-                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381]">
+                <Text style={{ fontSize: GetFontSize(14) }} className=" leading-6 text-[#637381]">
                   {lessonPlanDetails.activityDescription}
                 </Text>
               </>
@@ -557,7 +591,7 @@ const GeneratedLessonPlan = () => {
             {lessonPlanDetails.practiceWork && (
               <>
                 <SectionHeader title="Practice Work" sectionKey="Practice Work" />
-                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381]">
+                <Text style={{ fontSize: GetFontSize(14) }} className="leading-6 text-[#637381]">
                   {lessonPlanDetails.practiceWork}
                 </Text>
               </>
@@ -572,21 +606,47 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Quick Assessments */}
-            {lessonPlanDetails.quickAssessments && (
+            {lessonPlanDetails.quickAssessments?.length > 0 && (
               <>
                 <SectionHeader title="Quick Assessments" sectionKey="Quick Assessments" />
+
                 {lessonPlanDetails.quickAssessments.map((assessment, index) => (
-                  <View key={index} className="mb-2">
-                    <Text style={{ fontSize: GetFontSize(15) }} className=" font-500 text-[#637381] mb-1">
-                      • {assessment.question}
+                  <View
+                    key={index}
+                    className="flex-row items-start rounded-xl px-3 py-2 "
+                  >
+                    {/* Bullet */}
+                    <Text
+                      style={{ fontSize: GetFontSize(16), lineHeight: 22 }}
+                      className="text-[#6B21A8] mr-2"
+                    >
+                      •
                     </Text>
-                    <Text style={{ fontSize: GetFontSize(16) }} className="font-600 text-[#6B7280] ml-4">
-                      Cognitive Level: {assessment.cognitiveLevel}
-                    </Text>
+
+                    {/* Text Content */}
+                    <View className="flex-1">
+                      <Text
+                        style={{ fontSize: GetFontSize(15)}}
+                        className="text-[#212B36] font-inter500"
+                      >
+                        {assessment.question}
+                      </Text>
+
+                      <Text
+                        style={{ fontSize: GetFontSize(13)}}
+                        className="text-[#6B7280] font-inter500 ml-1"
+                      >
+                        Cognitive Level:
+                        <Text className="text-[#DC9047] font-inter600">
+                          {assessment.cognitiveLevel}
+                        </Text>
+                      </Text>
+                    </View>
                   </View>
                 ))}
               </>
             )}
+
 
             {/* Teacher Tips */}
             {lessonPlanDetails.teacherTips && (

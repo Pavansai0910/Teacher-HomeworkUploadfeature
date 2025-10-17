@@ -103,10 +103,10 @@ const Loader = ({ isVisible, onClose }) => {
   });
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white ">
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
-        className="pt-16 pb-6 px-4"
+        className="pb-6 px-4"
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
@@ -237,7 +237,7 @@ const Loader = ({ isVisible, onClose }) => {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

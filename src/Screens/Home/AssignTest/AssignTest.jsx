@@ -171,7 +171,7 @@ const AssignTest = () => {
               <View className="mb-2">
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
-                  className="text-[#B68201] font-inter700 text-center">
+                  className="text-[#664400] font-inter700 text-center">
                   Ready to plan smarter?
                 </Text>
               </View>
@@ -180,7 +180,7 @@ const AssignTest = () => {
               <View className="px-2">
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
-                  className="text-[#B68201] font-inter500 text-center">
+                  className="text-[#664400] font-inter500 text-center">
                   Select a chapter for which you want to assign a test.
                 </Text>
               </View>
