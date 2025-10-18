@@ -73,10 +73,10 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
               borderBottomWidth: 4,
               borderLeftWidth: 2,
             }}
-            className="bg-white rounded-xl border-[#E4E4E2] shadow-sm self-center mt-4"
+            className="bg-white rounded-xl border-[#E4E4E2] shadow-sm self-center mt-4 w-full"
           >
             <Text style={{ fontSize: GetFontSize(15) }}
-              className="font-inter700 py-3 px-16 text-center">
+              className="font-inter700 py-3 text-center">
               Assign Test
             </Text>
           </TouchableOpacity>

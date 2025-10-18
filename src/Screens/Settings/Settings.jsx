@@ -21,7 +21,7 @@ const Settings = () => {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header Section */}
       <View className="bg-[#F7EBFF] pt-6 pb-4 items-center justify-center">
         {/* Top Bar */}
@@ -108,7 +108,7 @@ const Settings = () => {
           </Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

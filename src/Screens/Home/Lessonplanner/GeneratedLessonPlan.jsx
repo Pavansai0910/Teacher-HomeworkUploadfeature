@@ -345,7 +345,7 @@ const GeneratedLessonPlan = () => {
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400 w-[85%]"
+              className="text-[#454F5B] font-inter400 w-full"
             >
               Generate a comprehensive lesson plan in seconds
             </Text>
@@ -399,7 +399,6 @@ const GeneratedLessonPlan = () => {
                 <Text
                   style={{
                     fontSize: GetFontSize(14),
-                    lineHeight: GetFontSize(20),
                     flexShrink: 1,
                   }}
                   className="font-inter500 text-[#212B36] ml-2"
@@ -637,7 +636,7 @@ const GeneratedLessonPlan = () => {
                         className="text-[#6B7280] font-inter500 ml-1"
                       >
                         Cognitive Level:
-                        <Text className="text-[#DC9047] font-inter600">
+                        <Text className="text-[#6B7280] font-inter600">
                           {assessment.cognitiveLevel}
                         </Text>
                       </Text>
