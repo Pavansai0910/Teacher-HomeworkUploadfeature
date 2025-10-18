@@ -42,7 +42,11 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
           </View>
         </View>
 
-        <View className="bg-white flex-1 px-6 py-6 rounded-b-3xl">
+        <View style={{
+          paddingHorizontal: width * 0.06,
+          paddingVertical: height * 0.03,
+        }}
+          className="bg-white flex-1 rounded-b-3xl">
           <View className="flex-1 justify-center">
             <Text style={{ fontSize: GetFontSize(19) }}
               className="text-[#212B36] font-inter600 text-center mb-3">

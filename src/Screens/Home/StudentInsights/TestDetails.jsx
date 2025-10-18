@@ -128,7 +128,7 @@ const TestDetails = ({
                                         </View>
                                         <View className="flex-row w-full px-2 pb-4 pt-2">
                                             <View
-                                                style={{ width: '25%' }}
+                                                style={{ width: '24%' }}
                                                 className="pr-1 items-start justify-start border-r border-[#E5E5E3]"
                                             >
                                                 <Text style={{ fontSize: GetFontSize(20) }} className="font-inter700 text-[#212B36] text-left">
@@ -140,7 +140,7 @@ const TestDetails = ({
                                             </View>
 
                                             <View
-                                                style={{ width: '25%' }}
+                                                style={{ width: '24%' }}
                                                 className="px-2 items-start justify-start border-r border-[#E5E5E3]"
                                             >
                                                 <Text style={{ fontSize: GetFontSize(20) }} className="font-inter700 text-[#212B36] text-left">
@@ -152,7 +152,7 @@ const TestDetails = ({
                                             </View>
 
                                             <View
-                                                style={{ width: '25%' }}
+                                                style={{ width: '28%' }}
                                                 className="px-2 items-start justify-start border-r border-[#E5E5E3]"
                                             >
                                                 <Text style={{ fontSize: GetFontSize(20) }} className="font-inter700 text-[#212B36] text-left">
@@ -164,7 +164,7 @@ const TestDetails = ({
                                             </View>
 
                                             <View
-                                                style={{ width: '25%' }}
+                                                style={{ width: '24%' }}
                                                 className="pl-2 items-start justify-start"
                                             >
                                                 <Text style={{ fontSize: GetFontSize(20) }} className="font-inter700 text-[#212B36] text-left">

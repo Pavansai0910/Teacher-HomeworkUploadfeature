@@ -114,7 +114,7 @@ const LearningDetails = () => {
                                 <CrossIcon />
                             </TouchableOpacity>
                         </View>
-                        <Text style={{ fontSize: GetFontSize(14) }} className="text-[#454F5B] font-inter400 w-[80%]">
+                        <Text style={{ fontSize: GetFontSize(14) }} className="text-[#454F5B] font-inter400 w-[85%]">
                             Boost your student's progress in just a few taps!
                         </Text>
                     </View>

@@ -53,8 +53,8 @@ const SignInScreen = () => {
   return (
     <View className=" h-screen bg-white">
       <KeyboardAvoidingView behavior="padding" className="flex-1">
-        <View className="absolute mt-[85px] w-screen items-center">
-          <View className=' w-full h-[6vh]'>
+        <View className="w-screen items-center mt-8">
+          <View className='w-full h-[8vh]'>
             <Image
               source={AdaptmateBlueLogo}
               style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
@@ -62,8 +62,8 @@ const SignInScreen = () => {
             />
           </View>
         </View>
-        <View className="flex-1 justify-center items-center mx-[5%] bg-[#FFFFFF] mt-[40%]">
-          <View className="mt-[20px] w-[100%] max-w-[450px]">
+        <View className="flex-1 justify-center items-center mx-[5%] bg-[#FFFFFF]">
+          <View className="mt-[2px] w-[100%] max-w-[450px]">
             <Text
               style={{ fontSize: GetFontSize(30) }}
               className="font-inter700 text-center text-[#33569F] tracking-[-0.40] mb-4">
@@ -109,9 +109,13 @@ const SignInScreen = () => {
           </View>
 
           <TouchableOpacity
+          
             style={[styles.button, loading && styles.disabledButton]}
             className="w-[100%] max-w-[450px] mt-[27px]"
-            onPress={handleLogin}>
+            onPress={() => {
+              Vibration.vibrate(50);
+              handleLogin();
+            }}>
             <Text
               style={{ fontSize: GetFontSize(22) }}
               className="text-[#ACCFFF] font-inter700 tracking-[-0.40] ">

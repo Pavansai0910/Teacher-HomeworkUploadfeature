@@ -2,7 +2,7 @@
 
 
 import React, { useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../Context/AuthContext';
@@ -28,7 +28,10 @@ const Settings = () => {
         <View className="w-full flex-row justify-between items-center px-5 mb-3">
           <Text style={{ fontSize: GetFontSize(16) }} className="text-[#637381] font-inter500" />
           <TouchableOpacity
-            onPress={() => navigation.navigate('MainTabNavigator')}
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigation.navigate('MainTabNavigator');
+            }}
             className="w-6 h-6 rounded-full border-2 border-[#BF5CFF] bg-[#CE82FF] items-center justify-center"
           >
             <CrossIcon />
@@ -100,7 +103,10 @@ const Settings = () => {
       {/* Fixed Bottom Log Out Button */}
       <View className="absolute bottom-6 left-0 right-0 px-5">
         <TouchableOpacity
-          onPress={logout}
+          onPress={() => {
+            Vibration.vibrate(50);
+            logout();
+          }}
           className="bg-[#FFE1E1] rounded-xl p-4 flex-row justify-center border-[1.5px] border-red-500"
         >
           <Text style={{ fontSize: GetFontSize(16) }} className="text-red-500 font-inter700">

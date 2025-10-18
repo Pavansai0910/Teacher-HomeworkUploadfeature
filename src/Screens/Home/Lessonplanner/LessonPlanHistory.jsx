@@ -100,8 +100,8 @@ const LessonPlanHistory = () => {
         <Text
           style={{ fontSize: GetFontSize(16) }}
           className="text-[#637381] font-inter500"
-          numberOfLines={2}          // Limit to 2 lines
-          ellipsizeMode="tail"        // Add "..." if text overflows
+          numberOfLines={2}          
+          ellipsizeMode="tail"        
         >
           {item.topic}
         </Text>

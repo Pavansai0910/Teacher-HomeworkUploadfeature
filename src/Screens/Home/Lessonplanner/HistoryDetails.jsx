@@ -305,6 +305,14 @@ const HistoryDetails = () => {
                     }}
                     showsVerticalScrollIndicator={false}
                 >
+
+                    {/* <Text
+                        style={{ fontSize: GetFontSize(14) }}
+                        className="text-[#454F5B] mb-3"
+                    >
+                        Chapter: {chapterName}
+                    </Text> */}
+
                     {(() => {
                         // Convert to array if comma-separated string
                         const topics = typeof topicName === 'string' ? topicName.split(',') : topicName;
@@ -319,12 +327,6 @@ const HistoryDetails = () => {
                             </Text>
                         ));
                     })()}
-                    {/* <Text
-                        style={{ fontSize: GetFontSize(14) }}
-                        className="text-[#454F5B] mb-3"
-                    >
-                        Chapter: {chapterName}
-                    </Text> */}
 
                     {/* Download Button */}
                     <View className="border border-[#E5E5E3] rounded-xl p-4 mt-3">

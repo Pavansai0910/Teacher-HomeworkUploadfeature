@@ -21,7 +21,7 @@ const StudentListModal = ({ visible, onClose, modalType, selectedTopic, students
                 borderWidth: 1,
                 borderColor: '#E5E7EB',
                 paddingVertical: 20,
-                paddingHorizontal: 16,
+                paddingHorizontal: 8,
                 backgroundColor: 'white',
                 borderRadius: 8,
             }}
@@ -34,7 +34,7 @@ const StudentListModal = ({ visible, onClose, modalType, selectedTopic, students
                 {student.name || 'Unknown Student'}
             </Text>
             <Text
-                className="text-[#9CA3AF] font-inter400"
+                className="text-[#9CA3AF] font-inter400 ml-1"
                 style={{ fontSize: GetFontSize(12) }}
             >
                 Roll no. {student.rollNo || ''}

@@ -345,7 +345,7 @@ const GeneratedLessonPlan = () => {
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400 w-full"
+              className="text-[#454F5B] font-inter400 w-[85%]"
             >
               Generate a comprehensive lesson plan in seconds
             </Text>

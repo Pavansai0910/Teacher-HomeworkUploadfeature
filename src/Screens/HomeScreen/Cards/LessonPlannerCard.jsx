@@ -28,10 +28,14 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
       >
         <LinearGradient
           colors={['#B1E3FB', '#1EAFF7']}
-          style={{ flex: 1 }}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
-          className="rounded-3xl px-6 py-6"
+          className="rounded-3xl"
+          style={{
+            flex: 1,
+            paddingHorizontal: width * 0.06,
+            paddingVertical: height * 0.03,
+          }}
         >
           {/* Top Row: Icon + Small Text */}
           <View className="flex-row items-center">
@@ -57,7 +61,7 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
                 fontSize: GetFontSize(14),
                 fontFamily: 'Inter-Regular',
                 letterSpacing: 0.15,
-                lineHeight: GetFontSize(14) * 1.5, 
+                lineHeight: GetFontSize(14) * 1.5,
               }}
               className="text-white font-inter400 text-center"
             >

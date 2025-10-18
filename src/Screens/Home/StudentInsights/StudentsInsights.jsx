@@ -229,7 +229,7 @@ const StudentsInsights = () => {
               borderRightWidth: 2,
               borderColor: '#77E425',
             }}
-            className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
+            className="flex-row justify-between items-center mb-4 p-2 rounded-2xl bg-white"
             onPress={() => {
               Vibration.vibrate(50);
               navigateToLearningTopic('completed')
@@ -262,7 +262,7 @@ const StudentsInsights = () => {
               borderRightWidth: 2,
               borderColor: '#77E425',
             }}
-            className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
+            className="flex-row justify-between items-center mb-4 p-2 rounded-2xl bg-white"
             onPress={() => {
               Vibration.vibrate(50);
               navigateToLearningTopic('pending')
@@ -295,7 +295,7 @@ const StudentsInsights = () => {
               borderRightWidth: 2,
               borderColor: '#77E425',
             }}
-            className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
+            className="flex-row justify-between items-center mb-4 p-2 rounded-2xl bg-white"
             onPress={() => {
               Vibration.vibrate(50);
               navigateToLearningTopic('assigned')
