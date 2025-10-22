@@ -53,7 +53,7 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
                 Test Insights
               </Text>
               <TouchableOpacity
-                className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
+                className="w-7 h-7 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
                 onPress={() => {
                   Vibration.vibrate(50);
                   navigation.navigate('MainTabNavigator')

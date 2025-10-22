@@ -332,7 +332,7 @@ const GeneratedLessonPlan = () => {
                 Lesson Plan
               </Text>
               <TouchableOpacity
-                className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
+                className="w-7 h-7 bg-[#1EAFF7] rounded-full justify-center items-center"
                 onPress={() => {
                   Vibration.vibrate(50);
 

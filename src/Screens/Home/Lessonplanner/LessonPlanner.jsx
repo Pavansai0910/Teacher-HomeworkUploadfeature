@@ -190,10 +190,10 @@ const LessonPlanner = () => {
             {/* Content Box */}
             <View className="rounded-xl mt-3">
               <View className="items-center mb-6">
-                <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
+                <View className="w-16 h-16 rounded-xl justify-center items-center">
                   <Document />
                 </View>
-                <Text
+                {/* <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white font-inter600mb-2 text-center"
                 >
@@ -205,7 +205,7 @@ const LessonPlanner = () => {
                 >
                   Select a chapter for which you want to generate a lesson plan
                   or quickly view your saved plans for this class.
-                </Text>
+                </Text> */}
               </View>
             </View>
             <View className="w-full">

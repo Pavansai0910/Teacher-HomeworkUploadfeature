@@ -40,7 +40,7 @@ function NavHeader() {
       {/* Header */}
       <View className="bg-[#FFF3D6] p-5">
         <View className="flex-row items-center">
-          <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center mr-3">
+          <View className="w-16 h-16 bg-[#FEE19A] rounded-lg justify-center items-center mr-3">
             <AssignTestDoc />
           </View>
           <View className="flex-1">
@@ -53,20 +53,20 @@ function NavHeader() {
               </Text>
               <TouchableOpacity
 
-                className="w-6 h-6 bg-[#FEDB85] rounded-full justify-center items-center border-2 border-[#FDCA0C]"
+                className="w-7 h-7 bg-[#FEDB85] rounded-full justify-center items-center border-2 border-[#FDCA0C]"
                 onPress={() => {
                   Vibration.vibrate(50);
                   navigation.navigate('MainTabNavigator')
                 }
                 }
               >
-                <Text
+                {/* <Text
                   style={{ fontSize: GetFontSize(11), marginTop: -1 }}
                   className="text-white font-inter600"
                 >
                   ✕
-                </Text>
-                {/* <CrossIcon /> */}
+                </Text> */}
+                <CrossIcon />
               </TouchableOpacity>
             </View>
             <Text

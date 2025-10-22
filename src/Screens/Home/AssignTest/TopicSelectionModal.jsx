@@ -9,6 +9,7 @@ import {
   Vibration
 } from 'react-native';
 import GetFontSize from '../../../Commons/GetFontSize';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const TopicSelectionModal = ({
   visible,
@@ -84,7 +85,7 @@ const TopicSelectionModal = ({
       onRequestClose={onClose}
     >
       <View
-        className="flex-1 bg-[#FEDB85]"
+        className="flex-1 bg-[#FFF3D6]"
         style={{
           borderWidth: 2,
           borderColor: '#DC9047',
@@ -106,9 +107,9 @@ const TopicSelectionModal = ({
 
                 onClose()
               }}
-              className="w-8 h-8 bg-white rounded-full justify-center items-center"
+              className="w-7 h-7 bg-[#FEDB85] rounded-full justify-center items-center border-2 border-[#FDCA0C]"
             >
-              <Text className="text-[#B68201] font-inter600">✕</Text>
+              <CrossIcon />
             </TouchableOpacity>
           </View>
           <Text
@@ -145,8 +146,8 @@ const TopicSelectionModal = ({
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
                   className={`font-inter600 ${activeFilter === 'all'
-                      ? 'text-[#A17F5E]'
-                      : 'text-[#6B7280]'
+                    ? 'text-[#A17F5E]'
+                    : 'text-[#6B7280]'
                     }`}
                   numberOfLines={1}
                 >
@@ -172,8 +173,8 @@ const TopicSelectionModal = ({
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
                   className={`font-inter600 ${activeFilter === 'pending'
-                      ? 'text-[#A17F5E]'
-                      : 'text-[#6B7280]'
+                    ? 'text-[#A17F5E]'
+                    : 'text-[#6B7280]'
                     }`}
                   numberOfLines={1}
                 >
@@ -197,8 +198,8 @@ const TopicSelectionModal = ({
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
                   className={`font-inter600 ${activeFilter === 'assigned'
-                      ? 'text-[#A17F5E]'
-                      : 'text-[#6B7280]'
+                    ? 'text-[#A17F5E]'
+                    : 'text-[#6B7280]'
                     }`}
                   numberOfLines={1}
                 >
@@ -224,8 +225,8 @@ const TopicSelectionModal = ({
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
                   className={`font-inter600 ${activeFilter === 'completed'
-                      ? 'text-[#A17F5E]'
-                      : 'text-[#637381]'
+                    ? 'text-[#A17F5E]'
+                    : 'text-[#637381]'
                     }`}
                   numberOfLines={1}
                 >

@@ -8,6 +8,7 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import TestAnalytics from './TestAnalytics';
 import TestDetails from './TestDetails';
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import FlipIcon from '../../../Images/LessonPlan/FlipIcon';
 
 const LearningDetails = () => {
     const { width, height } = Dimensions.get('window');
@@ -104,7 +105,7 @@ const LearningDetails = () => {
                                 Test Insights
                             </Text>
                             <TouchableOpacity
-                                className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
+                                className="w-7 h-7 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
                                 onPress={() => {
                                     Vibration.vibrate(50);
                                     navigation.navigate('MainTabNavigator')
@@ -123,7 +124,7 @@ const LearningDetails = () => {
 
             {/* Topic Info */}
             {/* <View className="mt-6 mx-6  gap-4 border-b-2 border-[#E5E5E3] pb-4"> */}
-                <View className="mx-6 mt-4 border-b-2 border-[#E5E5E3] pb-2">
+                <View className="mx-6 mt-4 border-b-2 border-[#E5E5E3] pb-4">
                     <Text
                         className="font-inter500 text-[#454F5B]"
                         style={{ fontSize: GetFontSize(16), lineHeight: GetFontSize(20) }}
@@ -136,7 +137,7 @@ const LearningDetails = () => {
 
             <View>
                 {(status === 'pending' || status === 'completed') && (
-                    <View className="mx-6 mt-2 border-b-2 border-[#E5E5E3] pb-2">
+                    <View className="mx-6 mt-4 border-b-2 border-[#E5E5E3] pb-4">
                         <Text className="text-[#919EAB] font-inter400" style={{ fontSize: GetFontSize(13) }}>
                             Assigned on - {formatDate(assignedDate)}
                         </Text>
@@ -226,6 +227,7 @@ const LearningDetails = () => {
                         <Text style={{ fontSize: GetFontSize(16) }} className="font-inter600 text-[#357A20]">
                             See More
                         </Text>
+                        <FlipIcon />
                     </TouchableOpacity>
                 )}
             </View>
