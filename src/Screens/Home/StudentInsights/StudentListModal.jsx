@@ -1,81 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Modal, Dimensions, ActivityIndicator, Vibration } from 'react-native';
 import GetFontSize from '../../../Commons/GetFontSize';
-import { getExamParticipationByTopic } from '../../../Services/teacherAPIV2';
-import { useSelector } from 'react-redux';
 
-const StudentListModal = ({ visible, onClose, modalType, selectedTopic }) => {
+const StudentListModal = ({ visible, onClose, modalType, selectedTopic, students, title }) => {
     const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
-    const [students, setStudents] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const selectedAssignment = useSelector((state) => state.assignment.selectedAssignment);
-
     const statusColor = modalType === 'completed' ? '#5FCC3D' : '#E87076';
-    const dynamicTitle =
-        modalType === 'completed'
+    const dynamicTitle = title || 
+        (modalType === 'completed'
             ? 'Students have given Assessment'
-            : "Students haven't given Assessment";
+            : "Students haven't given Assessment");
 
-    useEffect(() => {
-        const fetchStudents = async () => {
-            if (!visible || !selectedTopic) return;
-
-        console.log('Calling API with:', {
-            classId: selectedAssignment?.classId?._id,
-            sectionId: selectedAssignment?.sectionId?._id,
-            subjectId: selectedAssignment?.subjectId?._id,
-            topicId: selectedTopic,
-        });
-
-            try {
-                setLoading(true);
-                const response = await getExamParticipationByTopic({
-                    classId: selectedAssignment?.classId?._id,
-                    sectionId: selectedAssignment?.sectionId?._id,
-                    subjectId: selectedAssignment?.subjectId?._id,
-                    topicId: selectedTopic,
-                });
-
-                console.log('API Response (Exam Participation):', response.data);
-
-                const allStudents =
-                    modalType === 'completed'
-                        ? response.data?.data?.completedStudents || []
-                        : response.data?.data?.notCompletedStudents || [];
-
-                setStudents(allStudents);
-            } catch (error) {
-                console.log('Failed to fetch student list:', error.response.data.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchStudents();
-    }, [visible, selectedTopic, modalType]);
-
-    const groupedStudents = [];
-    for (let i = 0; i < students.length; i += 2) {
-        groupedStudents.push(students.slice(i, i + 2));
-    }
-
-    const renderStudentContent = (student) => (
-        <>
+    const renderStudentItem = (student, index) => (
+        <View
+            key={student._id || index}
+            style={{
+                width: '48%',
+                margin: '1%',
+                borderWidth: 1,
+                borderColor: '#E5E7EB',
+                paddingVertical: 20,
+                paddingHorizontal: 8,
+                backgroundColor: 'white',
+                borderRadius: 8,
+            }}
+        >
             <Text
                 className="text-[#212B36] font-inter600 mb-1"
                 style={{ fontSize: GetFontSize(14) }}
                 numberOfLines={2}
             >
-                {student.name || student.studentName || 'Unknown Student'}
+                {student.name || 'Unknown Student'}
             </Text>
             <Text
-                className="text-[#9CA3AF] font-inter400"
+                className="text-[#9CA3AF] font-inter400 ml-1"
                 style={{ fontSize: GetFontSize(12) }}
             >
-                Roll no. {student.rollNo || student.rollNumber || ''}
+                Roll no. {student.rollNo || ''}
             </Text>
-        </>
+        </View>
     );
 
     return (
@@ -112,7 +76,7 @@ const StudentListModal = ({ visible, onClose, modalType, selectedTopic }) => {
                         <Text style={{ fontSize: GetFontSize(16), color: '#454F5B' }}>✕</Text>
                     </TouchableOpacity>
 
-                    <View className="flex-1 px-6 pt-4 pb-6">
+                    <View className="flex-1 px-4 pt-4 pb-6">
                         {/* Student Count Circle */}
                         <View className="items-center mb-3 mt-4">
                             <View
@@ -125,7 +89,6 @@ const StudentListModal = ({ visible, onClose, modalType, selectedTopic }) => {
                             </View>
                         </View>
 
-                        {/* Title */}
                         <Text
                             className="text-[#454F5B] font-inter500 text-center mb-4"
                             style={{
@@ -144,41 +107,31 @@ const StudentListModal = ({ visible, onClose, modalType, selectedTopic }) => {
                                 <ActivityIndicator size="large" color={statusColor} />
                             </View>
                         ) : (
-                            <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-                                {students.length > 0 ? (
-                                    groupedStudents.map((row, rowIndex) => (
-                                        <View
-                                            key={rowIndex}
-                                            style={{
-                                                flexDirection: 'row',
-                                                justifyContent: 'center',
-                                            }}
-                                        >
-                                            {row.map((student, colIndex) => (
-                                                <View
-                                                    key={colIndex}
-                                                    style={{
-                                                        width: groupedStudents.length > 1 ? '50%' : '100%',
-                                                        borderWidth: 1,
-                                                        borderColor: '#E5E7EB',
-                                                        paddingVertical: 20,
-                                                        paddingHorizontal: 28,
-                                                        backgroundColor: 'white',
-                                                    }}
-                                                >
-                                                    {renderStudentContent(student)}
-                                                </View>
-                                            ))}
+                            <ScrollView
+                                showsVerticalScrollIndicator={false}
+                                contentContainerStyle={{ flexGrow: 1 }}
+                            >
+                                <View style={{ flex: 1 }}>
+                                    {students.length > 0 ? (
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            flexWrap: 'wrap',
+                                            justifyContent: 'flex-start',
+                                            paddingHorizontal: 8,
+                                        }}>
+                                            {students.map((student, index) => renderStudentItem(student, index))}
                                         </View>
-                                    ))
-                                ) : (
-                                    <Text
-                                        className="text-[#9CA3AF] font-inter400 text-center mt-8"
-                                        style={{ fontSize: GetFontSize(14) }}
-                                    >
-                                        No students found.
-                                    </Text>
-                                )}
+                                    ) : (
+                                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text
+                                                className="text-[#9CA3AF] font-inter400 text-center"
+                                                style={{ fontSize: GetFontSize(14) }}
+                                            >
+                                                No students found.
+                                            </Text>
+                                        </View>
+                                    )}
+                                </View>
                             </ScrollView>
                         )}
                     </View>

@@ -17,7 +17,7 @@ function GetStartedScreen() {
   };
 
   return (
-    <SafeAreaView className="relative w-screen h-screen bg-[#33569F]">
+    <View className="relative w-screen h-screen bg-[#33569F]">
       <View className="absolute mt-[85px] w-screen items-center">
         <View className=' w-full h-[6vh]'>
           <Image
@@ -85,7 +85,7 @@ function GetStartedScreen() {
           className="text-white text-center">Version {process.env.APP_VERSION}</Text>
       </View>
 
-    </SafeAreaView>
+    </View>
 
   );
 }

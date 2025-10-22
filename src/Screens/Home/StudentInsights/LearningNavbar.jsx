@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import SkullIcon from '../../../Images/StudentInsights/SkullIcon';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { getAllStudents } from '../../../Services/teacherAPIV1'
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
   const navigation = useNavigation();
@@ -36,9 +37,9 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
   }, [selectedAssignment]);
 
   return (
-    <>
+    <View>
       {/* Header */}
-      <View className="bg-[#E8FADB] px-6 py-6">
+      <View className="bg-[#E8FADB] p-5">
         <View className="flex-row items-center">
           <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
             <SkullIcon />
@@ -54,24 +55,25 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
               <TouchableOpacity
                 className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
                 onPress={() => {
-              Vibration.vibrate(50);
-
-              navigation.navigate('MainTabNavigator')}
-            }
-                  >
-                  <Text
+                  Vibration.vibrate(50);
+                  navigation.navigate('MainTabNavigator')
+                }
+                }
+              >
+                {/* <Text
                   style={{ fontSize: GetFontSize(14) }}
                   className="text-white "
                 >
                   ✕
-                </Text>
+                </Text> */}
+                <CrossIcon />
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400"
+              className="text-[#454F5B] font-inter400 w-[85%]"
             >
-              Boost your students' progress in {'\n'} just a few taps!
+              Boost your student's progress in just a few taps!
             </Text>
           </View>
         </View>
@@ -80,7 +82,7 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
       {/* Class & Subject */}
       <View className="mt-6 px-6 bg-white">
         <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
-          <View className="w-[60%] border-r-2 border-[#E5E5E3] pr-4">
+          <View className="">
             <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
             <Text
               className="text-gray-800 font-semibold"
@@ -90,6 +92,31 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
               Class {selectedAssignment?.classId?.className}-{selectedAssignment?.sectionId?.sectionName} | {studentData?.length} Students
             </Text>
           </View>
+          {/* <View className="flex-[1] ml-2">
+            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
+            <Text
+              className="text-gray-800 font-semibold"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {capitalize(selectedAssignment?.subjectId?.subjectName)}
+            </Text>
+          </View> */}
+        </View>
+      </View>
+
+           <View className="mt-3 px-6 bg-white">
+        <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
+          {/* <View className="w-[60%] border-r-2 border-[#E5E5E3] pr-4">
+            <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
+            <Text
+              className="text-gray-800 font-semibold"
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              Class {selectedAssignment?.classId?.className}-{selectedAssignment?.sectionId?.sectionName} | {studentData?.length} Students
+            </Text>
+          </View> */}
           <View className="flex-[1] ml-2">
             <Text className="text-gray-500 text-xs mb-1">Subject</Text>
             <Text
@@ -102,7 +129,7 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
           </View>
         </View>
       </View>
-    </>
+    </View>
   );
 };
 

@@ -28,10 +28,14 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
       >
         <LinearGradient
           colors={['#B1E3FB', '#1EAFF7']}
-          style={{ flex: 1 }}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
-          className="rounded-3xl px-6 py-6"
+          className="rounded-3xl"
+          style={{
+            flex: 1,
+            paddingHorizontal: width * 0.06,
+            paddingVertical: height * 0.03,
+          }}
         >
           {/* Top Row: Icon + Small Text */}
           <View className="flex-row items-center">
@@ -52,8 +56,15 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
               className="text-white font-inter700 text-center mb-3">
               Create Lesson Plan
             </Text>
-            <Text style={{ fontSize: GetFontSize(13) }}
-              className="text-white font-inter400 text-center leading-6">
+            <Text
+              style={{
+                fontSize: GetFontSize(14),
+                fontFamily: 'Inter-Regular',
+                letterSpacing: 0.15,
+                lineHeight: GetFontSize(14) * 1.5,
+              }}
+              className="text-white font-inter400 text-center"
+            >
               Generate comprehensive lesson plans with objectives and activities
             </Text>
           </View>
@@ -71,10 +82,10 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
               borderBottomWidth: 4,
               borderLeftWidth: 2,
             }}
-            className="bg-white rounded-xl border-[#89D5FB] shadow-sm self-center"
+            className="bg-white rounded-xl border-[#89D5FB] shadow-sm self-center w-full"
           >
-            <Text style={{ fontSize: GetFontSize(14) }}
-              className="text-[#1EAFF7] font-inter700 py-3 px-10 text-center">
+            <Text style={{ fontSize: GetFontSize(15) }}
+              className="font-inter700 py-3 text-center">
               Create Lesson Plan
             </Text>
           </TouchableOpacity>

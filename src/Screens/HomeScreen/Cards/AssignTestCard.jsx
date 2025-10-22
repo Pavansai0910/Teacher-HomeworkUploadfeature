@@ -29,7 +29,7 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
         <View
           style={{
             backgroundColor: '#FED570',
-            flex: 2,
+            flex: 1.5,
           }}
           className="rounded-t-3xl justify-center items-center "
         >
@@ -42,15 +42,26 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
           </View>
         </View>
 
-        <View className="bg-white flex-1 px-6 py-6 rounded-b-3xl">
+        <View style={{
+          paddingHorizontal: width * 0.06,
+          paddingVertical: height * 0.03,
+        }}
+          className="bg-white flex-1 rounded-b-3xl">
           <View className="flex-1 justify-center">
             <Text style={{ fontSize: GetFontSize(19) }}
               className="text-[#212B36] font-inter600 text-center mb-3">
               Assign Test
             </Text>
-            <Text style={{ fontSize: GetFontSize(13) }}
-              className="text-[#454F5B] font-inter400 text-center leading-6">
-              Generate comprehensive lesson plans with objectives and activities
+            <Text
+              style={{
+                fontSize: GetFontSize(14),
+                fontFamily: 'Inter-Regular',
+                letterSpacing: 0.15,
+                lineHeight: GetFontSize(14) * 1.5,
+              }}
+              className="text-[#454F5B] font-inter400 text-center"
+            >
+              Seamlessly assign tests and review detailed performance analytics
             </Text>
           </View>
 
@@ -66,10 +77,10 @@ const AssignTestCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
               borderBottomWidth: 4,
               borderLeftWidth: 2,
             }}
-            className="bg-white rounded-xl border-[#E4E4E2] shadow-sm self-center mt-4"
+            className="bg-white rounded-xl border-[#E4E4E2] shadow-sm self-center mt-4 w-full"
           >
-            <Text style={{ fontSize: GetFontSize(14) }}
-              className="text-[#FEC434] font-inter700 py-3 px-16 text-center">
+            <Text style={{ fontSize: GetFontSize(15) }}
+              className="font-inter700 py-3 text-center">
               Assign Test
             </Text>
           </TouchableOpacity>

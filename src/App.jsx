@@ -11,6 +11,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { PersistGate } from 'redux-persist/integration/react';
 import { store, persistor } from './store/store';
 import * as Clarity from '@microsoft/react-native-clarity';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 function AppContent() {
   const dispatch = useDispatch();
@@ -58,25 +59,27 @@ function AppContent() {
 
 function App() {
 
-      const ClarityProjectId = process.env.PROJECT_ID
+  const ClarityProjectId = process.env.PROJECT_ID
 
   useEffect(() => {
     Clarity.initialize(ClarityProjectId, {
-      logLevel: Clarity.LogLevel.None, // Note: Use "LogLevel.Verbose" value while testing to debug initialization issues.
+      logLevel: Clarity.LogLevel.None, 
     });
-  }, []); // The empty array ensures this effect runs only once
+  }, []); 
 
   return (
     <SafeAreaProvider>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <AuthProvider>
-            {/* <SoundProvider> */}
-            <AppContent />
-            {/* </SoundProvider> */}
-          </AuthProvider>
-        </PersistGate>
-      </Provider>
+      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom', 'left', 'right']}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <AuthProvider>
+              {/* <SoundProvider> */}
+              <AppContent />
+              {/* </SoundProvider> */}
+            </AuthProvider>
+          </PersistGate>
+        </Provider>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }

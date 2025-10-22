@@ -7,7 +7,6 @@ import Document from '../../../Images/LessonPlan/Document';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
 import { useState, useEffect, useContext } from 'react';
-import AssignTestDoc from '../../../Images/AssignTestCard/AssignTestDoc';
 import NavHeader from '../../NavHeader';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { getChapters } from '../../../Services/teacherAPIV1';
@@ -16,7 +15,7 @@ import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import DropdownArrow from '../../../Images/LessonPlan/DropdownArrow';
 import { Shadow } from 'react-native-shadow-2';
-import { useSound } from '../../../Context/SoundContext';
+
 const AssignTest = () => {
   const navigation = useNavigation();
   const { teacherProfile } = useContext(AuthContext);
@@ -73,7 +72,6 @@ const AssignTest = () => {
 
   const renderHeader = () => (
     <View>
-
       <NavHeader />
 
       <View className="px-4 mt-3">
@@ -114,10 +112,12 @@ const AssignTest = () => {
                 style={{ borderRadius: 50 }}
               >
 
-                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text style={{ fontSize: GetFontSize(12) }}
-                      className="text-white font-inter600">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
                       2
                     </Text>
                   </View>
@@ -136,10 +136,12 @@ const AssignTest = () => {
                 style={{ borderRadius: 50 }}
               >
 
-                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
                   <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text style={{ fontSize: GetFontSize(12) }}
-                      className="text-white font-inter600">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
                       3
                     </Text>
                   </View>
@@ -169,7 +171,7 @@ const AssignTest = () => {
               <View className="mb-2">
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
-                  className="text-[#B68201] font-inter700 text-center">
+                  className="text-[#664400] font-inter700 text-center">
                   Ready to plan smarter?
                 </Text>
               </View>
@@ -178,8 +180,7 @@ const AssignTest = () => {
               <View className="px-2">
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
-
-                  className="text-[#B68201] font-inter500 text-center">
+                  className="text-[#664400] font-inter500 text-center">
                   Select a chapter for which you want to assign a test.
                 </Text>
               </View>
@@ -191,7 +192,7 @@ const AssignTest = () => {
               <ActivityIndicator size="large" color="#ffffff" />
             ) : (
               <LinearGradient
-                colors={['#E8B787', '#9B7A5A']}
+                colors={['#A17F5E', '#B8916B']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
@@ -205,26 +206,30 @@ const AssignTest = () => {
                 <TouchableOpacity
                   onPress={() => {
                     Vibration.vibrate(50);
-
-                    setIsModalVisible(true)
-                  }
-                  }
-                  className="bg-white rounded-lg px-4 py-4 flex-row justify-between items-center"
+                    setIsModalVisible(true);
+                  }}
+                  className="bg-white rounded-lg px-4 py-4"
                 >
-                  <Text
-                    style={{
-                      fontSize: GetFontSize(17),
-                      color: '#DC9047',
-                      fontFamily: 'Inter',
-                      fontWeight: '700',
-                      lineHeight: GetFontSize(16) * 1.35,
-                      letterSpacing: GetFontSize(16) * -0.02  // -2% of fontSize
-                    }}
-                    className="font-inter700 flex-1"
-                  >
-                    {selectedChapterName || "Choose a chapter to get started..."}
-                  </Text>
-                  <DropdownArrow color="#DC9047" />
+                  <View className="flex-row items-center justify-between">
+                    <Text
+                      style={{
+                        fontSize: GetFontSize(17),
+                        color: '#DC9047',
+                        fontFamily: 'Inter',
+                        fontWeight: '700',
+                        lineHeight: GetFontSize(16) * 1.35,
+                        letterSpacing: GetFontSize(16) * -0.02,
+                        flex: 1, // Add this
+                        flexWrap: 'wrap', // Add this
+                        marginRight: 8, // Add some spacing between text and icon
+                      }}
+                      className="font-inter700"
+                      numberOfLines={2} // Limit to 2 lines
+                    >
+                      {selectedChapterName || "Choose a chapter to get started"}
+                    </Text>
+                    <DropdownArrow color="#DC9047" />
+                  </View>
                 </TouchableOpacity>
               </LinearGradient>
             )}
@@ -235,7 +240,7 @@ const AssignTest = () => {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
 
       {/* Scrollable Content */}
       <FlatList
@@ -326,11 +331,11 @@ const AssignTest = () => {
 
 
           </SafeAreaView>
-        </View>
+        </View>        
       </Modal>
 
       {/* Fixed Bottom Buttons */}
-      <View className="px-4 py-4 bg-white border-t border-[#DFE3E8]" style={{ height: 92, gap: 12 }}>
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <View className="flex-row gap-3">
           <TouchableOpacity
             style={{ fontSize: GetFontSize(16) }}
@@ -376,7 +381,7 @@ const AssignTest = () => {
           </TouchableOpacity>
         </View>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

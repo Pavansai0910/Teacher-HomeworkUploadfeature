@@ -25,6 +25,7 @@ import ScrollUpArrow from '../../../Images/LessonPlan/ScrollUpArrow';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { AuthContext } from '../../../Context/AuthContext';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const HistoryDetails = () => {
     const route = useRoute();
@@ -42,11 +43,8 @@ const HistoryDetails = () => {
         (state) => state.lessonPlanner?.lessonPlannerData
     );
 
-    const {
-        lessonPlanData,
-        chapterId,
-        selectedTopics,
-    } = route.params || {};
+    const { lessonPlanData, chapterName, selectedTopics } = route.params || {};
+
 
     if (!lessonPlanData) {
         return (
@@ -77,8 +75,6 @@ const HistoryDetails = () => {
         lessonPlanData?.topicName?.[0] ||
         'Topic';
 
-    const chapterName =
-        lessonPlanData?.chapter || 'Chapter';
 
     const getAvailableSections = () => {
         const availableSections = [];
@@ -237,22 +233,35 @@ const HistoryDetails = () => {
     );
 
     const BulletList = ({ items }) => (
-        <View className="ml-4">
+        <View className="ml-2">
             {items?.map((item, index) => (
-                <Text style={{ fontSize: GetFontSize(14) }}
-                    key={index}
-                    className="leading-6 text-[#454F5B]"
-                >
-                    • {item}
-                </Text>
+                <View key={index} style={{ flexDirection: 'row', marginBottom: 4 }}>
+                    {/* Bullet */}
+                    <Text style={{ fontSize: GetFontSize(14), lineHeight: 20, marginRight: 6 }}>
+                        •
+                    </Text>
+
+                    {/* Text */}
+                    <Text
+                        style={{
+                            flex: 1,
+                            fontSize: GetFontSize(14),
+                            lineHeight: 20,
+                            color: '#454F5B',
+                        }}
+                    >
+                        {item}
+                    </Text>
+                </View>
             ))}
         </View>
     );
 
+
     return (
-        <SafeAreaView className="flex-1 bg-white">
+        <View className="flex-1 bg-white">
             {/* Header */}
-            <View className="bg-[#E0F5FF] px-6 py-6">
+            <View className="bg-[#E0F5FF] p-5">
                 <View className="flex-row items-center">
                     <View className="h-10 rounded-lg mr-3 justify-center items-center">
                         <Bluepage />
@@ -272,19 +281,14 @@ const HistoryDetails = () => {
                                     navigation.goBack()
                                 }
                                 }                            >
-                                <Text
-                                    style={{ fontSize: GetFontSize(14) }}
-                                    className="text-white"
-                                >
-                                    ✕
-                                </Text>
+                                <CrossIcon />
                             </TouchableOpacity>
                         </View>
                         <Text
                             style={{ fontSize: GetFontSize(14) }}
-                            className="text-[#454F5B]"
+                            className="text-[#454F5B] w-[85%] font-inter400"
                         >
-                            Generate a comprehensive lesson{'\n'}plan in seconds
+                            Generate a comprehensive lesson plan in seconds
                         </Text>
                     </View>
                 </View>
@@ -296,27 +300,37 @@ const HistoryDetails = () => {
                     ref={scrollViewRef}
                     contentContainerStyle={{
                         paddingHorizontal: 20,
-                        paddingTop: 20,
+                        paddingTop: 8,
                         paddingBottom: 100,
                     }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <Text
-                        style={{ fontSize: GetFontSize(18) }}
-                        className="font-inter600 text-[#212B36] mb-1"
-                    >
-                        {topicName}
-                    </Text>
-                    <Text
+
+                    {/* <Text
                         style={{ fontSize: GetFontSize(14) }}
                         className="text-[#454F5B] mb-3"
                     >
                         Chapter: {chapterName}
-                    </Text>
+                    </Text> */}
+
+                    {(() => {
+                        // Convert to array if comma-separated string
+                        const topics = typeof topicName === 'string' ? topicName.split(',') : topicName;
+
+                        return topics.map((topic, index) => (
+                            <Text
+                                key={index}
+                                style={{ fontSize: GetFontSize(15) }}
+                                className="font-inter500 text-[#212B36]"
+                            >
+                                • {topic.trim()}
+                            </Text>
+                        ));
+                    })()}
 
                     {/* Download Button */}
-                    <View className="border border-[#E5E5E3] rounded-xl p-4 ">
-                        <View className="flex-row items-center mb-4">
+                    <View className="border border-[#E5E5E3] rounded-xl p-4 mt-3">
+                        <View className="flex-row items-center">
                             <TouchableOpacity
                                 className="bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1"
                                 onPress={() => {
@@ -353,7 +367,7 @@ const HistoryDetails = () => {
                         </View>
 
                         {/* Timeline */}
-                        {lessonPlanDetails.timelinePeriods && (
+                        {/* {lessonPlanDetails.timelinePeriods && (
                             <>
                                 <SectionHeader title="Timeline" sectionKey="Timeline" />
                                 <Text
@@ -362,7 +376,7 @@ const HistoryDetails = () => {
                                     {lessonPlanDetails.timelinePeriods}
                                 </Text>
                             </>
-                        )}
+                        )} */}
 
                         {/* Learning Objectives */}
                         {lessonPlanDetails.learningObjectives && (
@@ -378,30 +392,58 @@ const HistoryDetails = () => {
                                 <SectionHeader title="Pre-Requisites" sectionKey="Pre-Requisites" />
                                 <View className="ml-4">
                                     {lessonPlanDetails.preRequisite?.map((item, i) => (
-                                        <View key={i} className="">
+                                        <View key={i} className="mb-2">
                                             {item.priorKnowledge && (
-                                                <Text style={{ fontSize: GetFontSize(14) }}
-                                                    className="leading-6 text-[#454F5B]">
-                                                    • Prior Knowledge: {item.priorKnowledge}
-                                                </Text>
+                                                <View style={{ flexDirection: 'row', marginBottom: 4 }}>
+                                                    <Text style={{ fontSize: GetFontSize(14), marginRight: 6 }}>•</Text>
+                                                    <Text
+                                                        style={{
+                                                            flex: 1,
+                                                            fontSize: GetFontSize(14),
+                                                            lineHeight: 20,
+                                                            color: '#454F5B',
+                                                        }}
+                                                    >
+                                                        Prior Knowledge: {item.priorKnowledge}
+                                                    </Text>
+                                                </View>
                                             )}
                                             {item.warmUp && (
-                                                <Text style={{ fontSize: GetFontSize(14) }}
-                                                    className="leading-6 text-[#454F5B]">
-                                                    • Warm Up: {item.warmUp}
-                                                </Text>
+                                                <View style={{ flexDirection: 'row', marginBottom: 4 }}>
+                                                    <Text style={{ fontSize: GetFontSize(14), marginRight: 6 }}>•</Text>
+                                                    <Text
+                                                        style={{
+                                                            flex: 1,
+                                                            fontSize: GetFontSize(14),
+                                                            lineHeight: 20,
+                                                            color: '#454F5B',
+                                                        }}
+                                                    >
+                                                        Warm Up: {item.warmUp}
+                                                    </Text>
+                                                </View>
                                             )}
                                             {item.quickConnect && (
-                                                <Text style={{ fontSize: GetFontSize(14) }}
-                                                    className="leading-6 text-[#454F5B]">
-                                                    • Quick Connect: {item.quickConnect}
-                                                </Text>
+                                                <View style={{ flexDirection: 'row', marginBottom: 4 }}>
+                                                    <Text style={{ fontSize: GetFontSize(14), marginRight: 6 }}>•</Text>
+                                                    <Text
+                                                        style={{
+                                                            flex: 1,
+                                                            fontSize: GetFontSize(14),
+                                                            lineHeight: 20,
+                                                            color: '#454F5B',
+                                                        }}
+                                                    >
+                                                        Quick Connect: {item.quickConnect}
+                                                    </Text>
+                                                </View>
                                             )}
                                         </View>
                                     ))}
                                 </View>
                             </>
                         )}
+
 
                         {/* Key Terms */}
                         {lessonPlanDetails.keyTerms && (
@@ -438,19 +480,30 @@ const HistoryDetails = () => {
                         {lessonPlanDetails.learningFlow && (
                             <>
                                 <SectionHeader title="Learning Flow" sectionKey="Learning Flow" />
-                                <View className="">
+                                <View>
                                     {Object.entries(lessonPlanDetails.learningFlow).map(([phase, items]) => (
-                                        <View key={phase} className="">
-                                            <Text style={{ fontSize: GetFontSize(14) }}
-                                                className="font-inter500 text-[#454F5B] capitalize">
+                                        <View key={phase} className="mb-3">
+                                            <Text
+                                                style={{ fontSize: GetFontSize(14) }}
+                                                className="font-inter500 text-[#454F5B] capitalize mb-1"
+                                            >
                                                 {phase}:
                                             </Text>
                                             <View className="ml-4">
                                                 {items?.map((item, i) => (
-                                                    <Text style={{ fontSize: GetFontSize(14) }}
-                                                        key={i} className="leading-6 text-[#454F5B]">
-                                                        • {item}
-                                                    </Text>
+                                                    <View key={i} style={{ flexDirection: 'row', marginBottom: 4 }}>
+                                                        <Text style={{ fontSize: GetFontSize(14), marginRight: 6 }}>•</Text>
+                                                        <Text
+                                                            style={{
+                                                                flex: 1,
+                                                                fontSize: GetFontSize(14),
+                                                                lineHeight: 20,
+                                                                color: '#454F5B',
+                                                            }}
+                                                        >
+                                                            {item}
+                                                        </Text>
+                                                    </View>
                                                 ))}
                                             </View>
                                         </View>
@@ -458,6 +511,7 @@ const HistoryDetails = () => {
                                 </View>
                             </>
                         )}
+
 
                         {/* Skills Applied */}
                         {lessonPlanDetails.skillsApplied && (
@@ -505,7 +559,7 @@ const HistoryDetails = () => {
                                     {lessonPlanDetails.quickAssessments?.map((assessment, i) => (
                                         <Text style={{ fontSize: GetFontSize(14) }}
                                             key={i} className="leading-6 text-[#454F5B]">
-                                            • <Text className="font-semibold">{assessment.question}</Text> ({assessment.cognitiveLevel})
+                                            • <Text className="font-inter500">{assessment.question}</Text> ({assessment.cognitiveLevel})
                                         </Text>
                                     ))}
                                 </View>
@@ -657,7 +711,7 @@ const HistoryDetails = () => {
                     />
                 )}
             </View>
-        </SafeAreaView>
+        </View>
     );
 };
 

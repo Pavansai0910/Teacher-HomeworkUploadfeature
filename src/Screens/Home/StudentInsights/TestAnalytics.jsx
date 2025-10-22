@@ -5,13 +5,9 @@ import { useSelector } from 'react-redux';
 import { AuthContext } from '../../../Context/AuthContext';
 import { View, Text, TouchableOpacity, Vibration } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import SkullIcon from '../../../Images/StudentInsights/SkullIcon';
 import GetFontSize from '../../../Commons/GetFontSize';
-import { getAllStudents } from '../../../Services/teacherAPIV1';
 import StudentListModal from './StudentListModal';
-import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
-import { useRoute } from '@react-navigation/native';
-
+import { getExamParticipationByTopic } from '../../../Services/teacherAPIV2';
 
 const TestAnalytics = ({ selectedTopic }) => {
     const navigation = useNavigation();
@@ -22,43 +18,57 @@ const TestAnalytics = ({ selectedTopic }) => {
     const [modalTitle, setModalTitle] = useState('');
     const [completedCount, setCompletedCount] = useState(0);
     const [notCompletedCount, setNotCompletedCount] = useState(0);
+    const [loading, setLoading] = useState(false);
+    
     const { teacherProfile } = useContext(AuthContext);
     const selectedAssignment = useSelector(
         (state) => state.assignment.selectedAssignment
     );
 
-
+    // Fetch student data when selectedTopic changes
     useEffect(() => {
-        const getData = async () => {
+        const fetchStudentData = async () => {
+            if (!selectedTopic) return;
+
             try {
-                setStudentData([]);
-                const response = await getAllStudents({
-                    sectionId: selectedAssignment?.sectionId?._id,
+                setLoading(true);
+                const response = await getExamParticipationByTopic({
                     classId: selectedAssignment?.classId?._id,
-                    schoolId: teacherProfile?.schoolId._id,
+                    sectionId: selectedAssignment?.sectionId?._id,
                     subjectId: selectedAssignment?.subjectId?._id,
+                    topicId: selectedTopic,
                 });
-                const data = response.data?.data || [];
-                setStudentData(data);
-                const completed = data.filter(student => student.completed).length;
-                const notCompleted = data.length - completed;
-                setCompletedCount(completed);
-                setNotCompletedCount(notCompleted);
+
+                const allStudents = response.data?.students || [];
+                
+                // Set the complete student data
+                setStudentData(allStudents);
+                
+                // Calculate counts
+                const completedStudents = allStudents.filter(student => student.testGiven);
+                const notCompletedStudents = allStudents.filter(student => !student.testGiven);
+                
+                setCompletedCount(completedStudents.length);
+                setNotCompletedCount(notCompletedStudents.length);
+
             } catch (error) {
-                console.error(error);
+                console.log('Failed to fetch student data:', error.response?.data?.message || error.message);
+            } finally {
+                setLoading(false);
             }
         };
-        getData();
-    }, [selectedAssignment]);
 
+        fetchStudentData();
+    }, [selectedTopic]);
 
     const handleViewDetails = (type) => {
         const filtered = studentData.filter(student =>
-            (type === 'completed' && student.completed) ||
-            (type === 'notCompleted' && !student.completed)
+            type === 'completed' ? student.testGiven : !student.testGiven
         );
 
-        const title = type === 'completed' ? 'Students Who Completed Assessment' : 'Students Who Haven\'t Completed Assessment';
+        const title = type === 'completed' 
+            ? 'Students Who Completed Assessment' 
+            : 'Students Who Haven\'t Completed Assessment';
 
         setModalType(type);
         setFilteredStudents(filtered);
@@ -128,7 +138,6 @@ const TestAnalytics = ({ selectedTopic }) => {
                 </View>
             </View>
 
-
             {/* Separate Modal Component */}
             <StudentListModal
                 visible={showModal}
@@ -138,10 +147,8 @@ const TestAnalytics = ({ selectedTopic }) => {
                 modalType={modalType}
                 selectedTopic={selectedTopic}
             />
-
         </View>
     );
 };
 
 export default TestAnalytics;
-

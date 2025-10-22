@@ -24,6 +24,8 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import TopArrow from '../../../Images/LessonPlan/TopArrow';
 import LessonPlanNavbar from './LessonPlanNavbar';
 import { Shadow } from 'react-native-shadow-2';
+import CrossIcon from '../../../Images/Home/CrossIcon';
+
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
@@ -76,7 +78,7 @@ const LessonPlanTopics = ({ route }) => {
     fetchTopics();
   }, [chapterId]);
   const handleTopicToggle = topic => {
-                  Vibration.vibrate(50);
+    Vibration.vibrate(50);
 
     const isSelected = selectedTopics.some(t => t.id === topic.id);
     if (isSelected) {
@@ -135,7 +137,7 @@ const LessonPlanTopics = ({ route }) => {
     );
   };
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
       <LessonPlanNavbar
         classDisplay={classDisplay}
@@ -151,7 +153,7 @@ const LessonPlanTopics = ({ route }) => {
               <View className="items-center">
                 <Shadow
                   distance={1}
-                  startColor="#CDCDCD"
+                  startColor="#6FCE62"
                   offset={[0, 2]}
                   radius={20}
                   style={{ borderRadius: 50 }}
@@ -237,7 +239,7 @@ const LessonPlanTopics = ({ route }) => {
                 </Text>
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
-                  className="text-white font-inter400 leading-5 px-2"
+                  className="text-white font-inter400 leading-5 px-2 text-center"
                 >
                   Select one or more topics from the list to generate a
                   comprehensive lesson plan.
@@ -245,7 +247,7 @@ const LessonPlanTopics = ({ route }) => {
               </View>
             </View>
             {/* Topics Selection */}
-            <TouchableOpacity
+            {/* <TouchableOpacity
               className="bg-white rounded-xl p-3 mb-4"
               style={{
                 borderTopWidth: 1,
@@ -255,9 +257,10 @@ const LessonPlanTopics = ({ route }) => {
                 borderColor: '#89D5FB',
               }}
               onPress={() => {
-                             Vibration.vibrate(50);
-               
-                navigation.navigate('LessonPlanHistory')}
+                Vibration.vibrate(50);
+
+                navigation.navigate('LessonPlanHistory')
+              }
               }>
               <View className="flex-row justify-center items-center gap-2">
                 <Text
@@ -268,7 +271,7 @@ const LessonPlanTopics = ({ route }) => {
                 </Text>
                 <TopArrow color="#1EAFF7" />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {loading ? (
               <View className="py-8">
@@ -290,9 +293,10 @@ const LessonPlanTopics = ({ route }) => {
               >
                 <TouchableOpacity
                   onPress={() => {
-                                Vibration.vibrate(50);
+                    Vibration.vibrate(50);
 
-                    setIsModalVisible(true)}
+                    setIsModalVisible(true)
+                  }
                   }
                   className="bg-white rounded-lg px-4 py-4"
                 >
@@ -329,17 +333,19 @@ const LessonPlanTopics = ({ route }) => {
             Select multiple topics to create a comprehensive lesson plan!
           </Text>
         </View>
-        <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" />
+        {/* <View className="flex-1 h-[2px] bg-[#DFE3E8] mt-2 mb-2" /> */}
       </ScrollView>
+
       {/* Navigation Buttons */}
-      <View className="px-6 mb-4">
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 border-[#DFE3E8] rounded-xl border-t-[1.5px] border-x-2 border-b-4 justify-center items-center px-4 py-3"
             onPress={() => {
               Vibration.vibrate(50);
 
-              navigation.goBack()}
+              navigation.goBack()
+            }
             }
           >
             <LeftArrow color="#1EAFF7" />
@@ -385,13 +391,14 @@ const LessonPlanTopics = ({ route }) => {
               </Text>
               <TouchableOpacity
                 onPress={() => {
-              Vibration.vibrate(50);
+                  Vibration.vibrate(50);
 
-                  setIsModalVisible(false)}
-                } 
+                  setIsModalVisible(false)
+                }
+                }
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
                 <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
-                  <Text className="text-white font-inter400">✕</Text>
+                  <CrossIcon />
                 </View>
               </TouchableOpacity>
             </View>
@@ -425,7 +432,7 @@ const LessonPlanTopics = ({ route }) => {
                   : 'bg-gray-400 '
                   }`}
                 onPress={() => {
-                                Vibration.vibrate(50);
+                  Vibration.vibrate(50);
 
                   setIsModalVisible(false);
                   if (selectedTopics.length > 0) {
@@ -446,7 +453,7 @@ const LessonPlanTopics = ({ route }) => {
           </SafeAreaView>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 };
 export default LessonPlanTopics; 

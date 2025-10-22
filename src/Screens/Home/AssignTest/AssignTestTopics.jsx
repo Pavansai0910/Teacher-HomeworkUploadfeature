@@ -85,7 +85,7 @@ const AssignTestTopics = ({ route }) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
 
       {/* Class-Section-Subject Display */}
       <NavHeader />
@@ -96,20 +96,19 @@ const AssignTestTopics = ({ route }) => {
           <View className="bg-[#FED570] rounded-2xl px-3 py-6">
             {/* Content Header */}
             <View className="flex-row items-center justify-between mb-5">
-              <View className="items-center">
+             <View className="items-center">
                 <Shadow
                   distance={1}
-                  startColor="#CDCDCD"
+                  startColor="#6FCE62"
                   offset={[0, 2]}
                   radius={20}
                   style={{ borderRadius: 50 }}
                 >
-
                   <View className="flex-row bg-[#5FCC3D] rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
                     <View className="w-8 h-8 bg-white rounded-full justify-center items-center">
                       <Text
                         style={{ fontSize: GetFontSize(12) }}
-                        className="text-black font-inter600"
+                        className="font-inter600"
                       >
                         1
                       </Text>
@@ -149,27 +148,27 @@ const AssignTestTopics = ({ route }) => {
 
               <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
 
-              <View className="items-center">
-                <Shadow
-                  distance={1}
-                  startColor="#CDCDCD"
-                  offset={[0, 2]}
-                  radius={20}
-                  style={{ borderRadius: 50 }}
-                >
+             <View className="items-center">
+              <Shadow
+                distance={1}
+                startColor="#CDCDCD"
+                offset={[0, 2]}
+                radius={20}
+                style={{ borderRadius: 50 }}
+              >
 
-                  <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#FFF] items-center">
-                    <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                      <Text
-                        style={{ fontSize: GetFontSize(12) }}
-                        className="text-white font-inter600"
-                      >
-                        3
-                      </Text>
-                    </View>
+                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                    <Text
+                      style={{ fontSize: GetFontSize(12) }}
+                      className="text-white font-inter600"
+                    >
+                      3
+                    </Text>
                   </View>
-                </Shadow>
-              </View>
+                </View>
+              </Shadow>
+            </View>
             </View>
 
             <View
@@ -183,13 +182,13 @@ const AssignTestTopics = ({ route }) => {
               </View>
               <Text
                 style={{ fontSize: GetFontSize(16) }}
-                className="text-[#B68201] font-inter600 mb-1 text-center"
+                className="text-[#664400] font-inter600 mb-1 text-center"
               >
                 Zoom in and pick your focus!
               </Text>
               <Text
                 style={{ fontSize: GetFontSize(13) }}
-                className="text-[#B68201] text-center font-inter500 mb-6">
+                className="text-[#664400] text-center font-inter500 mb-6">
                 Here is the list of topics from{' '}
                 <Text className="font-inter700">{chapterName}</Text>.{'\n'}
                 {'\n'}
@@ -256,7 +255,7 @@ const AssignTestTopics = ({ route }) => {
       </ScrollView>
 
       {/* Fixed Bottom Buttons */}
-      <View className="px-6 pb-6 pt-5 bg-white border-t border-gray-200">
+      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
         <View className="flex-row gap-2">
           <TouchableOpacity
             className="flex-row gap-1 rounded-xl border-t-[1.5px] border-x-2 border-b-4 border-[#DFE3E8] justify-center items-center px-4 py-3"
@@ -303,7 +302,7 @@ const AssignTestTopics = ({ route }) => {
         setActiveFilter={setActiveFilter}
         chapterName={chapterName}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

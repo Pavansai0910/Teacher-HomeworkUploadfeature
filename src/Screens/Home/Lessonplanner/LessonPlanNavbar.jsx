@@ -8,6 +8,7 @@ import Bluepage from '../../../Images/LessonPlan/LessonPlanner';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { useNavigation } from '@react-navigation/native';
 import { getAllStudents } from '../../../Services/teacherAPIV1'
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const LessonPlanNavbar = () => {
   const navigation = useNavigation();
@@ -36,9 +37,9 @@ const LessonPlanNavbar = () => {
   }, [selectedAssignment]);
 
   return (
-    <>
+    <View>
       {/* Header */}
-      <View className="bg-[#E0F5FF] px-6 py-6">
+      <View className="bg-[#E0F5FF] p-5">
         <View className="flex-row items-center">
           <View className="w-[54px] h-10 rounded-lg mr-3 justify-center items-center">
             <Bluepage />
@@ -59,19 +60,14 @@ const LessonPlanNavbar = () => {
                   navigation.navigate('MainTabNavigator')}
                 } 
               >
-                <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white "
-                >
-                  ✕
-                </Text>
+                <CrossIcon />
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400"
+              className="text-[#454F5B] font-inter400 w-[85%]"
             >
-              Generate a comprehensive lesson{'\n'} plan in seconds
+              Generate a comprehensive lesson plan in seconds
             </Text>
           </View>
         </View>
@@ -103,7 +99,7 @@ const LessonPlanNavbar = () => {
         </View>
       </View>
 
-    </>
+    </View>
   );
 };
 

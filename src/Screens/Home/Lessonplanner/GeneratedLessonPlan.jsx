@@ -24,6 +24,7 @@ import { downloadLessonPlan, saveLessonPlan } from '../../../Services/teacherAPI
 import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../../Context/AuthContext';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const GeneratedLessonPlan = () => {
   const route = useRoute();
@@ -50,7 +51,7 @@ const GeneratedLessonPlan = () => {
   const [isSavedClicked, setIsSavedClicked] = useState(false);
   const [generatedLessonPlanId, setGeneratedLessonPlanId] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedSection, setSelectedSection] = useState('Learning Objectives');
+  const [selectedSection, setSelectedSection] = useState(null);
 
   const lessonPlanDetails = lessonPlanData?.generatedContent || {};
   const topicName =
@@ -85,10 +86,20 @@ const GeneratedLessonPlan = () => {
   const ButtonsOptions = getAvailableSections();
 
   useEffect(() => {
-    if (ButtonsOptions.length > 0 && !ButtonsOptions.includes(selectedSection)) {
+    if (selectedSection && ButtonsOptions.length > 0 && !ButtonsOptions.includes(selectedSection)) {
       setSelectedSection(ButtonsOptions[0]);
     }
   }, [ButtonsOptions]);
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      setSelectedSection(null);
+      setIsDropdownOpen(false);
+      dropdownAnimation.setValue(0);
+    });
+
+    return unsubscribe;
+  }, [navigation]);
 
   const toggleDropdown = () => {
     Vibration.vibrate(50);
@@ -179,17 +190,14 @@ const GeneratedLessonPlan = () => {
       setIsSavedClicked(true);
       setGeneratedLessonPlanId(response.data?.savedPlan._id);
     } catch (error) {
-
-      // Handle 409 conflict (already exists)
       if (error.response?.status === 409) {
-        setIsSaved(true); // Mark as saved since it exists on server
+        setIsSaved(true);
         Toast.show({
           type: 'info',
           text1: 'Already Saved',
           visibilityTime: 3000,
         });
       } else {
-        // Handle other errors
         const errorMessage = error.response?.data?.message || 'Unable to save lesson plan. Please try again.';
         Toast.show({
           type: 'error',
@@ -203,7 +211,6 @@ const GeneratedLessonPlan = () => {
     }
   };
 
-  // Handle download
   const handleLessonPlanDownload = async (generatedLessonPlanId) => {
 
     if (!isSavedClicked) {
@@ -276,13 +283,21 @@ const GeneratedLessonPlan = () => {
   const BulletList = ({ items }) => (
     <View className="ml-0">
       {items?.map((item, index) => (
-        <Text style={{ fontSize: GetFontSize(14) }}
-          key={index} className="leading-6 mx-2 text-[#454F5B]">
-          • {item}
-        </Text>
+        <View key={index} className="flex-row mx-2 mb-1">
+          <Text style={{ fontSize: GetFontSize(14), lineHeight: 22 }} className="text-[#454F5B] mr-2">
+            •
+          </Text>
+          <Text
+            style={{ fontSize: GetFontSize(14), lineHeight: 22, flex: 1 }}
+            className="text-[#454F5B]"
+          >
+            {item}
+          </Text>
+        </View>
       ))}
     </View>
   );
+
 
   if (!lessonPlanData?.generatedContent) {
     return (
@@ -290,7 +305,7 @@ const GeneratedLessonPlan = () => {
         <Text style={{ fontSize: GetFontSize(16) }} className="text-[#454F5B] text-center">
           No lesson plan data found.{'\n'}
           <Text style={{ fontSize: GetFontSize(15) }} className="text-[#1A9DDD]" onPress={() => {
-            Vibration.vibrate(50);  
+            Vibration.vibrate(50);
             navigation.goBack()
           }}>
             Go back
@@ -301,9 +316,9 @@ const GeneratedLessonPlan = () => {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
-      <View className="bg-[#E0F5FF] px-6 py-6">
+      <View className="bg-[#E0F5FF] p-5">
         <View className="flex-row items-center">
           <View className="w-[54px] h-10 rounded-xl mr-3 justify-center items-center">
             <Bluepage />
@@ -325,19 +340,14 @@ const GeneratedLessonPlan = () => {
                 }
                 }
               >
-                <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white "
-                >
-                  ✕
-                </Text>
+                <CrossIcon />
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] "
+              className="text-[#454F5B] font-inter400 w-[85%]"
             >
-              Generate a comprehensive lesson{'\n'} plan in seconds
+              Generate a comprehensive lesson plan in seconds
             </Text>
           </View>
         </View>
@@ -350,25 +360,54 @@ const GeneratedLessonPlan = () => {
           className="flex-1"
           contentContainerStyle={{
             paddingHorizontal: 20,
-            paddingTop: 20,
+            paddingTop: 4,
             paddingBottom: 100,
           }}
           showsVerticalScrollIndicator={false}
         >
-          {/* Topic Header */}
-          <View className="">
+
+          <View className="mb-4">
             <Text
-              style={{ fontSize: GetFontSize(18) }}
-              className=" font-inter600 text-[#212B36] mb-1"
+              style={{ fontSize: GetFontSize(16) }}
+              className="font-inter700 text-[#454F5B]"
             >
-              {topicName}
+              Chapter: {chapterName}
             </Text>
-            <Text
-              style={{ fontSize: GetFontSize(14) }}
-              className=" font-inter400 text-[#454F5B] mb-5"
+
+            {/* Topic Header */}
+            {/* <Text
+              style={{ fontSize: GetFontSize(16) }}
+              className="font-inter700 text-[#454F5B]"
             >
-              Chapter :- {chapterName}
-            </Text>
+              Topic:-
+            </Text> */}
+            {selectedTopics?.map((topic, index) => (
+              <View
+                key={index}
+                className="flex-row items-start mx-3"
+                style={{ marginBottom: 4 }}
+              >
+                {/* Bullet */}
+                <Text
+                  style={{ fontSize: GetFontSize(14), lineHeight: GetFontSize(20) }}
+                  className="font-inter500 text-[#212B36]"
+                >
+                  •
+                </Text>
+
+                {/* Text */}
+                <Text
+                  style={{
+                    fontSize: GetFontSize(14),
+                    flexShrink: 1,
+                  }}
+                  className="font-inter500 text-[#212B36] ml-2"
+                >
+                  {topic?.name || topic?.topicName || 'Untitled Topic'}
+                </Text>
+              </View>
+            ))}
+
           </View>
 
           {/* Save Button with Download Icon */}
@@ -394,8 +433,8 @@ const GeneratedLessonPlan = () => {
                   />
                 ) : (
                   <Text
-                    style={{ fontSize: GetFontSize(14) }}
-                    className="text-[#1EAFF7] font-inter500 justify-center items-center"
+                    style={{ fontSize: GetFontSize(15) }}
+                    className="text-[#1EAFF7] font-inter700 justify-center items-center"
                   >
                     {isSaved ? 'Saved ✓' : 'Save Lesson Plan'}
                   </Text>
@@ -450,7 +489,7 @@ const GeneratedLessonPlan = () => {
                       {prereq.priorKnowledge && (
                         <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-[#454F5B]">
                           • Prior Knowledge:{' '}
-                          <Text style={{ fontSize: GetFontSize(13)}}
+                          <Text style={{ fontSize: GetFontSize(13) }}
                             className="text-[#454F5B]">
                             {prereq.priorKnowledge}
                           </Text>
@@ -458,8 +497,8 @@ const GeneratedLessonPlan = () => {
                       )}
                       {prereq.warmUp && (
                         <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 mb-2 text-[#454F5B]">
-                          • Warm Up: 
-                          <Text style={{ fontSize: GetFontSize(13)}}
+                          • Warm Up:
+                          <Text style={{ fontSize: GetFontSize(13) }}
                             className="text-[#454F5B]">
                             {prereq.warmUp}
                           </Text>
@@ -467,8 +506,8 @@ const GeneratedLessonPlan = () => {
                       )}
                       {prereq.quickConnect && (
                         <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#454F5B]">
-                          • Quick Connect: 
-                          <Text style={{ fontSize: GetFontSize(13)}}
+                          • Quick Connect:
+                          <Text style={{ fontSize: GetFontSize(13) }}
                             className="text-[#454F5B]">
                             {prereq.quickConnect}
                           </Text>
@@ -504,7 +543,7 @@ const GeneratedLessonPlan = () => {
                     <Text style={{ fontSize: GetFontSize(16) }} className="text-base font-inter600 text-[#454F5B] mb-1">
                       {flow.phase} ({flow.duration})
                     </Text>
-                    <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 text-[#637381] leading-6 ml-2">
+                    <Text style={{ fontSize: GetFontSize(14) }} className="text-[#637381] leading-6 ml-2">
                       {flow.description}
                     </Text>
                   </View>
@@ -541,7 +580,7 @@ const GeneratedLessonPlan = () => {
             {lessonPlanDetails.activityDescription && (
               <>
                 <SectionHeader title="Activity Description" sectionKey="Activity Description" />
-                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381]">
+                <Text style={{ fontSize: GetFontSize(14) }} className=" leading-6 text-[#637381]">
                   {lessonPlanDetails.activityDescription}
                 </Text>
               </>
@@ -551,7 +590,7 @@ const GeneratedLessonPlan = () => {
             {lessonPlanDetails.practiceWork && (
               <>
                 <SectionHeader title="Practice Work" sectionKey="Practice Work" />
-                <Text style={{ fontSize: GetFontSize(15) }} className="font-inter500 leading-6 text-[#637381]">
+                <Text style={{ fontSize: GetFontSize(14) }} className="leading-6 text-[#637381]">
                   {lessonPlanDetails.practiceWork}
                 </Text>
               </>
@@ -566,21 +605,47 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Quick Assessments */}
-            {lessonPlanDetails.quickAssessments && (
+            {lessonPlanDetails.quickAssessments?.length > 0 && (
               <>
                 <SectionHeader title="Quick Assessments" sectionKey="Quick Assessments" />
+
                 {lessonPlanDetails.quickAssessments.map((assessment, index) => (
-                  <View key={index} className="mb-2">
-                    <Text style={{ fontSize: GetFontSize(15) }} className=" font-500 text-[#637381] mb-1">
-                      • {assessment.question}
+                  <View
+                    key={index}
+                    className="flex-row items-start rounded-xl px-3 py-2 "
+                  >
+                    {/* Bullet */}
+                    <Text
+                      style={{ fontSize: GetFontSize(16), lineHeight: 22 }}
+                      className="text-[#6B21A8] mr-2"
+                    >
+                      •
                     </Text>
-                    <Text style={{ fontSize: GetFontSize(16) }} className="font-600 text-[#6B7280] ml-4">
-                      Cognitive Level: {assessment.cognitiveLevel}
-                    </Text>
+
+                    {/* Text Content */}
+                    <View className="flex-1">
+                      <Text
+                        style={{ fontSize: GetFontSize(15)}}
+                        className="text-[#212B36] font-inter500"
+                      >
+                        {assessment.question}
+                      </Text>
+
+                      <Text
+                        style={{ fontSize: GetFontSize(13)}}
+                        className="text-[#6B7280] font-inter500 ml-1"
+                      >
+                        Cognitive Level:
+                        <Text className="text-[#6B7280] font-inter600">
+                          {assessment.cognitiveLevel}
+                        </Text>
+                      </Text>
+                    </View>
                   </View>
                 ))}
               </>
             )}
+
 
             {/* Teacher Tips */}
             {lessonPlanDetails.teacherTips && (
@@ -692,7 +757,7 @@ const GeneratedLessonPlan = () => {
                 onPress={toggleDropdown}
               >
                 <Text style={{ fontSize: GetFontSize(18) }} className="text-[#DC9047]  font-inter700 mr-2 flex-1 text-center">
-                  Lesson Plan Sections
+                  {selectedSection || 'Lesson Plan Sections'}
                 </Text>
                 <Animated.View
                   style={{
@@ -723,7 +788,7 @@ const GeneratedLessonPlan = () => {
           />
         )}
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

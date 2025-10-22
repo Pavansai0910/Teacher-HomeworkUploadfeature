@@ -9,11 +9,9 @@ import {
   Vibration,
   ActivityIndicator
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
-
 import capitalizeSubject from '../../../Utils/Capitalize';
 import LearningNavbar from './LearningNavbar';
 import GetFontSize from '../../../Commons/GetFontSize';
@@ -86,7 +84,12 @@ const StudentsInsights = () => {
           setSelectedChapterId(chapterList[0].id);
         }
       } catch (err) {
-        console.error('Failed to fetch chapters:', err.message);
+        const status = err?.response?.status;
+        if (status !== 400 && status !== 404) {
+          console.error('Failed to fetch chapters:', err?.response?.data || err?.message || err);
+        } else {
+          console.log(`ℹSkipped logging for status ${status}`);
+        }
       } finally {
         setLoading(false);
       }
@@ -130,7 +133,12 @@ const StudentsInsights = () => {
           pending: pendingTopics,
         });
       } catch (err) {
-        console.error('Failed to fetch topics:', err.message);
+        const status = err?.response?.status;
+        if (status !== 400 && status !== 404) {
+          console.error(' Failed to fetch topics:', err?.response?.data || err?.message || err);
+        } else {
+          console.log(`ℹ Skipped logging for status ${status}`);
+        }
         setTopicsData({ completed: [], assigned: [], pending: [] });
       } finally {
         setTopicsLoading(false);
@@ -197,123 +205,120 @@ const StudentsInsights = () => {
   const getTopicCount = (status) => topicsData[status]?.length || 0;
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <View className="flex-1 bg-white">
       <LearningNavbar
         classDisplay={classDisplay}
         subjectDisplay={subjectDisplay}
       />
 
       <View className="bg-[#D0F5B3] p-6 mx-6 mt-6 rounded-2xl">
-        {/* Completed */}
-        <TouchableOpacity
-          style={{
-            borderTopWidth: 1,
-            borderBottomWidth: 4,
-            borderLeftWidth: 2,
-            borderRightWidth: 2,
-            borderColor: '#77E425',
-          }}
-          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
-          onPress={() => {
-            Vibration.vibrate(50);
-            navigateToLearningTopic('completed')}
-          }
-          disabled={topicsLoading || !selectedChapter}
-        >
-          <View className="flex-row items-center">
-            <Text
-              className="text-[#454F5B] font-inter500 py-1 px-2"
-              style={{ fontSize: GetFontSize(16) }}
-            >
-              Completed
-            </Text>
-            {topicsLoading ? (
-              <ActivityIndicator size="small" color="#454F5B" className="" />
-            ) : (
+        {/* Loading Overlay */}
+        {topicsLoading && (
+          <View className="absolute inset-0 bg-[#D0F5B3] rounded-2xl z-10 justify-center items-center">
+            <ActivityIndicator size="large" color="#77E425" />
+          </View>
+        )}
+        
+        <View>
+          {/* Completed */}
+          <TouchableOpacity
+            style={{
+              borderTopWidth: 1,
+              borderBottomWidth: 4,
+              borderLeftWidth: 2,
+              borderRightWidth: 2,
+              borderColor: '#77E425',
+            }}
+            className="flex-row justify-between items-center mb-4 p-2 rounded-2xl bg-white"
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigateToLearningTopic('completed')
+            }}
+            disabled={topicsLoading || !selectedChapter}
+          >
+            <View className="flex-row items-center">
+              <Text
+                className="text-[#454F5B] font-inter500 py-1 px-2"
+                style={{ fontSize: GetFontSize(16) }}
+              >
+                Completed
+              </Text>
               <Text
                 className="text-[#454F5B] font-inter600"
                 style={{ fontSize: GetFontSize(14) }}
               >
                 ({getTopicCount('completed')})
               </Text>
-            )}
-          </View>
-          <RightArrowIcon color="#77E425" />
-        </TouchableOpacity>
+            </View>
+            <RightArrowIcon color="#77E425" />
+          </TouchableOpacity>
 
-        {/* Assigned */}
-        <TouchableOpacity
-          style={{
-            borderTopWidth: 1,
-            borderBottomWidth: 4,
-            borderLeftWidth: 2,
-            borderRightWidth: 2,
-            borderColor: '#77E425',
-          }}
-          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
-          onPress={() => {
-           Vibration.vibrate(50);
-            navigateToLearningTopic('assigned')
-          }}
-          disabled={topicsLoading || !selectedChapter}
-        >
-          <View className="flex-row items-center">
-            <Text
-              className="text-[#454F5B] font-inter500 py-1 px-2"
-              style={{ fontSize: GetFontSize(16) }}
-            >
-              Assigned
-            </Text>
-            {topicsLoading ? (
-              <ActivityIndicator size="small" color="#454F5B" className="" />
-            ) : (
+          {/* Pending */}
+          <TouchableOpacity
+            style={{
+              borderTopWidth: 1,
+              borderBottomWidth: 4,
+              borderLeftWidth: 2,
+              borderRightWidth: 2,
+              borderColor: '#77E425',
+            }}
+            className="flex-row justify-between items-center mb-4 p-2 rounded-2xl bg-white"
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigateToLearningTopic('pending')
+            }}
+            disabled={topicsLoading || !selectedChapter}
+          >
+            <View className="flex-row items-center">
               <Text
-                className="text-[#454F5B] font-inter600"
-                style={{ fontSize: GetFontSize(14) }}
+                className="text-[#454F5B] font-inter500 py-1 px-2"
+                style={{ fontSize: GetFontSize(16) }}
               >
-                ({getTopicCount('assigned')})
+                Pending
               </Text>
-            )}
-          </View>
-          <RightArrowIcon color="#77E425" />
-        </TouchableOpacity>
-
-        {/* Pending */}
-        <TouchableOpacity
-          style={{
-            borderTopWidth: 1,
-            borderBottomWidth: 4,
-            borderLeftWidth: 2,
-            borderRightWidth: 2,
-            borderColor: '#77E425',
-          }}
-          className="flex-row justify-between mb-4 p-2 rounded-2xl bg-white"
-          onPress={() => {
-            Vibration.vibrate(50);
-            navigateToLearningTopic('pending')}
-          } 
-          disabled={topicsLoading || !selectedChapter}
-        >
-          <View className="flex-row items-center">
-            <Text
-              className="text-[#454F5B] font-inter500 py-1 px-2"
-              style={{ fontSize: GetFontSize(16) }}
-            >
-              Pending
-            </Text>
-            {topicsLoading ? (
-              <ActivityIndicator size="small" color="#454F5B" className="" />
-            ) : (
               <Text
                 className="text-[#454F5B] font-inter600"
                 style={{ fontSize: GetFontSize(14) }}
               >
                 ({getTopicCount('pending')})
               </Text>
-            )}
-          </View>
-          <RightArrowIcon color="#77E425" />
-        </TouchableOpacity>
+            </View>
+            <RightArrowIcon color="#77E425" />
+          </TouchableOpacity>
+
+          {/* Assigned */}
+          <TouchableOpacity
+            style={{
+              borderTopWidth: 1,
+              borderBottomWidth: 4,
+              borderLeftWidth: 2,
+              borderRightWidth: 2,
+              borderColor: '#77E425',
+            }}
+            className="flex-row justify-between items-center mb-4 p-2 rounded-2xl bg-white"
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigateToLearningTopic('assigned')
+            }}
+            disabled={topicsLoading || !selectedChapter}
+          >
+            <View className="flex-row items-center">
+              <Text
+                className="text-[#454F5B] font-inter500 py-1 px-2"
+                style={{ fontSize: GetFontSize(16) }}
+              >
+                Not Assigned
+              </Text>
+              <Text
+                className="text-[#454F5B] font-inter600"
+                style={{ fontSize: GetFontSize(14) }}
+              >
+                ({getTopicCount('assigned')})
+              </Text>
+            </View>
+            <RightArrowIcon color="#77E425" />
+          </TouchableOpacity>
+        </View>
       </View>
 
       {/* Floating Dropdown */}
@@ -350,8 +355,7 @@ const StudentsInsights = () => {
                     onPress={() => {
                       Vibration.vibrate(50);
                       selectChapter(chapter)
-                    }
-                    }
+                    }}
                     style={{
                       backgroundColor: isSelected ? '#FFE4B5' : 'white',
                       marginVertical: 4,
@@ -440,7 +444,7 @@ const StudentsInsights = () => {
           onPress={toggleDropdown}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -1,50 +1,45 @@
+// 
+
+
 import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Vibration } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../Context/AuthContext';
 import GetFontSize from '../../Commons/GetFontSize';
+import CrossIcon from '../../Images/Home/CrossIcon';
+
+const getInitials = (name) => {
+  if (!name) return 'T';
+  const parts = name.trim().split(' ');
+  if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+};
 
 const Settings = () => {
   const { teacherProfile, logout } = useContext(AuthContext);
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      {/* Header */}
-      <View className="absolute top-0 z-10 w-full h-[37.44%] bg-[#F7EBFF] gap-[29px] items-center justify-center left-0 opacity-100">
-        {/* New Top Layout Bar */}
-        <View className="w-full h-6 flex-row justify-between items-center px-5 opacity-100">
-          {/* Left: Settings Text */}
-          <Text style={{ fontSize: GetFontSize(16) }} className="text-[#637381] font-inter500">Settings</Text>
-          {/* Right: Circular Element */}
+    <View className="flex-1 bg-white">
+      {/* Header Section */}
+      <View className="bg-[#F7EBFF] pt-6 pb-4 items-center justify-center">
+        {/* Top Bar */}
+        <View className="w-full flex-row justify-between items-center px-5 mb-3">
+          <Text style={{ fontSize: GetFontSize(16) }} className="text-[#637381] font-inter500" />
           <TouchableOpacity
-            onPress={() => navigation.navigate('MainTabNavigator')}
-            className="w-6 h-6 rounded-[20px] border-2 bg-[#CE82FF] border-[#BF5CFF] p-1 opacity-100 relative items-center justify-center"
+            onPress={() => {
+              Vibration.vibrate(50);
+              navigation.navigate('MainTabNavigator');
+            }}
+            className="w-6 h-6 rounded-full border-2 border-[#BF5CFF] bg-[#CE82FF] items-center justify-center"
           >
-            <Text
-              className="text-white text-center absolute"
-              style={{
-                width: 10.503851890563965,
-                height: 10.504477500915527,
-                top: 2.75,
-                left: 2.75,
-                opacity: 1,
-                transform: [{ rotate: '0deg' }],
-                fontSize: 8,
-                lineHeight: 10.504477500915527,
-                textAlign: 'center',
-                includeFontPadding: false
-              }}
-            >
-              ✕
-            </Text>
+            <CrossIcon />
           </TouchableOpacity>
         </View>
 
-        {/* Profile Icon with Border */}
-        <View className="items-center justify-center">
-          {/* Profile Avatar with Border */}
+        {/* Profile Section */}
+        <View className="items-center mb-2">
           <View
             className="rounded-full items-center justify-center"
             style={{
@@ -52,98 +47,75 @@ const Settings = () => {
               height: 66,
               borderWidth: 6,
               borderColor: '#CE82FF',
-              opacity: 1,
-              backgroundColor: 'transparent'
             }}
           >
-            <View
-              className="rounded-full items-center justify-center"
-              style={{
-                width: 50,
-                height: 50,
-                backgroundColor: '#FFFFFF'  // Changed to white
-              }}
-            >
+            <View className="rounded-full items-center justify-center bg-white" style={{ width: 50, height: 50 }}>
               <Text style={{ fontSize: GetFontSize(24), color: '#CE82FF' }} className="font-inter600">
-                {teacherProfile?.name?.charAt(0) ?? 'T'}
+                {getInitials(teacherProfile?.name)}
               </Text>
             </View>
           </View>
         </View>
 
-        <Text style={{ fontSize: GetFontSize(16) }} className="text-lg font-inter500 text-[#212B36]">
+        <Text style={{ fontSize: GetFontSize(16) }} className="font-inter500 text-[#212B36]">
           {teacherProfile?.name || 'Teacher'}
         </Text>
-        {/* <Text className="text-[#637381] text-sm">
-          Your Adaptmate rank is 16/36
-        </Text> */}
+
+        <View className="bg-white rounded-2xl px-4 py-1 mt-2">
+          <View className="flex-row justify-center">
+            <Text style={{ fontSize: GetFontSize(10) }} className="text-[#637381] font-inter400 leading-[135%]">
+              Higher score, better leads!{' '}
+            </Text>
+            <Text
+              style={{ fontSize: GetFontSize(10), color: '#B747FF' }}
+              className="font-inter500"
+            >
+              Improve yours now
+            </Text>
+          </View>
+        </View>
       </View>
 
-      <ScrollView className="flex-1 px-5 ">
-        {/* Dashed Line Below Header */}
+      {/* Scrollable Content */}
+      {/* <ScrollView className="flex-1 px-5">
+        <View className="border-b-2 border-dashed border-[#CE82FF] my-3" />
         <View
-          className="w-[394.03173828125px] h-0 border-b-2 border-dashed border-[#CE82FF] opacity-100 -left-[1px]"
           style={{
-            transform: [{ rotate: '0deg' }]
+            borderTopWidth: 1.5,
+            borderRightWidth: 2.5,
+            borderBottomWidth: 6,
+            borderLeftWidth: 2.5,
+            borderColor: '#F7EBFF',
+            borderRadius: 20,
           }}
-        />
-
-        {/* Account Details */}
-        {/* <View className="mt-6">
-          <Text className="text-xs text-gray-400 mb-2">ACCOUNT DETAILS</Text>
-
-          <TouchableOpacity className="bg-gray-50 rounded-xl p-4 mb-3 flex-row justify-between items-center">
-            <Text className="text-[#454F5B]">Personal Information</Text>
+          className="p-4 mb-20" // space for bottom button
+        >
+          <Text className="text-[#919EAB] font-inter600 text-xs mb-2">SETTINGS</Text>
+          <TouchableOpacity className="bg-white rounded-xl p-4 flex-row justify-between items-center border border-[#DFE3E8] mb-2">
+            <Text className="font-inter600 text-[#454F5B]" style={{ fontSize: GetFontSize(14) }}>
+              Profile Settings
+            </Text>
             <Text className="text-[#637381]">{'>'}</Text>
           </TouchableOpacity>
+        </View>
+      </ScrollView> */}
 
-          <TouchableOpacity className="bg-gray-50 rounded-xl p-4 mb-3 flex-row justify-between items-center">
-            <Text className="text-[#454F5B]">Professional Details</Text>
-            <Text className="text-[#637381]">{'>'}</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        {/* Help & Support */}
-        {/* <View className="mt-6">
-          <Text className="text-xs text-gray-400 mb-2">HELP AND SUPPORT</Text>
-
-          <TouchableOpacity className="bg-gray-50 rounded-xl p-4 mb-3 flex-row justify-between items-center">
-            <Text className="text-[#454F5B]">Support</Text>
-            <Text className="text-[#637381]">{'>'}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="bg-gray-50 rounded-xl p-4 mb-3 flex-row justify-between items-center">
-            <Text className="text-[#454F5B]">FAQ</Text>
-            <Text className="text-[#637381]">{'>'}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="bg-gray-50 rounded-xl p-4 mb-3 flex-row justify-between items-center">
-            <Text className="text-[#454F5B]">Feedback</Text>
-            <Text className="text-[#637381]">{'>'}</Text>
-          </TouchableOpacity>
-        </View> */}
-
-        {/* Logout */}
+      {/* Fixed Bottom Log Out Button */}
+      <View className="absolute bottom-6 left-0 right-0 px-5">
         <TouchableOpacity
           onPress={() => {
             Vibration.vibrate(50);
-            logout()
+            logout();
           }}
-          className="bg-[#ffffff] rounded-xl p-4 mt-3 flex-row justify-center"
-          style={{
-            borderTopWidth: 1,
-            borderRightWidth: 2,
-            borderBottomWidth: 4,
-            borderLeftWidth: 2,
-            borderStyle: 'solid',
-            borderColor: '#DFE3E8'
-          }}
+          className="bg-[#FFE1E1] rounded-xl p-4 flex-row justify-center border-[1.5px] border-red-500"
         >
-          <Text style={{ fontSize: GetFontSize(16) }} className="text-red-500 font-inter700">Log Out</Text>
+          <Text style={{ fontSize: GetFontSize(16) }} className="text-red-500 font-inter700">
+            Log Out
+          </Text>
         </TouchableOpacity>
-      </ScrollView>
-    </SafeAreaView>
+      </View>
+    </View>
   );
 };
 
-export default Settings; 
+export default Settings;

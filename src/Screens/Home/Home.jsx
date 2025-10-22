@@ -132,22 +132,29 @@ const Home = () => {
   });
 
   return (
-    <SafeAreaView className="flex-1 pt-5 bg-white">
+    <View className="flex-1 bg-white">
       {/* Header */}
       <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white">
         <TouchableOpacity
           className="flex-row items-center"
           onPress={() => {
-          Vibration.vibrate(50);
-            navigation.navigate('Settings')}
+            Vibration.vibrate(50);
+            navigation.navigate('Settings')
+          }
           }
         >
           <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
             <Text
-              style={{ fontSize: GetFontSize(16) }}
-              className="text-white font-poppins400"
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-white font-inter600"
             >
-              {teacherProfile?.name?.[0] || 'T'}
+              {teacherProfile?.name
+                ? teacherProfile.name
+                  .split(' ')
+                  .slice(0, 2)
+                  .map(word => word[0].toUpperCase())
+                  .join('')
+                : 'T'}
             </Text>
           </View>
           <View>
@@ -175,10 +182,10 @@ const Home = () => {
         end={{ x: 0, y: 1 }}
       >
         {/* Dropdowns */}
-        <View className="flex-row justify-between px-6 pt-4 pb-6">
+        <View className="flex-row justify-between px-5 pt-4 pb-6 gap-4">
           {/* Class Dropdown */}
           <TouchableOpacity
-            className="flex-1 mr-2 rounded-[16px] py-3 px-4 flex-row justify-between items-center shadow-sm"
+            className="flex-1 rounded-[16px] py-3 px-2 flex-row justify-between items-center"
             style={{
               backgroundColor: '#FFF',
               borderTopWidth: 3,
@@ -190,13 +197,13 @@ const Home = () => {
             }
             onPress={() => {
 
-                            Vibration.vibrate(50);
-
-              setClassModalVisible(true)}
-            } 
+              Vibration.vibrate(50);
+              setClassModalVisible(true)
+            }
+            }
           >
             <Text
-              style={{ fontSize: GetFontSize(16) }}
+              style={{ fontSize: GetFontSize(15) }}
               className="text-[#DC9047] font-inter700"
             >
               Class: {getClassDisplayText()}
@@ -206,7 +213,7 @@ const Home = () => {
 
           {/* Subject Dropdown */}
           <TouchableOpacity
-            className="flex-1 rounded-[16px] py-3 px-4 flex-row justify-between items-center"
+            className="flex-1 rounded-[16px] py-3 px-2 flex-row justify-between items-center"
             style={{
               backgroundColor: '#FFF',
               borderTopWidth: 3,
@@ -216,7 +223,7 @@ const Home = () => {
               borderColor: '#A17F5E',
             }}
             onPress={() => {
-                            Vibration.vibrate(50);
+              Vibration.vibrate(50);
 
               if (!selectedClass && !selectedAssignment) {
                 alert('Please select a class first');
@@ -228,7 +235,7 @@ const Home = () => {
           >
             <View style={{ maxWidth: '80%' }}>
               <Text
-                style={{ fontSize: GetFontSize(16) }}
+                style={{ fontSize: GetFontSize(15) }}
                 className="text-[#DC9047] font-inter700"
                 numberOfLines={1}
                 ellipsizeMode="tail"
@@ -259,9 +266,8 @@ const Home = () => {
                   <TouchableOpacity
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
-                                    Vibration.vibrate(50);
+                      Vibration.vibrate(50);
 
-                      // Filter subjects for the selected class-section
                       const relatedSubjects = teacherProfile?.assignments
                         ?.filter(
                           a =>
@@ -271,14 +277,13 @@ const Home = () => {
                         .map(a => a.subjectId)
                         .filter(Boolean);
 
-                      // Pick first subject if available
                       const firstSubject = relatedSubjects?.[0] || null;
 
                       const updatedAssignment = {
                         ...selectedAssignment,
                         classId: item.classId,
                         sectionId: item.sectionId,
-                        subjectId: firstSubject, // ✅ automatically assign first subject
+                        subjectId: firstSubject,
                       };
 
                       setSelectedClass({
@@ -286,9 +291,7 @@ const Home = () => {
                         sectionId: item.sectionId,
                       });
                       setSelectedSubject(firstSubject);
-
                       dispatch(setAssignment(updatedAssignment));
-
                       setClassModalVisible(false);
                     }}
                   >
@@ -313,9 +316,10 @@ const Home = () => {
               <TouchableOpacity
                 className="mt-4 bg-red-500 py-2 rounded-lg"
                 onPress={() => {
-                                Vibration.vibrate(50);
-setClassModalVisible(false)}
-                              }              >
+                  Vibration.vibrate(50);
+                  setClassModalVisible(false)
+                }
+                }              >
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white text-center font-inter700"
@@ -346,7 +350,7 @@ setClassModalVisible(false)}
                   <TouchableOpacity
                     className="py-3 border-b border-gray-200"
                     onPress={() => {
-                                    Vibration.vibrate(50);
+                      Vibration.vibrate(50);
 
                       const updatedAssignment = {
                         ...selectedAssignment,
@@ -354,10 +358,7 @@ setClassModalVisible(false)}
                       };
 
                       setSelectedSubject(item);
-
-                      // update redux
                       dispatch(setAssignment(updatedAssignment));
-
                       setSubjectModalVisible(false);
                     }}
                   >
@@ -376,9 +377,10 @@ setClassModalVisible(false)}
               <TouchableOpacity
                 className="mt-4 bg-red-500 py-2 rounded-lg"
                 onPress={() => {
-                                Vibration.vibrate(50);
-setSubjectModalVisible(false)}
-                              }              >
+                  Vibration.vibrate(50);
+                  setSubjectModalVisible(false)
+                }
+                }              >
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white text-center font-inter700"
@@ -407,38 +409,41 @@ setSubjectModalVisible(false)}
           >
             <StudentsInsightsCard
               onPress={() => {
-                              Vibration.vibrate(50);
-navigation.navigate('StudentsInsights')}
-                            }
-                                          isActive={currentIndex === 0}
+                Vibration.vibrate(50);
+                navigation.navigate('StudentsInsights')
+              }
+              }
+              isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             />
             <LessonPlannerCard
-              onPress={() =>{
-              Vibration.vibrate(50);
+              onPress={() => {
+                Vibration.vibrate(50);
 
-                navigation.navigate('LessonPlanner')}
+                navigation.navigate('LessonPlanner')
+              }
               }
               isActive={currentIndex === 1}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
             />
-           
+
             <AssignTestCard
               onPress={() => {
-                             Vibration.vibrate(50);
+                Vibration.vibrate(50);
 
-                navigation.navigate('AssignTest')}
-               } 
-               isActive={currentIndex === 2}
+                navigation.navigate('AssignTest')
+              }
+              }
+              isActive={currentIndex === 2}
               cardWidth={cardWidth}
               cardSpacing={0}
-            /> 
+            />
           </ScrollView>
 
           {/* Pagination Dots */}
-          <View className="flex-row justify-center items-center mt-8">
+          <View className="flex-row justify-center items-center mt-10">
             {gradientBackgrounds.map((_, index) => {
               let dotColor = '#FFFFFF';
               if (currentIndex === index) {
@@ -463,7 +468,7 @@ navigation.navigate('StudentsInsights')}
 
         </View>
       </LinearGradient>
-    </SafeAreaView>
+    </View>
   );
 };
 

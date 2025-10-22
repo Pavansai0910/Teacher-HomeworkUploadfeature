@@ -8,6 +8,7 @@ import AssignTestDoc from '../../Images/AssignTestCard/AssignTestDoc';
 import GetFontSize from '../../Commons/GetFontSize';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import CrossIcon from '../../Images/Home/CrossIcon';
 
 function NavHeader() {
   const navigation = useNavigation();
@@ -37,7 +38,7 @@ function NavHeader() {
   return (
     <>
       {/* Header */}
-      <View className="bg-[#FFF3D6] px-6 py-6">
+      <View className="bg-[#FFF3D6] p-5">
         <View className="flex-row items-center">
           <View className="w-20 h-20 bg-[#FEE19A] rounded-lg justify-center items-center mr-3">
             <AssignTestDoc />
@@ -65,13 +66,14 @@ function NavHeader() {
                 >
                   ✕
                 </Text>
+                {/* <CrossIcon /> */}
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400"
+              className="text-[#454F5B] font-inter400 w-[85%]" 
             >
-              Boost your students's progress in{'\n'}just few taps!
+              Boost your students's progress in just few taps!
             </Text>
           </View>
         </View>
