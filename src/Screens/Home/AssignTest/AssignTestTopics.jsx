@@ -176,24 +176,24 @@ const AssignTestTopics = ({ route }) => {
               style={{ borderStyle: 'dashed' }}
             />
 
-            <View className="items-center mb-4 mt-8">
+            <View className="items-center mb-4 mt-4">
               <View className="w-16 h-16 rounded-xl justify-center items-center ">
                 <Document />
               </View>
-              <Text
+              {/* <Text
                 style={{ fontSize: GetFontSize(16) }}
                 className="text-[#664400] font-inter600 mb-1 text-center"
               >
                 Zoom in and pick your focus!
-              </Text>
-              <Text
+              </Text> */}
+              {/* <Text
                 style={{ fontSize: GetFontSize(13) }}
                 className="text-[#664400] text-center font-inter500 mb-6">
                 Here is the list of topics from{' '}
                 <Text className="font-inter700">{chapterName}</Text>.{'\n'}
                 {'\n'}
                 Select a topic you want to assign a test for.
-              </Text>
+              </Text> */}
 
               {/* Select Topics Button */}
 

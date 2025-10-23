@@ -15,6 +15,7 @@ import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import DropdownArrow from '../../../Images/LessonPlan/DropdownArrow';
 import { Shadow } from 'react-native-shadow-2';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const AssignTest = () => {
   const navigation = useNavigation();
@@ -168,22 +169,22 @@ const AssignTest = () => {
               </View>
 
               {/* Title Text Section */}
-              <View className="mb-2">
+              {/* <View className="mb-2">
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-[#664400] font-inter700 text-center">
                   Ready to plan smarter?
                 </Text>
-              </View>
+              </View> */}
 
               {/* Subtitle Text Section */}
-              <View className="px-2">
+              {/* <View className="px-2">
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
                   className="text-[#664400] font-inter500 text-center">
                   Select a chapter for which you want to assign a test.
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
           {/* Choose Chapter Button */}
@@ -274,8 +275,9 @@ const AssignTest = () => {
                 }
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
 
-                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-                  <Text className="text-white font-inter400">✕</Text>
+                <View className="w-7 h-7 bg-[#FEDB85] rounded-full justify-center items-center border-2 border-[#FDCA0C]">
+                  {/* <Text className="text-white font-inter400">✕</Text> */}
+                  <CrossIcon />
                 </View>
 
               </TouchableOpacity>

@@ -19,7 +19,7 @@ const TestAnalytics = ({ selectedTopic }) => {
     const [completedCount, setCompletedCount] = useState(0);
     const [notCompletedCount, setNotCompletedCount] = useState(0);
     const [loading, setLoading] = useState(false);
-    
+
     const { teacherProfile } = useContext(AuthContext);
     const selectedAssignment = useSelector(
         (state) => state.assignment.selectedAssignment
@@ -40,14 +40,14 @@ const TestAnalytics = ({ selectedTopic }) => {
                 });
 
                 const allStudents = response.data?.students || [];
-                
+
                 // Set the complete student data
                 setStudentData(allStudents);
-                
+
                 // Calculate counts
                 const completedStudents = allStudents.filter(student => student.testGiven);
                 const notCompletedStudents = allStudents.filter(student => !student.testGiven);
-                
+
                 setCompletedCount(completedStudents.length);
                 setNotCompletedCount(notCompletedStudents.length);
 
@@ -66,8 +66,8 @@ const TestAnalytics = ({ selectedTopic }) => {
             type === 'completed' ? student.testGiven : !student.testGiven
         );
 
-        const title = type === 'completed' 
-            ? 'Students Who Completed Assessment' 
+        const title = type === 'completed'
+            ? 'Students Who Completed Assessment'
             : 'Students Who Haven\'t Completed Assessment';
 
         setModalType(type);
@@ -91,11 +91,13 @@ const TestAnalytics = ({ selectedTopic }) => {
                 <View className="flex-row gap-[10px]">
                     <View className="flex-1 rounded-[16px] p-4 border-t-2 border-r-2 border-b-4 border-l-2 border-[#E5E5E3] flex-col justify-between">
                         <View className="flex-col items-center gap-[10px]">
-                            <View className="w-[30px] h-[30px] rounded-full bg-[#5FCC3D] justify-center items-center">
-                                <Text className="text-white font-inter700" style={{ fontSize: GetFontSize(20) }}>
+                            <View className="w-[30px] h-[30px] rounded-full bg-[#5FCC3D] flex justify-center items-center">
+                                <Text style={{ fontSize: GetFontSize(18) }}
+                                    className="text-white font-inter700 leading-[16px]">
                                     {completedCount}
                                 </Text>
                             </View>
+
                             <Text className="text-[#454F5B] font-inter400 text-center" style={{ fontSize: GetFontSize(12) }}>
                                 Students have given Assessment
                             </Text>
@@ -115,7 +117,8 @@ const TestAnalytics = ({ selectedTopic }) => {
                     <View className="flex-1 rounded-[16px] p-4 border-t-2 border-r-2 border-b-4 border-l-2 border-[#E5E5E3] flex-col justify-between">
                         <View className="flex-col items-center gap-[10px]">
                             <View className="w-[30px] h-[30px] rounded-full bg-[#E87076] justify-center items-center">
-                                <Text className="text-white font-inter700" style={{ fontSize: GetFontSize(20) }}>
+                                <Text style={{ fontSize: GetFontSize(18) }}
+                                    className="text-white font-inter700 leading-[16px]">
                                     {notCompletedCount}
                                 </Text>
                             </View>
@@ -124,7 +127,7 @@ const TestAnalytics = ({ selectedTopic }) => {
                             </Text>
                         </View>
                         <TouchableOpacity
-                            className="self-center w-[112px] h-[33px] rounded-[17.19px] px-5 py-1 bg-[#A88462] border-t-2 border-r-2 border-b-4 border-l-2 border-[#836549] mt-2"
+                            className="self-center px-6 py-1 rounded-[17.19px] px-5 py-1 bg-[#A88462] border-t-2 border-r-2 border-b-4 border-l-2 border-[#836549] mt-2"
                             onPress={() => {
                                 Vibration.vibrate(50);
                                 handleViewDetails('notCompleted');
