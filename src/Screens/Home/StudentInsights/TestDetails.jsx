@@ -85,10 +85,9 @@ const TestDetails = ({
             className="px-4"
             nestedScrollEnabled={true}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-                paddingBottom: 20,
-                flexGrow: 1
-            }}
+            // contentContainerStyle={{
+            //     paddingBottom: 4,
+            // }}
         >
             {chapterData.map((item, index) => {
                 const isExpanded = expanded.includes(index);

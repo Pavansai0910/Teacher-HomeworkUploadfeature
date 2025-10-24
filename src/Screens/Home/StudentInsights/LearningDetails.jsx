@@ -167,7 +167,7 @@ const LearningDetails = () => {
                 <Animated.View
                     style={{
                         width: width,
-                        height: height * 0.7,
+                        // height: height * 0.7,
                         justifyContent: 'center',
                         alignItems: 'center',
                         transform: [{ rotateY }],
