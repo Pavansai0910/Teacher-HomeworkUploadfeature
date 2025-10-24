@@ -80,9 +80,11 @@ const LessonPlanNavbar = () => {
       <View className="mt-6 px-6 bg-white">
         <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
           <View className="w-[60%] border-r-2 border-[#E5E5E3] pr-4">
-            <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
+            <Text style={{ fontSize: GetFontSize(12) }}
+            className="text-[#637381] font-inter400 mb-1">Selected Class</Text>
             <Text
-              className="text-gray-800 font-semibold"
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#212B36] font-inter500"
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -90,9 +92,12 @@ const LessonPlanNavbar = () => {
             </Text>
           </View>
           <View className="flex-[1] ml-2">
-            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
+            <Text 
+            style={{ fontSize: GetFontSize(12) }}
+            className="text-[#637381] font-inter400 mb-1">Subject</Text>
             <Text
-              className="text-gray-800 font-semibold"
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#212B36] font-inter500"
               numberOfLines={1}
               ellipsizeMode="tail"
             >

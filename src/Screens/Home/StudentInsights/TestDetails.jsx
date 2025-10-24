@@ -81,11 +81,23 @@ const TestDetails = ({
     };
 
     return (
-        <ScrollView className="px-4">
+        <ScrollView
+            className="px-4"
+            nestedScrollEnabled={true}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+                paddingBottom: 20,
+                flexGrow: 1
+            }}
+        >
             {chapterData.map((item, index) => {
                 const isExpanded = expanded.includes(index);
+                const isLastItem = index === chapterData.length - 1;
                 return (
-                    <View key={item.objectiveId || index} className="mt-2">
+                    <View style={{
+                        marginBottom: isLastItem ? 40 : 0
+                    }}
+                        key={item.objectiveId || index} className="mt-2">
                         {!isExpanded ? (
                             <View className="bg-white rounded-t-2xl">
                                 <TouchableOpacity
