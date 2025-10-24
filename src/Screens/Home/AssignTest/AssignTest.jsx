@@ -275,7 +275,7 @@ const AssignTest = () => {
                 }
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
 
-                <View className="w-7 h-7 bg-[#FEDB85] rounded-full justify-center items-center border-2 border-[#FDCA0C]">
+                <View className="w-7 h-7 bg-[#FED570] rounded-full justify-center items-center">
                   {/* <Text className="text-white font-inter400">✕</Text> */}
                   <CrossIcon />
                 </View>

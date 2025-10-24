@@ -1,103 +1,74 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal, Vibration } from 'react-native';
+import { View, Text, TouchableOpacity, Modal, Dimensions, Vibration } from 'react-native';
 import GetFontSize from '../../Commons/GetFontSize';
+import { useNavigation } from '@react-navigation/native';
 
-const ExitConfirmationPopup = ({ visible, onExit, onCancel }) => {
+const ExitConfirmationPopup = ({ visible, onClose, onExit, title }) => {
+  const { height: screenHeight } = Dimensions.get('window');
+  const navigation = useNavigation();
+
   return (
-    <Modal
-      transparent={true}
-      visible={visible}
-      animationType="fade"
-      onRequestClose={onCancel}
-    >
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: 'rgba(0, 0, 0, 0.5)', // ✅ Semi-transparent background
-          justifyContent: 'flex-end',
-          paddingBottom: 40,
-          paddingHorizontal: 20,
-        }}
-      >
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <View className="flex-1 justify-end bg-black/20">
         <View
-          style={{
-            backgroundColor: 'white',
-            borderRadius: 16,
-            padding: 20,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: -4 },
-            shadowOpacity: 0.1,
-            shadowRadius: 8,
-            elevation: 10,
-          }}
+          className="w-full bg-white rounded-t-3xl px-4 py-5"
+          style={{ maxHeight: screenHeight * 0.3 }}
         >
           {/* Title */}
           <Text
-            style={{
-              fontSize: GetFontSize(18),
-              fontWeight: '600',
-              color: '#212B36',
-              marginBottom: 8,
-            }}
+            className="text-center mb-4 font-medium text-[#454F5B]"
+            style={{ fontSize: GetFontSize(16) }}
           >
-            Confirm Exit
-          </Text>
-
-          {/* Description */}
-          <Text
-            style={{
-              fontSize: GetFontSize(14),
-              color: '#637381',
-              marginBottom: 20,
-            }}
-          >
-            Are you sure you want to exit Assign Test
+            {title || 'Are you sure you want to exit?'}
           </Text>
 
           {/* Exit Button */}
           <TouchableOpacity
-            style={{
-              backgroundColor: '#FF6B6B',
-              borderRadius: 12,
-              paddingVertical: 14,
-              alignItems: 'center',
-              marginBottom: 12,
-            }}
             onPress={() => {
               Vibration.vibrate(50);
-              onExit();
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'MainTabNavigator' }],
+              });
+            }}
+            className="bg-[#E87076] rounded-lg mb-3"
+            style={{
+              borderColor: '#E03E46',
+              borderLeftWidth: 2.5,
+              borderRightWidth: 2.5,
+              borderTopWidth: 1.5,
+              borderBottomWidth: 4,
+              paddingVertical: 14,
             }}
           >
             <Text
-              style={{
-                color: 'white',
-                fontSize: GetFontSize(16),
-                fontWeight: '600',
-              }}
+              className="text-white text-center font-semibold"
+              style={{ fontSize: GetFontSize(16) }}
             >
               Exit
             </Text>
           </TouchableOpacity>
 
+
           {/* Cancel Button */}
           <TouchableOpacity
-            style={{
-              backgroundColor: 'transparent',
-              borderRadius: 12,
-              paddingVertical: 14,
-              alignItems: 'center',
-            }}
             onPress={() => {
               Vibration.vibrate(50);
-              onCancel();
+              onClose && onClose();
+            }}
+            className="bg-white py-3 rounded-lg"
+            style={{
+              borderColor: '#E5E5E3',
+              borderLeftWidth: 2.5,
+              borderRightWidth: 2.5,
+              borderTopWidth: 1.5,
+              borderBottomWidth: 4,
+              paddingVertical: 14,
             }}
           >
             <Text
-              style={{
-                color: '#637381',
-                fontSize: GetFontSize(16),
-                fontWeight: '500',
-              }}
+              className="text-[#454F5B] text-center font-semibold"
+              style={{ fontSize: GetFontSize(16) }}
             >
               Cancel
             </Text>

@@ -9,11 +9,14 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import { useNavigation } from '@react-navigation/native';
 import { getAllStudents } from '../../../Services/teacherAPIV1'
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import ExitConfirmationPopup from '../../ConfirmationPopup/ExitConfirmationPopup';
+
 
 const LessonPlanNavbar = () => {
   const navigation = useNavigation();
   const [studentData, setStudentData] = useState([]);
   const { teacherProfile } = useContext(AuthContext);
+  const [isExitPopupVisible, setIsExitPopupVisible] = useState(false);
   const selectedAssignment = useSelector(
     (state) => state.assignment.selectedAssignment
   );
@@ -53,12 +56,12 @@ const LessonPlanNavbar = () => {
                 Create Lesson Plan
               </Text>
               <TouchableOpacity
-                className="w-7 h-7 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center"
+                className="w-7 h-7 bg-[#1EAFF7] rounded-full border border-[#1A9DDD] justify-center items-center"
                 onPress={() => {
-              Vibration.vibrate(50);
-
-                  navigation.navigate('MainTabNavigator')}
-                } 
+                  Vibration.vibrate(50);
+                   setIsExitPopupVisible(true);
+                }
+                }
               >
                 <CrossIcon />
               </TouchableOpacity>
@@ -98,7 +101,12 @@ const LessonPlanNavbar = () => {
           </View>
         </View>
       </View>
-
+      <ExitConfirmationPopup
+        visible={isExitPopupVisible}
+        onClose={() => setIsExitPopupVisible(false)}
+        modalType="completed"
+        title="Are you sure you want to exit?"
+      />
     </View>
   );
 };

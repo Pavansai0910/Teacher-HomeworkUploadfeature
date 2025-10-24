@@ -25,6 +25,7 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../../Context/AuthContext';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import ExitConfirmationPopup from '../../ConfirmationPopup/ExitConfirmationPopup';
 
 const GeneratedLessonPlan = () => {
   const route = useRoute();
@@ -50,6 +51,7 @@ const GeneratedLessonPlan = () => {
   const [downloadStatus, setDownloadStatus] = useState(false);
   const [isSavedClicked, setIsSavedClicked] = useState(false);
   const [generatedLessonPlanId, setGeneratedLessonPlanId] = useState(null);
+  const [isExitPopupVisible, setIsExitPopupVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedSection, setSelectedSection] = useState(null);
 
@@ -335,8 +337,7 @@ const GeneratedLessonPlan = () => {
                 className="w-7 h-7 bg-[#1EAFF7] rounded-full justify-center items-center"
                 onPress={() => {
                   Vibration.vibrate(50);
-
-                  navigation.navigate('MainTabNavigator')
+                  setIsExitPopupVisible(true);
                 }
                 }
               >
@@ -625,14 +626,14 @@ const GeneratedLessonPlan = () => {
                     {/* Text Content */}
                     <View className="flex-1">
                       <Text
-                        style={{ fontSize: GetFontSize(15)}}
+                        style={{ fontSize: GetFontSize(15) }}
                         className="text-[#212B36] font-inter500"
                       >
                         {assessment.question}
                       </Text>
 
                       <Text
-                        style={{ fontSize: GetFontSize(13)}}
+                        style={{ fontSize: GetFontSize(13) }}
                         className="text-[#6B7280] font-inter500 ml-1"
                       >
                         Cognitive Level:
@@ -788,6 +789,13 @@ const GeneratedLessonPlan = () => {
           />
         )}
       </View>
+
+      <ExitConfirmationPopup
+        visible={isExitPopupVisible}
+        onClose={() => setIsExitPopupVisible(false)}
+        modalType="completed"
+        title="Are you sure you want to exit?"
+      />
     </View>
   );
 };

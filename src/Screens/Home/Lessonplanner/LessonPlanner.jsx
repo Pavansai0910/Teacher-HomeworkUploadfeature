@@ -23,6 +23,7 @@ import { Shadow } from 'react-native-shadow-2';
 import { getChapters } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import TopArrow from '../../../Images/LessonPlan/TopArrow';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 
 const LessonPlanner = () => {
@@ -240,12 +241,12 @@ const LessonPlanner = () => {
                           fontWeight: '700',
                           lineHeight: GetFontSize(16) * 1.35,
                           letterSpacing: GetFontSize(16) * -0.02,
-                          flex: 1, // Takes available space
-                          flexWrap: 'wrap', // Allows text to wrap
-                          marginRight: 8, // Space between text and icon
+                          flex: 1,
+                          flexWrap: 'wrap', 
+                          marginRight: 8, 
                         }}
                         className="font-inter700"
-                        numberOfLines={2} // Limits to 2 lines max
+                        numberOfLines={2} 
                       >
                         {selectedChapterName || "Choose a chapter to get started"}
                       </Text>
@@ -367,13 +368,12 @@ const LessonPlanner = () => {
               <TouchableOpacity
                 onPress={() => {
                   Vibration.vibrate(50);
-
                   setIsModalVisible(false)
                 }
                 }
               >
-                <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
-                  <Text className="text-white font-inter400">✕</Text>
+                <View className="w-7 h-7 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
+                  <CrossIcon />
                 </View>
               </TouchableOpacity>
             </View>

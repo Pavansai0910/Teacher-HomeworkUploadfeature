@@ -9,11 +9,13 @@ import GetFontSize from '../../Commons/GetFontSize';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CrossIcon from '../../Images/Home/CrossIcon';
+import ExitConfirmationPopup from '../ConfirmationPopup/ExitConfirmationPopup';
 
 function NavHeader() {
   const navigation = useNavigation();
   const [studentData, setStudentData] = useState([]);
   const { teacherProfile } = useContext(AuthContext);
+  const [isExitPopupVisible, setIsExitPopupVisible] = useState(false);
   const selectedAssignment = useSelector(
     (state) => state.assignment.selectedAssignment
   );
@@ -56,22 +58,16 @@ function NavHeader() {
                 className="w-7 h-7 bg-[#FEDB85] rounded-full justify-center items-center border-2 border-[#FDCA0C]"
                 onPress={() => {
                   Vibration.vibrate(50);
-                  navigation.navigate('MainTabNavigator')
+                  setIsExitPopupVisible(true);
                 }
                 }
               >
-                {/* <Text
-                  style={{ fontSize: GetFontSize(11), marginTop: -1 }}
-                  className="text-white font-inter600"
-                >
-                  ✕
-                </Text> */}
                 <CrossIcon />
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#454F5B] font-inter400 w-[85%]" 
+              className="text-[#454F5B] font-inter400 w-[85%]"
             >
               Boost your students's progress in just few taps!
             </Text>
@@ -103,6 +99,13 @@ function NavHeader() {
           </View>
         </View>
       </View>
+
+      <ExitConfirmationPopup
+        visible={isExitPopupVisible}
+        onClose={() => setIsExitPopupVisible(false)}
+        modalType="completed"
+        title="Are you sure you want to exit?"
+      />
     </>
 
   )
