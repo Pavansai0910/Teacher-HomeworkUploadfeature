@@ -34,7 +34,8 @@ const HistoryDetails = () => {
     const scrollViewRef = useRef(null);
     const { teacherProfile } = useContext(AuthContext);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const [selectedSection, setSelectedSection] = useState('Learning Objectives');
+    // CHANGED: Default to "Full Lesson Plan"
+    const [selectedSection, setSelectedSection] = useState('Full Lesson Plan');
     const dropdownAnimation = useRef(new Animated.Value(0)).current;
     const { height: screenHeight } = Dimensions.get('window');
     const sectionRefs = useRef({});
@@ -44,7 +45,6 @@ const HistoryDetails = () => {
     );
 
     const { lessonPlanData, chapterName, selectedTopics } = route.params || {};
-
 
     if (!lessonPlanData) {
         return (
@@ -56,10 +56,8 @@ const HistoryDetails = () => {
                         className="text-[#1A9DDD]"
                         onPress={() => {
                             Vibration.vibrate(50);
-
                             navigation.goBack()
-                        }
-                        }>
+                        }}>
                         Go back
                     </Text>
                 </Text>
@@ -75,9 +73,8 @@ const HistoryDetails = () => {
         lessonPlanData?.topicName?.[0] ||
         'Topic';
 
-
     const getAvailableSections = () => {
-        const availableSections = [];
+        const availableSections = ['Full Lesson Plan']; // ADDED: Always include this option
 
         if (lessonPlanDetails.learningObjectives) availableSections.push('Learning Objectives');
         if (lessonPlanDetails.preRequisite) availableSections.push('Pre-Requisites');
@@ -131,8 +128,11 @@ const HistoryDetails = () => {
             friction: 8,
         }).start();
 
+        // CHANGED: Scroll to top when changing sections
         setTimeout(() => {
-            scrollToSpecificSection(section);
+            if (scrollViewRef.current) {
+                scrollViewRef.current.scrollTo({ y: 0, animated: true });
+            }
         }, 200);
     };
 
@@ -145,28 +145,6 @@ const HistoryDetails = () => {
         inputRange: [0, 1],
         outputRange: ['0deg', '180deg'],
     });
-
-    // Improved scroll to specific section function
-    const scrollToSpecificSection = (sectionName) => {
-        console.log('Scrolling to section:', sectionName);
-        const sectionRef = sectionRefs.current[sectionName];
-
-        if (sectionRef && scrollViewRef.current) {
-            sectionRef.measure((x, y, width, height, pageX, pageY) => {
-                console.log('Section position:', { x, y, width, height, pageX, pageY });
-                if (scrollViewRef.current && pageY !== undefined) {
-                    const offsetY = Math.max(0, pageY - 100);
-                    console.log('Scrolling to Y:', offsetY);
-                    scrollViewRef.current.scrollTo({
-                        y: offsetY,
-                        animated: true
-                    });
-                }
-            });
-        } else {
-            console.log('Section ref not found for:', sectionName);
-        }
-    };
 
     const handleLessonPlanDownload = async (_id) => {
         const hasPermission = await requestStoragePermission();
@@ -212,7 +190,6 @@ const HistoryDetails = () => {
         }
     };
 
-    // Improved SectionHeader component
     const SectionHeader = ({ title, sectionKey }) => (
         <View
             ref={(ref) => {
@@ -236,12 +213,9 @@ const HistoryDetails = () => {
         <View className="ml-2">
             {items?.map((item, index) => (
                 <View key={index} style={{ flexDirection: 'row', marginBottom: 4 }}>
-                    {/* Bullet */}
                     <Text style={{ fontSize: GetFontSize(14), lineHeight: 20, marginRight: 6 }}>
                         •
                     </Text>
-
-                    {/* Text */}
                     <Text
                         style={{
                             flex: 1,
@@ -257,6 +231,10 @@ const HistoryDetails = () => {
         </View>
     );
 
+    // NEW: Function to check if section should be shown
+    const shouldShowSection = (sectionName) => {
+        return selectedSection === 'Full Lesson Plan' || selectedSection === sectionName;
+    };
 
     return (
         <View className="flex-1 bg-white">
@@ -279,8 +257,7 @@ const HistoryDetails = () => {
                                 onPress={() => {
                                     Vibration.vibrate(50);
                                     navigation.goBack()
-                                }
-                                }                            >
+                                }}>
                                 <CrossIcon />
                             </TouchableOpacity>
                         </View>
@@ -305,16 +282,7 @@ const HistoryDetails = () => {
                     }}
                     showsVerticalScrollIndicator={false}
                 >
-
-                    {/* <Text
-                        style={{ fontSize: GetFontSize(14) }}
-                        className="text-[#454F5B] mb-3"
-                    >
-                        Chapter: {chapterName}
-                    </Text> */}
-
                     {(() => {
-                        // Convert to array if comma-separated string
                         const topics = typeof topicName === 'string' ? topicName.split(',') : topicName;
 
                         return topics.map((topic, index) => (
@@ -335,10 +303,8 @@ const HistoryDetails = () => {
                                 className="bg-[#EBF8FE] border-[#1EAFF7] py-3 px-5 rounded-xl items-center justify-center flex-row flex-1"
                                 onPress={() => {
                                     Vibration.vibrate(50);
-
                                     handleLessonPlanDownload(lessonPlanData._id)
-                                }
-                                }
+                                }}
                                 style={{
                                     borderRightWidth: 2,
                                     borderLeftWidth: 2,
@@ -366,20 +332,10 @@ const HistoryDetails = () => {
                             </TouchableOpacity>
                         </View>
 
-                        {/* Timeline */}
-                        {/* {lessonPlanDetails.timelinePeriods && (
-                            <>
-                                <SectionHeader title="Timeline" sectionKey="Timeline" />
-                                <Text
-                                    style={{ fontSize: GetFontSize(14) }}
-                                    className="text-[#454F5B]">
-                                    {lessonPlanDetails.timelinePeriods}
-                                </Text>
-                            </>
-                        )} */}
-
+                        {/* CHANGED: Conditional rendering for each section */}
+                        
                         {/* Learning Objectives */}
-                        {lessonPlanDetails.learningObjectives && (
+                        {shouldShowSection('Learning Objectives') && lessonPlanDetails.learningObjectives && (
                             <>
                                 <SectionHeader title="Learning Objectives" sectionKey="Learning Objectives" />
                                 <BulletList items={lessonPlanDetails.learningObjectives} />
@@ -387,7 +343,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Pre-Requisites */}
-                        {lessonPlanDetails.preRequisite && (
+                        {shouldShowSection('Pre-Requisites') && lessonPlanDetails.preRequisite && (
                             <>
                                 <SectionHeader title="Pre-Requisites" sectionKey="Pre-Requisites" />
                                 <View className="ml-4">
@@ -444,9 +400,8 @@ const HistoryDetails = () => {
                             </>
                         )}
 
-
                         {/* Key Terms */}
-                        {lessonPlanDetails.keyTerms && (
+                        {shouldShowSection('Key Terms') && lessonPlanDetails.keyTerms && (
                             <>
                                 <SectionHeader title="Key Terms" sectionKey="Key Terms" />
                                 <BulletList items={lessonPlanDetails.keyTerms} />
@@ -454,7 +409,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Teaching Aids */}
-                        {lessonPlanDetails.teachingAids && (
+                        {shouldShowSection('Teaching Aids') && lessonPlanDetails.teachingAids && (
                             <>
                                 <SectionHeader title="Teaching Aids" sectionKey="Teaching Aids" />
                                 <BulletList items={lessonPlanDetails.teachingAids} />
@@ -462,7 +417,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Suggested Flow */}
-                        {lessonPlanDetails.suggestedFlow && (
+                        {shouldShowSection('Suggested Flow') && lessonPlanDetails.suggestedFlow && (
                             <>
                                 <SectionHeader title="Suggested Flow" sectionKey="Suggested Flow" />
                                 <View className="ml-4">
@@ -477,7 +432,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Learning Flow */}
-                        {lessonPlanDetails.learningFlow && (
+                        {shouldShowSection('Learning Flow') && lessonPlanDetails.learningFlow && (
                             <>
                                 <SectionHeader title="Learning Flow" sectionKey="Learning Flow" />
                                 <View>
@@ -512,9 +467,8 @@ const HistoryDetails = () => {
                             </>
                         )}
 
-
                         {/* Skills Applied */}
-                        {lessonPlanDetails.skillsApplied && (
+                        {shouldShowSection('Skills Applied') && lessonPlanDetails.skillsApplied && (
                             <>
                                 <SectionHeader title="Skills Applied" sectionKey="Skills Applied" />
                                 <BulletList items={lessonPlanDetails.skillsApplied} />
@@ -522,7 +476,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Activity Description */}
-                        {lessonPlanDetails.activityDescription && (
+                        {shouldShowSection('Activity Description') && lessonPlanDetails.activityDescription && (
                             <>
                                 <SectionHeader title="Activity Description" sectionKey="Activity Description" />
                                 <Text style={{ fontSize: GetFontSize(14) }}
@@ -533,7 +487,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Practice Work */}
-                        {lessonPlanDetails.practiceWork && (
+                        {shouldShowSection('Practice Work') && lessonPlanDetails.practiceWork && (
                             <>
                                 <SectionHeader title="Practice Work" sectionKey="Practice Work" />
                                 <Text style={{ fontSize: GetFontSize(14) }}
@@ -544,7 +498,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Inquiry Questions */}
-                        {lessonPlanDetails.inquiryQuestions && (
+                        {shouldShowSection('Inquiry Questions') && lessonPlanDetails.inquiryQuestions && (
                             <>
                                 <SectionHeader title="Inquiry Questions" sectionKey="Inquiry Questions" />
                                 <BulletList items={lessonPlanDetails.inquiryQuestions} />
@@ -552,7 +506,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Quick Assessments */}
-                        {lessonPlanDetails.quickAssessments && (
+                        {shouldShowSection('Quick Assessments') && lessonPlanDetails.quickAssessments && (
                             <>
                                 <SectionHeader title="Quick Assessments" sectionKey="Quick Assessments" />
                                 <View className="ml-4">
@@ -567,7 +521,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Teacher Tips */}
-                        {lessonPlanDetails.teacherTips && (
+                        {shouldShowSection('Teacher Tips') && lessonPlanDetails.teacherTips && (
                             <>
                                 <SectionHeader title="Teacher Tips" sectionKey="Teacher Tips" />
                                 <BulletList items={lessonPlanDetails.teacherTips} />
@@ -575,7 +529,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Learning Outcomes */}
-                        {lessonPlanDetails.learningOutcomes && (
+                        {shouldShowSection('Learning Outcomes') && lessonPlanDetails.learningOutcomes && (
                             <>
                                 <SectionHeader title="Learning Outcomes" sectionKey="Learning Outcomes" />
                                 <BulletList items={lessonPlanDetails.learningOutcomes} />
@@ -583,7 +537,7 @@ const HistoryDetails = () => {
                         )}
 
                         {/* Values Inculcated */}
-                        {lessonPlanDetails.valuesInculcated && (
+                        {shouldShowSection('Values Inculcated') && lessonPlanDetails.valuesInculcated && (
                             <>
                                 <SectionHeader title="Values Inculcated" sectionKey="Values Inculcated" />
                                 <BulletList items={lessonPlanDetails.valuesInculcated} />
@@ -623,10 +577,8 @@ const HistoryDetails = () => {
                                         key={option}
                                         onPress={() => {
                                             Vibration.vibrate(50);
-
                                             selectSection(option)
-                                        }
-                                        }
+                                        }}
                                         style={{
                                             backgroundColor: option === selectedSection ? '#FFE4B5' : 'white',
                                             marginVertical: 4,

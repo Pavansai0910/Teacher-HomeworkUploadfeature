@@ -6,7 +6,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Modal,
-  Vibration
+  Vibration,
+  ToastAndroid
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -242,11 +243,11 @@ const LessonPlanner = () => {
                           lineHeight: GetFontSize(16) * 1.35,
                           letterSpacing: GetFontSize(16) * -0.02,
                           flex: 1,
-                          flexWrap: 'wrap', 
-                          marginRight: 8, 
+                          flexWrap: 'wrap',
+                          marginRight: 8,
                         }}
                         className="font-inter700"
-                        numberOfLines={2} 
+                        numberOfLines={2}
                       >
                         {selectedChapterName || "Choose a chapter to get started"}
                       </Text>
@@ -326,23 +327,24 @@ const LessonPlanner = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            disabled={!selectedChapterId}
             onPress={() => {
               Vibration.vibrate(50);
+
+              if (!selectedChapterId) {
+                ToastAndroid.show('Please select a chapter first', ToastAndroid.SHORT);
+                return;
+              }
+
               navigation.navigate('LessonPlanTopics', {
                 chapterId: selectedChapterId,
-              })
-            }
-            }
+              });
+            }}
             className={`flex-row gap-1 flex-1 py-3 rounded-xl justify-center items-center border-t-[1.5px] border-x-2 border-b-4 ${selectedChapterId
-              ? 'bg-[#1EAFF7] border-[#0786C5]'
-              : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
+                ? 'bg-[#1EAFF7] border-[#0786C5]'
+                : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
               }`}
           >
-            <Text
-              style={{ fontSize: GetFontSize(16) }}
-              className={'font-inter600 text-white'}
-            >
+            <Text style={{ fontSize: GetFontSize(16) }} className={'font-inter600 text-white'}>
               Continue
             </Text>
             <RightArrow color="#FFFFFF" />

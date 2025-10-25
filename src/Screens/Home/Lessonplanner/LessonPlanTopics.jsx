@@ -7,7 +7,8 @@ import {
   ActivityIndicator,
   Modal,
   FlatList,
-  Vibration
+  Vibration,
+  ToastAndroid
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -87,9 +88,13 @@ const LessonPlanTopics = ({ route }) => {
       setSelectedTopics([...selectedTopics, topic]);
     }
   };
+
   const handleContinue = () => {
-    if (selectedTopics.length === 0) return;
     Vibration.vibrate(50);
+    if (selectedTopics.length === 0) {
+      ToastAndroid.show('Please select at least one topic', ToastAndroid.SHORT);
+      return;
+    }
     navigation.navigate('LessonPlanGeneration', {
       chapterId,
       selectedTopics: selectedTopics,
@@ -364,7 +369,6 @@ const LessonPlanTopics = ({ route }) => {
               : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
               }`}
             onPress={handleContinue}
-            disabled={selectedTopics.length === 0}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}

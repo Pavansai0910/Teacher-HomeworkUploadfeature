@@ -4,10 +4,10 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Vibration
+  Vibration,
+  ToastAndroid
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import GetFontSize from '../../../Commons/GetFontSize';
 import LearningNavbar from './LearningNavbar';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
@@ -102,25 +102,27 @@ const LearningTopic = () => {
           </TouchableOpacity>
 
           <TouchableOpacity
-            disabled={!selectedTopicId}
+            // disabled={!selectedTopicId}
             onPress={() => {
               Vibration.vibrate(50);
-              if (selectedTopicId) {
-                const selectedTopic = topics.find(t => (t._id || t.id) === selectedTopicId);
-                navigation.navigate('LearningDetails', {
-                  status,
-                  topic: selectedTopic,
-                  topicId: selectedTopicId,
-                  chapterId: chapterId,
-                  topicname: selectedTopic?.name,
-                  chapterName,
-                  classDisplay,
-                  subjectDisplay,
-                  assignedDate: selectedTopic?.assignedDate,
-                  dueDate: selectedTopic?.deadline,
-                });
-
+              if (!selectedTopicId) {
+                ToastAndroid.show('Please select a topic first', ToastAndroid.SHORT);
+                return;
               }
+
+              const selectedTopic = topics.find(t => (t._id || t.id) === selectedTopicId);
+              navigation.navigate('LearningDetails', {
+                status,
+                topic: selectedTopic,
+                topicId: selectedTopicId,
+                chapterId: chapterId,
+                topicname: selectedTopic?.name,
+                chapterName,
+                classDisplay,
+                subjectDisplay,
+                assignedDate: selectedTopic?.assignedDate,
+                dueDate: selectedTopic?.deadline,
+              });
             }}
             className={`flex-row gap-1 border-t-[1.5px] border-x-2 border-b-4 border-[#71E31C] flex-1 py-3 rounded-xl justify-center items-center ${selectedTopicId ? 'bg-[#B0EF80]' : 'bg-[#B0EF80]/60'}`}
           >

@@ -6,7 +6,6 @@ import {
   ScrollView,
   Vibration,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Document from '../../../Images/LessonPlan/Document';
@@ -21,6 +20,8 @@ import NavHeader from '../../NavHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import TopicSelectionModal from './TopicSelectionModal';
 import { Shadow } from 'react-native-shadow-2';
+import { ToastAndroid } from 'react-native';
+
 const AssignTestTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
@@ -78,8 +79,11 @@ const AssignTestTopics = ({ route }) => {
   };
 
   const handleContinue = () => {
-    if (!selectedTopic) return;
     Vibration.vibrate(50);
+    if (!selectedTopic) {
+      ToastAndroid.show('Please select a topic first', ToastAndroid.SHORT);
+      return;
+    }
     const payload = { questionPaper: selectedTopic };
     navigation.navigate('AssignTestDate', payload);
   };
@@ -278,7 +282,7 @@ const AssignTestTopics = ({ route }) => {
             className={`flex-row gap-1 flex-1 py-3 justify-center items-center rounded-xl border-t-[1.5px] border-x-2 border-b-4 ${selectedTopic ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'
               }`}
             onPress={handleContinue}
-            disabled={!selectedTopic}
+            // disabled={!selectedTopic}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}

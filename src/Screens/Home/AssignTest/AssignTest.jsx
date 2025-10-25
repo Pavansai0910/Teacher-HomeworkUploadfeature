@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView, Vibration } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView, Vibration, ToastAndroid } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -333,7 +333,7 @@ const AssignTest = () => {
 
 
           </SafeAreaView>
-        </View>        
+        </View>
       </Modal>
 
       {/* Fixed Bottom Buttons */}
@@ -357,17 +357,20 @@ const AssignTest = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={{ fontSize: GetFontSize(13) }}
-            disabled={!selectedChapterId}
+            // disabled={!selectedChapterId}
             onPress={() => {
               Vibration.vibrate(50);
 
-              // playClickSound();
+              if (!selectedChapterId) {
+                ToastAndroid.show("Please select a chapter first", ToastAndroid.SHORT);
+                return;
+              }
+
               navigation.navigate('AssignTestTopics', {
                 chapterId: selectedChapterId,
                 chapterName: selectedChapterName,
-              })
-            }
-            }
+              });
+            }}
             className={`flex-row gap-1 flex-1 py-3 rounded-xl border-t-[1.5px] border-x-2 border-b-4 justify-center items-center ${selectedChapterId
               ? 'bg-[#FED570] border-[#DFAF02]'
               : 'bg-[#FEDB85] border-[#DFAF02]'

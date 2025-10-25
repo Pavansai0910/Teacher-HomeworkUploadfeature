@@ -29,7 +29,7 @@ const Home = () => {
   const { teacherProfile } = useContext(AuthContext);
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1); // CHANGED: Set initial index to 1 (second card)
   const dispatch = useDispatch();
   const { width, height } = useWindowDimensions('screen');
 
@@ -47,6 +47,22 @@ const Home = () => {
 
   const cardWidth = width * 0.7;
   const cardSpacing = 20;
+
+  // NEW: Scroll to second card on mount
+  useEffect(() => {
+    // Use setTimeout to ensure the ScrollView is fully rendered
+    const timer = setTimeout(() => {
+      if (scrollViewRef.current) {
+        const secondCardPosition = (cardWidth + cardSpacing) * 1; // Index 1 for second card
+        scrollViewRef.current.scrollTo({
+          x: secondCardPosition,
+          animated: false, // Set to false for instant scroll, true for smooth animation
+        });
+      }
+    }, 100); // Small delay to ensure layout is complete
+
+    return () => clearTimeout(timer);
+  }, []); // Empty dependency array means this runs once on mount
 
   const handleScroll = event => {
     const contentOffset = event.nativeEvent.contentOffset.x;
@@ -140,8 +156,7 @@ const Home = () => {
           onPress={() => {
             Vibration.vibrate(50);
             navigation.navigate('Settings')
-          }
-          }
+          }}
         >
           <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
             <Text
@@ -193,14 +208,11 @@ const Home = () => {
               borderBottomWidth: 6,
               borderLeftWidth: 3,
               borderColor: '#A17F5E',
-            }
-            }
+            }}
             onPress={() => {
-
               Vibration.vibrate(50);
               setClassModalVisible(true)
-            }
-            }
+            }}
           >
             <Text
               style={{ fontSize: GetFontSize(15) }}
@@ -318,8 +330,8 @@ const Home = () => {
                 onPress={() => {
                   Vibration.vibrate(50);
                   setClassModalVisible(false)
-                }
-                }              >
+                }}
+              >
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white text-center font-inter700"
@@ -379,8 +391,8 @@ const Home = () => {
                 onPress={() => {
                   Vibration.vibrate(50);
                   setSubjectModalVisible(false)
-                }
-                }              >
+                }}
+              >
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white text-center font-inter700"
@@ -411,8 +423,7 @@ const Home = () => {
               onPress={() => {
                 Vibration.vibrate(50);
                 navigation.navigate('StudentsInsights')
-              }
-              }
+              }}
               isActive={currentIndex === 0}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
@@ -420,10 +431,8 @@ const Home = () => {
             <LessonPlannerCard
               onPress={() => {
                 Vibration.vibrate(50);
-
                 navigation.navigate('LessonPlanner')
-              }
-              }
+              }}
               isActive={currentIndex === 1}
               cardWidth={cardWidth}
               cardSpacing={cardSpacing}
@@ -432,10 +441,8 @@ const Home = () => {
             <AssignTestCard
               onPress={() => {
                 Vibration.vibrate(50);
-
                 navigation.navigate('AssignTest')
-              }
-              }
+              }}
               isActive={currentIndex === 2}
               cardWidth={cardWidth}
               cardSpacing={0}

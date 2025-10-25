@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, Alert, Vibration } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, Alert, Vibration, ToastAndroid } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +17,7 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import { setLessonPlanner } from '../../../store/Slices/lessonPlannerSlice';
 import LessonPlanNavbar from './LessonPlanNavbar';
 import { Shadow } from 'react-native-shadow-2';
+
 const LessonPlanGeneration = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -44,23 +45,27 @@ const LessonPlanGeneration = () => {
     'Not selected';
 
   const handleGenerate = async () => {
-                  Vibration.vibrate(50);
+    Vibration.vibrate(50);
 
-    if (!startDate || !endDate) return;
+    if (!startDate || !endDate) {
+      ToastAndroid.show('Please select both start and end dates', ToastAndroid.SHORT);
+      return;
+    }
+
+    if (!isValidDateRange()) {
+      ToastAndroid.show('End date should be after or same as start date', ToastAndroid.SHORT);
+      return;
+    }
 
     setShowLoader(true);
 
     try {
       const payload = {
-        boardId:
-          teacherProfile?.schoolId?.boardId || selectedAssignment?.boardId,
+        boardId: teacherProfile?.schoolId?.boardId || selectedAssignment?.boardId,
         teacherId: teacherProfile?._id || teacherProfile?.teacherId,
-        classId:
-          selectedAssignment?.classId?._id || selectedAssignment?.classId,
-        subjectId:
-          selectedAssignment?.subjectId?._id || selectedAssignment?.subjectId,
-        sectionId:
-          selectedAssignment?.sectionId?._id || selectedAssignment?.sectionId,
+        classId: selectedAssignment?.classId?._id || selectedAssignment?.classId,
+        subjectId: selectedAssignment?.subjectId?._id || selectedAssignment?.subjectId,
+        sectionId: selectedAssignment?.sectionId?._id || selectedAssignment?.sectionId,
         chapterId: chapterId,
         topicId: selectedTopics.map(topic => topic._id || topic.id || topic),
         depth: 'Introductory',
@@ -306,7 +311,7 @@ const LessonPlanGeneration = () => {
                   borderColor: '#9B7A5A',
                 }}
                 onPress={() => {
-                                Vibration.vibrate(50);
+                  Vibration.vibrate(50);
 
                   setPickerTarget('start');
                   setShowPicker(true);
@@ -334,8 +339,8 @@ const LessonPlanGeneration = () => {
                 }}
                 className="bg-white rounded-lg px-4 py-3 border border-[#E5E5E3] flex-row justify-between items-center"
                 onPress={() => {
-                                Vibration.vibrate(50);
-                  
+                  Vibration.vibrate(50);
+
                   setPickerTarget('end');
                   setShowPicker(true);
                 }}
@@ -373,8 +378,9 @@ const LessonPlanGeneration = () => {
             onPress={() => {
               Vibration.vibrate(50);
 
-              navigation.goBack()}
-            } 
+              navigation.goBack()
+            }
+            }
           >
             <LeftArrow color="#1EAFF7" />
             <Text
@@ -391,7 +397,6 @@ const LessonPlanGeneration = () => {
               : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
               }`}
             onPress={handleGenerate}
-            disabled={!startDate || !endDate || !isValidDateRange()}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}
