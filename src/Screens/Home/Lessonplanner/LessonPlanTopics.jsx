@@ -26,6 +26,7 @@ import TopArrow from '../../../Images/LessonPlan/TopArrow';
 import LessonPlanNavbar from './LessonPlanNavbar';
 import { Shadow } from 'react-native-shadow-2';
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import Toast from 'react-native-toast-message';
 
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -92,7 +93,10 @@ const LessonPlanTopics = ({ route }) => {
   const handleContinue = () => {
     Vibration.vibrate(50);
     if (selectedTopics.length === 0) {
-      ToastAndroid.show('Please select at least one topic', ToastAndroid.SHORT);
+      Toast.show({
+        type: 'info',
+        text1: 'Please select at least one topic',
+      });
       return;
     }
     navigation.navigate('LessonPlanGeneration', {

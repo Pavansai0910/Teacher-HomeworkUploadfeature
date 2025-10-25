@@ -61,7 +61,7 @@ const Settings = () => {
           {teacherProfile?.name || 'Teacher'}
         </Text>
 
-        <View className="bg-white rounded-2xl px-4 py-1 mt-2">
+        {/* <View className="bg-white rounded-2xl px-4 py-1 mt-2">
           <View className="flex-row justify-center">
             <Text style={{ fontSize: GetFontSize(10) }} className="text-[#637381] font-inter400 leading-[135%]">
               Higher score, better leads!{' '}
@@ -73,7 +73,7 @@ const Settings = () => {
               Improve yours now
             </Text>
           </View>
-        </View>
+        </View> */}
       </View>
 
       {/* Scrollable Content */}

@@ -12,6 +12,7 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import LearningNavbar from './LearningNavbar';
 import LeftArrow from '../../../Images/LessonPlan/LeftArrow';
 import RightArrow from '../../../Images/LessonPlan/RightArrow';
+import Toast from 'react-native-toast-message';
 
 const LearningTopic = () => {
   const navigation = useNavigation();
@@ -106,7 +107,10 @@ const LearningTopic = () => {
             onPress={() => {
               Vibration.vibrate(50);
               if (!selectedTopicId) {
-                ToastAndroid.show('Please select a topic first', ToastAndroid.SHORT);
+                Toast.show({
+                  type: 'info',
+                  text1: "Please select a topic first"
+                });
                 return;
               }
 

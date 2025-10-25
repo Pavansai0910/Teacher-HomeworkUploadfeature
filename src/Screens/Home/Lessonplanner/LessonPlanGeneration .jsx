@@ -17,6 +17,7 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import { setLessonPlanner } from '../../../store/Slices/lessonPlannerSlice';
 import LessonPlanNavbar from './LessonPlanNavbar';
 import { Shadow } from 'react-native-shadow-2';
+import Toast from 'react-native-toast-message';
 
 const LessonPlanGeneration = () => {
   const navigation = useNavigation();
@@ -48,12 +49,18 @@ const LessonPlanGeneration = () => {
     Vibration.vibrate(50);
 
     if (!startDate || !endDate) {
-      ToastAndroid.show('Please select both start and end dates', ToastAndroid.SHORT);
+      Toast.show({
+        type: 'info',
+        text1: "Please select both start and end dates"
+      });
       return;
     }
 
     if (!isValidDateRange()) {
-      ToastAndroid.show('End date should be after or same as start date', ToastAndroid.SHORT);
+      Toast.show({
+        type: 'info',
+        text1: "End date should be after or same as start date"
+      });
       return;
     }
 

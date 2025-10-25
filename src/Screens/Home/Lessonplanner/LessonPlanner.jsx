@@ -25,6 +25,7 @@ import { getChapters } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import TopArrow from '../../../Images/LessonPlan/TopArrow';
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import Toast from 'react-native-toast-message';
 
 
 const LessonPlanner = () => {
@@ -331,7 +332,10 @@ const LessonPlanner = () => {
               Vibration.vibrate(50);
 
               if (!selectedChapterId) {
-                ToastAndroid.show('Please select a chapter first', ToastAndroid.SHORT);
+                Toast.show({
+                  type: 'info',
+                  text1: 'Please select a chapter first',
+                });
                 return;
               }
 
@@ -340,8 +344,8 @@ const LessonPlanner = () => {
               });
             }}
             className={`flex-row gap-1 flex-1 py-3 rounded-xl justify-center items-center border-t-[1.5px] border-x-2 border-b-4 ${selectedChapterId
-                ? 'bg-[#1EAFF7] border-[#0786C5]'
-                : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
+              ? 'bg-[#1EAFF7] border-[#0786C5]'
+              : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
               }`}
           >
             <Text style={{ fontSize: GetFontSize(16) }} className={'font-inter600 text-white'}>

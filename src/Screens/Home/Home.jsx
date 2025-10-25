@@ -29,7 +29,7 @@ const Home = () => {
   const { teacherProfile } = useContext(AuthContext);
   const navigation = useNavigation();
   const scrollViewRef = useRef(null);
-  const [currentIndex, setCurrentIndex] = useState(1); // CHANGED: Set initial index to 1 (second card)
+  const [currentIndex, setCurrentIndex] = useState(1); 
   const dispatch = useDispatch();
   const { width, height } = useWindowDimensions('screen');
 
@@ -148,9 +148,9 @@ const Home = () => {
   });
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1 bg-white ">
       {/* Header */}
-      <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white">
+      <View className="flex-row justify-between items-center px-5 pt-2 pb-5 bg-white mt-3">
         <TouchableOpacity
           className="flex-row items-center"
           onPress={() => {
@@ -158,7 +158,7 @@ const Home = () => {
             navigation.navigate('Settings')
           }}
         >
-          <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3">
+          <View className="w-11 h-11 rounded-full bg-[#E75B9C] items-center justify-center mr-3 ">
             <Text
               style={{ fontSize: GetFontSize(14) }}
               className="text-white font-inter600"

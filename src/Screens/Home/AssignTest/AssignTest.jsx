@@ -362,7 +362,10 @@ const AssignTest = () => {
               Vibration.vibrate(50);
 
               if (!selectedChapterId) {
-                ToastAndroid.show("Please select a chapter first", ToastAndroid.SHORT);
+                Toast.show({
+                  type: 'info',
+                  text1: 'Please select a chapter first',
+                });
                 return;
               }
 

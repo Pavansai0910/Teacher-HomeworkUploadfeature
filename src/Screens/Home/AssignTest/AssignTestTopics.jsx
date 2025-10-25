@@ -81,7 +81,10 @@ const AssignTestTopics = ({ route }) => {
   const handleContinue = () => {
     Vibration.vibrate(50);
     if (!selectedTopic) {
-      ToastAndroid.show('Please select a topic first', ToastAndroid.SHORT);
+      Toast.show({
+        type: 'info',
+        text1: 'Please select a topic first',
+      });
       return;
     }
     const payload = { questionPaper: selectedTopic };
@@ -282,7 +285,7 @@ const AssignTestTopics = ({ route }) => {
             className={`flex-row gap-1 flex-1 py-3 justify-center items-center rounded-xl border-t-[1.5px] border-x-2 border-b-4 ${selectedTopic ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'
               }`}
             onPress={handleContinue}
-            // disabled={!selectedTopic}
+          // disabled={!selectedTopic}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}

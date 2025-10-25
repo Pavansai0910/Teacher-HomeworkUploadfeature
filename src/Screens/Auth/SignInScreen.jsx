@@ -119,11 +119,11 @@ const SignInScreen = () => {
                   style={{ fontSize: GetFontSize(22) }}
                   className="text-white font-inter700 tracking-[-0.40] flex-row items-center">
                   {loading ? 'Signing in...' : 'Sign in'}
-                  {!loading && (
+                  {/* {!loading && (
                     <>
                       <RightArrow />
                     </>
-                  )}
+                  )} */}
                 </Text>
               </TouchableOpacity>
             </View>
