@@ -9,11 +9,13 @@ import SkullIcon from '../../../Images/StudentInsights/SkullIcon';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { getAllStudents } from '../../../Services/teacherAPIV1'
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import ExitConfirmationPopup from '../../ConfirmationPopup/ExitConfirmationPopup';
 
 const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
   const navigation = useNavigation();
   const [studentData, setStudentData] = useState([]);
   const { teacherProfile } = useContext(AuthContext);
+  const [isExitPopupVisible, setIsExitPopupVisible] = useState(false);
   const selectedAssignment = useSelector(
     (state) => state.assignment.selectedAssignment
   );
@@ -53,19 +55,13 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
                 Test Insights
               </Text>
               <TouchableOpacity
-                className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
+                className="w-7 h-7 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
                 onPress={() => {
                   Vibration.vibrate(50);
-                  navigation.navigate('MainTabNavigator')
+                   setIsExitPopupVisible(true);
                 }
                 }
               >
-                {/* <Text
-                  style={{ fontSize: GetFontSize(14) }}
-                  className="text-white "
-                >
-                  ✕
-                </Text> */}
                 <CrossIcon />
               </TouchableOpacity>
             </View>
@@ -83,9 +79,12 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
       <View className="mt-6 px-6 bg-white">
         <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
           <View className="">
-            <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
+            <Text 
+            style={{ fontSize: GetFontSize(12) }}
+            className="text-[#637381] font-inter400 mb-1">Selected Class</Text>
             <Text
-              className="text-gray-800 font-semibold"
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#212B36] font-inter500"
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -105,7 +104,7 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
         </View>
       </View>
 
-           <View className="mt-3 px-6 bg-white">
+      <View className="mt-3 px-6 bg-white">
         <View className="flex-row border-2 border-[#E5E5E3] rounded-xl px-4 py-3">
           {/* <View className="w-[60%] border-r-2 border-[#E5E5E3] pr-4">
             <Text className="text-gray-500 text-xs mb-1">Selected Class</Text>
@@ -118,9 +117,11 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
             </Text>
           </View> */}
           <View className="flex-[1] ml-2">
-            <Text className="text-gray-500 text-xs mb-1">Subject</Text>
+            <Text style={{ fontSize: GetFontSize(12) }}
+            className="text-[#637381] font-inter400 mb-1">Subject</Text>
             <Text
-              className="text-gray-800 font-semibold"
+              style={{ fontSize: GetFontSize(14) }}
+              className="text-[#212B36] font-inter500"
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -129,6 +130,13 @@ const LearningNavbar = ({ classDisplay, subjectDisplay }) => {
           </View>
         </View>
       </View>
+
+      <ExitConfirmationPopup
+        visible={isExitPopupVisible}
+        onClose={() => setIsExitPopupVisible(false)}
+        modalType="completed"
+        title="Are you sure you want to exit?"
+      />
     </View>
   );
 };

@@ -6,7 +6,6 @@ import {
   ScrollView,
   Vibration,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import Document from '../../../Images/LessonPlan/Document';
@@ -21,6 +20,8 @@ import NavHeader from '../../NavHeader';
 import LinearGradient from 'react-native-linear-gradient';
 import TopicSelectionModal from './TopicSelectionModal';
 import { Shadow } from 'react-native-shadow-2';
+import { ToastAndroid } from 'react-native';
+
 const AssignTestTopics = ({ route }) => {
   const navigation = useNavigation();
   const chapterId = route.params.chapterId;
@@ -78,8 +79,14 @@ const AssignTestTopics = ({ route }) => {
   };
 
   const handleContinue = () => {
-    if (!selectedTopic) return;
     Vibration.vibrate(50);
+    if (!selectedTopic) {
+      Toast.show({
+        type: 'info',
+        text1: 'Please select a topic first',
+      });
+      return;
+    }
     const payload = { questionPaper: selectedTopic };
     navigation.navigate('AssignTestDate', payload);
   };
@@ -96,7 +103,7 @@ const AssignTestTopics = ({ route }) => {
           <View className="bg-[#FED570] rounded-2xl px-3 py-6">
             {/* Content Header */}
             <View className="flex-row items-center justify-between mb-5">
-             <View className="items-center">
+              <View className="items-center">
                 <Shadow
                   distance={1}
                   startColor="#6FCE62"
@@ -148,27 +155,27 @@ const AssignTestTopics = ({ route }) => {
 
               <View className="flex-1 h-[2px] bg-[#F7F7F5]" />
 
-             <View className="items-center">
-              <Shadow
-                distance={1}
-                startColor="#CDCDCD"
-                offset={[0, 2]}
-                radius={20}
-                style={{ borderRadius: 50 }}
-              >
+              <View className="items-center">
+                <Shadow
+                  distance={1}
+                  startColor="#CDCDCD"
+                  offset={[0, 2]}
+                  radius={20}
+                  style={{ borderRadius: 50 }}
+                >
 
-                <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
-                  <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
-                    <Text
-                      style={{ fontSize: GetFontSize(12) }}
-                      className="text-white font-inter600"
-                    >
-                      3
-                    </Text>
+                  <View className="flex-row bg-white rounded-full px-3 py-3 border-2 border-[#CCCCCC] items-center">
+                    <View className="w-8 h-8 bg-[#CCCCCC] rounded-full justify-center items-center">
+                      <Text
+                        style={{ fontSize: GetFontSize(12) }}
+                        className="text-white font-inter600"
+                      >
+                        3
+                      </Text>
+                    </View>
                   </View>
-                </View>
-              </Shadow>
-            </View>
+                </Shadow>
+              </View>
             </View>
 
             <View
@@ -176,24 +183,24 @@ const AssignTestTopics = ({ route }) => {
               style={{ borderStyle: 'dashed' }}
             />
 
-            <View className="items-center mb-4 mt-8">
+            <View className="items-center mb-4 mt-4">
               <View className="w-16 h-16 rounded-xl justify-center items-center ">
                 <Document />
               </View>
-              <Text
+              {/* <Text
                 style={{ fontSize: GetFontSize(16) }}
                 className="text-[#664400] font-inter600 mb-1 text-center"
               >
                 Zoom in and pick your focus!
-              </Text>
-              <Text
+              </Text> */}
+              {/* <Text
                 style={{ fontSize: GetFontSize(13) }}
                 className="text-[#664400] text-center font-inter500 mb-6">
                 Here is the list of topics from{' '}
                 <Text className="font-inter700">{chapterName}</Text>.{'\n'}
                 {'\n'}
                 Select a topic you want to assign a test for.
-              </Text>
+              </Text> */}
 
               {/* Select Topics Button */}
 
@@ -212,11 +219,12 @@ const AssignTestTopics = ({ route }) => {
               >
                 <TouchableOpacity
                   className="bg-white rounded-xl px-6 py-4 flex-row items-center justify-between w-full"
-                  onPress={() =>{
-                                  Vibration.vibrate(50);
+                  onPress={() => {
+                    Vibration.vibrate(50);
 
-                                  setShowModal(true)}
-                                }
+                    setShowModal(true)
+                  }
+                  }
                 >
                   <View className="flex-1">
                     <Text
@@ -277,7 +285,7 @@ const AssignTestTopics = ({ route }) => {
             className={`flex-row gap-1 flex-1 py-3 justify-center items-center rounded-xl border-t-[1.5px] border-x-2 border-b-4 ${selectedTopic ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'
               }`}
             onPress={handleContinue}
-            disabled={!selectedTopic}
+          // disabled={!selectedTopic}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}

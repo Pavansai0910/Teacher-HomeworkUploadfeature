@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView, Vibration } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, Modal, ScrollView, Vibration, ToastAndroid } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
@@ -15,6 +15,7 @@ import Toast from 'react-native-toast-message';
 import LinearGradient from 'react-native-linear-gradient';
 import DropdownArrow from '../../../Images/LessonPlan/DropdownArrow';
 import { Shadow } from 'react-native-shadow-2';
+import CrossIcon from '../../../Images/Home/CrossIcon';
 
 const AssignTest = () => {
   const navigation = useNavigation();
@@ -168,22 +169,22 @@ const AssignTest = () => {
               </View>
 
               {/* Title Text Section */}
-              <View className="mb-2">
+              {/* <View className="mb-2">
                 <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-[#664400] font-inter700 text-center">
                   Ready to plan smarter?
                 </Text>
-              </View>
+              </View> */}
 
               {/* Subtitle Text Section */}
-              <View className="px-2">
+              {/* <View className="px-2">
                 <Text
                   style={{ fontSize: GetFontSize(13) }}
                   className="text-[#664400] font-inter500 text-center">
                   Select a chapter for which you want to assign a test.
                 </Text>
-              </View>
+              </View> */}
             </View>
           </View>
           {/* Choose Chapter Button */}
@@ -274,8 +275,9 @@ const AssignTest = () => {
                 }
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
 
-                <View className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-                  <Text className="text-white font-inter400">✕</Text>
+                <View className="w-7 h-7 bg-[#FED570] rounded-full justify-center items-center">
+                  {/* <Text className="text-white font-inter400">✕</Text> */}
+                  <CrossIcon />
                 </View>
 
               </TouchableOpacity>
@@ -331,7 +333,7 @@ const AssignTest = () => {
 
 
           </SafeAreaView>
-        </View>        
+        </View>
       </Modal>
 
       {/* Fixed Bottom Buttons */}
@@ -355,17 +357,23 @@ const AssignTest = () => {
           </TouchableOpacity>
           <TouchableOpacity
             style={{ fontSize: GetFontSize(13) }}
-            disabled={!selectedChapterId}
+            // disabled={!selectedChapterId}
             onPress={() => {
               Vibration.vibrate(50);
 
-              // playClickSound();
+              if (!selectedChapterId) {
+                Toast.show({
+                  type: 'info',
+                  text1: 'Please select a chapter first',
+                });
+                return;
+              }
+
               navigation.navigate('AssignTestTopics', {
                 chapterId: selectedChapterId,
                 chapterName: selectedChapterName,
-              })
-            }
-            }
+              });
+            }}
             className={`flex-row gap-1 flex-1 py-3 rounded-xl border-t-[1.5px] border-x-2 border-b-4 justify-center items-center ${selectedChapterId
               ? 'bg-[#FED570] border-[#DFAF02]'
               : 'bg-[#FEDB85] border-[#DFAF02]'

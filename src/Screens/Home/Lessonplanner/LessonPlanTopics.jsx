@@ -7,7 +7,8 @@ import {
   ActivityIndicator,
   Modal,
   FlatList,
-  Vibration
+  Vibration,
+  ToastAndroid
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -25,6 +26,7 @@ import TopArrow from '../../../Images/LessonPlan/TopArrow';
 import LessonPlanNavbar from './LessonPlanNavbar';
 import { Shadow } from 'react-native-shadow-2';
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import Toast from 'react-native-toast-message';
 
 const LessonPlanTopics = ({ route }) => {
   const navigation = useNavigation();
@@ -87,49 +89,58 @@ const LessonPlanTopics = ({ route }) => {
       setSelectedTopics([...selectedTopics, topic]);
     }
   };
+
   const handleContinue = () => {
-    if (selectedTopics.length === 0) return;
     Vibration.vibrate(50);
+    if (selectedTopics.length === 0) {
+      Toast.show({
+        type: 'info',
+        text1: 'Please select at least one topic',
+      });
+      return;
+    }
     navigation.navigate('LessonPlanGeneration', {
       chapterId,
       selectedTopics: selectedTopics,
     });
   };
+
   const renderTopicItem = ({ item }) => {
     const isSelected = selectedTopics.some(t => t.id === item.id);
     return (
+
       <TouchableOpacity
         onPress={() => handleTopicToggle(item)}
-        className={`p-4 mb-3 rounded-lg ${isSelected ? 'bg-[#1EAFF7]' : 'bg-white'
+        className={`p-3 mb-3 rounded-lg ${isSelected ? 'bg-[#FCF5EE]' : 'bg-white'
           }`}
         style={{
           borderTopWidth: 1,
           borderRightWidth: 2,
           borderBottomWidth: 4,
           borderLeftWidth: 2,
-          borderColor: isSelected ? '#077FBB' : '#1A9DDD',
+          borderColor: '#E8B787',
           borderStyle: 'solid'
         }}
       >
-        <View className="flex-row justify-between items-center">
+        <View className="flex-row justify-between items-center ">
           <Text
             style={{ fontSize: GetFontSize(15) }}
-            className={`flex-1 font-inter500 pr-2 ${isSelected ? 'text-white' : 'text-[#212B36]'
+            className={`flex-1 font-inter500 pr-2 ${isSelected ? 'text-[#B0743A]' : 'text-[#212B36]'
               }`}
             numberOfLines={2}
           >
             {item.name}
           </Text>
           <View
-            className={`w-5 h-5 rounded justify-center items-center ${isSelected ? 'bg-[#FFF9E6] border-2' : 'border'
+            className={`w-5 h-5 rounded justify-center items-center ${isSelected ? 'bg-[#DC9047] border-2' : 'border-2 bg-white'
               }`}
             style={{
-              borderColor: isSelected ? '#077FBB' : '#1A9DDD',
+              borderColor: isSelected ? '#B0743A' : '#DFE3E8',
               borderWidth: 2,
             }}
           >
             {isSelected && (
-              <Text className="text-[#077FBB] font-inter600 text-xs">✓</Text>
+              <Text className="text-white font-inter600 text-xs">✓</Text>
             )}
           </View>
         </View>
@@ -228,10 +239,10 @@ const LessonPlanTopics = ({ route }) => {
             {/* Content Box */}
             <View className="rounded-xl mt-3">
               <View className="items-center mb-6">
-                <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
+                <View className="w-16 h-16 rounded-xl justify-center items-center">
                   <Document />
                 </View>
-                <Text
+                {/* <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white font-inter600 mb-2 text-center"
                 >
@@ -243,7 +254,7 @@ const LessonPlanTopics = ({ route }) => {
                 >
                   Select one or more topics from the list to generate a
                   comprehensive lesson plan.
-                </Text>
+                </Text> */}
               </View>
             </View>
             {/* Topics Selection */}
@@ -362,7 +373,6 @@ const LessonPlanTopics = ({ route }) => {
               : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
               }`}
             onPress={handleContinue}
-            disabled={selectedTopics.length === 0}
           >
             <Text
               style={{ fontSize: GetFontSize(16) }}
@@ -382,10 +392,10 @@ const LessonPlanTopics = ({ route }) => {
         onRequestClose={() => setIsModalVisible(false)}
         statusBarTranslucent={true}
       >
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View className="bg-[#e0f5ff] " style={{ flex: 1, backgroundColor: 'white' }}>
           <SafeAreaView style={{ flex: 1 }}>
             {/* Modal Header */}
-            <View className="px-4 pt-4 flex-row justify-between items-center bg-[#E0F5FF]">
+            <View className="px-8 pt-8 flex-row justify-between items-center bg-[#e0f5ff] ">
               <Text style={{ fontSize: GetFontSize(18) }} className="text-[#212B36] font-inter600">
                 Select Topics
               </Text>
@@ -397,35 +407,34 @@ const LessonPlanTopics = ({ route }) => {
                 }
                 }
                 className="w-6 h-6 bg-[#FED570] rounded-full justify-center items-center">
-                <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
+                <View className="w-7 h-7 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
                   <CrossIcon />
                 </View>
               </TouchableOpacity>
             </View>
             <Text
               style={{ fontSize: GetFontSize(14) }}
-              className="text-[#637381] font-inter400 py-3 px-4 bg-[#E0F5FF] border-b-4 border-[#DFE3E8]"
+              className="text-[#637381] font-inter400 px-8 bg-[#e0f5ff] pb-4"
             >
               {selectedTopics.length} of {topics.length} selected
             </Text>
             {/* Topics List with FlatList */}
-            <LinearGradient
-              colors={['#E0F5FF', '#1EAFF7']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={{ flex: 1 }}
+            <View
+              className="flex-1 bg-[#e0f5ff] p-6"
             >
-              <FlatList
-                data={topics}
-                keyExtractor={item => item.id.toString()}
-                renderItem={renderTopicItem}
-                style={{ flex: 1 }}
-                contentContainerStyle={{ padding: 16, paddingBottom: 20 }}
-                showsVerticalScrollIndicator={true}
-              />
-            </LinearGradient>
+              <View className="flex-1 bg-[#1eaff7] rounded-lg p-2">
+                <FlatList
+                  data={topics}
+                  keyExtractor={item => item.id.toString()}
+                  renderItem={renderTopicItem}
+                  style={{ flex: 1 }}
+                  contentContainerStyle={{ padding: 16, paddingBottom: 20 }}
+                  showsVerticalScrollIndicator={true}
+                />
+              </View>
+            </View>
             {/* Modal Footer */}
-            <View className="px-6 py-4 ">
+            <View className="px-6 py-4 border-t-2 border-[#DFE3E8] bg-white">
               <TouchableOpacity
                 className={`py-3 rounded-lg justify-center items-center ${selectedTopics.length > 0
                   ? 'bg-[#1EAFF7]'

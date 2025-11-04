@@ -131,7 +131,7 @@ const LessonPlanHistory = () => {
               Saved Lesson Plans
             </Text>
             <TouchableOpacity
-              className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
+                className="w-7 h-7 bg-[#1EAFF7] rounded-full border border-[#1A9DDD] justify-center items-center"
               onPress={() => {
                 Vibration.vibrate(50);
                 navigation.goBack()
@@ -173,7 +173,7 @@ const LessonPlanHistory = () => {
       {/* <View className="h-[2px] border-t border-[#E3E8EE] my-4" /> */}
 
       {/* Back Button */}
-      <View className="px-6 mb-4 pt-2 border-t-2 border-[#DFE3E8]">
+      <View className="px-6 mb-2 pt-2 border-t-2 border-[#DFE3E8]">
         <TouchableOpacity
           onPress={() => {
             Vibration.vibrate(50);
@@ -188,7 +188,7 @@ const LessonPlanHistory = () => {
             borderLeftWidth: 2,
             borderColor: '#DDE9F3',
           }}
-          className="flex-row items-center justify-center rounded-xl py-2 px-3 bg-white"
+          className="flex-row items-center justify-center rounded-xl py-3 px-3 bg-white w-[28%]"
         >
           <LeftArrow width={16} height={16} color="#1A9DDD" />
           <Text

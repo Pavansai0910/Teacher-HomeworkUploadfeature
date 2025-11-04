@@ -7,7 +7,8 @@ import {
   ActivityIndicator,
   Modal,
   useWindowDimensions,
-  Vibration
+  Vibration,
+  ToastAndroid
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -112,6 +113,13 @@ const AssignTestDate = ({ route }) => {
   // When user clicks Assign Test button
   const handleAssign = () => {
     Vibration.vibrate(50);
+    if (!dueDate) {
+      Toast.show({
+        type: 'info',
+        text1: 'Please select a due date first',
+      });
+      return;
+    }
     setShowTestLoader(true);
   };
 
@@ -572,7 +580,7 @@ const AssignTestDate = ({ route }) => {
           <TouchableOpacity
             className={`flex-1 py-3 flex-row justify-center items-center rounded-xl border-t-[1.5px] border-x-2 border-b-4 ${dueDate ? 'bg-[#FED570] border-[#DFAF02]' : 'bg-[#FEDB85] border-[#DFAF02]'}`}
             onPress={handleAssign}
-            disabled={!dueDate || showLoader}
+          // disabled={!dueDate || showLoader}
           >
             {showLoader ? (
               <View className="flex-row items-center">

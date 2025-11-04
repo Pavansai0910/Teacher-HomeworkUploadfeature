@@ -25,6 +25,7 @@ import Toast from 'react-native-toast-message';
 import { AuthContext } from '../../../Context/AuthContext';
 import { requestStoragePermission } from '../../../Permission/StoragePermission';
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import ExitConfirmationPopup from '../../ConfirmationPopup/ExitConfirmationPopup';
 
 const GeneratedLessonPlan = () => {
   const route = useRoute();
@@ -50,8 +51,10 @@ const GeneratedLessonPlan = () => {
   const [downloadStatus, setDownloadStatus] = useState(false);
   const [isSavedClicked, setIsSavedClicked] = useState(false);
   const [generatedLessonPlanId, setGeneratedLessonPlanId] = useState(null);
+  const [isExitPopupVisible, setIsExitPopupVisible] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedSection, setSelectedSection] = useState(null);
+  // CHANGED: Default to "Full Lesson Plan"
+  const [selectedSection, setSelectedSection] = useState('Full Lesson Plan');
 
   const lessonPlanDetails = lessonPlanData?.generatedContent || {};
   const topicName =
@@ -62,7 +65,8 @@ const GeneratedLessonPlan = () => {
   const chapterName = lessonPlanData?.chapter || lessonPlanner?.chapter || 'Chapter';
 
   const getAvailableSections = () => {
-    const availableSections = [];
+    // CHANGED: Always include "Full Lesson Plan" as first option
+    const availableSections = ['Full Lesson Plan'];
 
     if (lessonPlanDetails.learningObjectives) availableSections.push('Learning Objectives');
     if (lessonPlanDetails.keyTerms) availableSections.push('Key Terms');
@@ -86,14 +90,14 @@ const GeneratedLessonPlan = () => {
   const ButtonsOptions = getAvailableSections();
 
   useEffect(() => {
-    if (selectedSection && ButtonsOptions.length > 0 && !ButtonsOptions.includes(selectedSection)) {
+    if (ButtonsOptions.length > 0 && !ButtonsOptions.includes(selectedSection)) {
       setSelectedSection(ButtonsOptions[0]);
     }
   }, [ButtonsOptions]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
-      setSelectedSection(null);
+      setSelectedSection('Full Lesson Plan'); // CHANGED: Reset to full lesson plan
       setIsDropdownOpen(false);
       dropdownAnimation.setValue(0);
     });
@@ -114,23 +118,6 @@ const GeneratedLessonPlan = () => {
     }).start();
   };
 
-  const scrollToSpecificSection = useCallback((sectionName) => {
-    const sectionRef = sectionRefs.current[sectionName];
-    if (!sectionRef || !scrollViewRef.current) {
-      console.warn(`Ref not found for section: ${sectionName}`);
-      return;
-    }
-    sectionRef.measure((x, y, width, height, pageX, pageY) => {
-      if (scrollViewRef.current && pageY !== undefined) {
-        const offsetY = Math.max(0, pageY - 100);
-        scrollViewRef.current.scrollTo({
-          y: offsetY,
-          animated: true
-        });
-      }
-    });
-  }, []);
-
   const selectSection = useCallback((section) => {
     setSelectedSection(section);
     setIsDropdownOpen(false);
@@ -140,12 +127,15 @@ const GeneratedLessonPlan = () => {
       useNativeDriver: false,
       tension: 100,
       friction: 8,
-    }).start((finished) => {
-      if (finished) {
-        scrollToSpecificSection(section);
+    }).start(() => {
+      // CHANGED: Scroll to top when changing sections
+      if (scrollViewRef.current) {
+        setTimeout(() => {
+          scrollViewRef.current.scrollTo({ y: 0, animated: true });
+        }, 100);
       }
     });
-  }, [scrollToSpecificSection]);
+  }, []);
 
   const dropdownHeight = dropdownAnimation.interpolate({
     inputRange: [0, 1],
@@ -180,7 +170,6 @@ const GeneratedLessonPlan = () => {
       };
       const response = await saveLessonPlan(payload);
 
-      // Mark as saved on success
       setIsSaved(true);
       Toast.show({
         type: 'success',
@@ -221,7 +210,6 @@ const GeneratedLessonPlan = () => {
       });
     }
 
-    // 1. Permission Check
     const hasPermission = await requestStoragePermission();
     if (!hasPermission) {
       return;
@@ -298,6 +286,10 @@ const GeneratedLessonPlan = () => {
     </View>
   );
 
+  // NEW: Function to check if section should be shown
+  const shouldShowSection = (sectionName) => {
+    return selectedSection === 'Full Lesson Plan' || selectedSection === sectionName;
+  };
 
   if (!lessonPlanData?.generatedContent) {
     return (
@@ -332,13 +324,11 @@ const GeneratedLessonPlan = () => {
                 Lesson Plan
               </Text>
               <TouchableOpacity
-                className="w-6 h-6 bg-[#1EAFF7] rounded-full justify-center items-center"
+                className="w-7 h-7 bg-[#1EAFF7] rounded-full justify-center items-center"
                 onPress={() => {
                   Vibration.vibrate(50);
-
-                  navigation.navigate('MainTabNavigator')
-                }
-                }
+                  setIsExitPopupVisible(true);
+                }}
               >
                 <CrossIcon />
               </TouchableOpacity>
@@ -374,20 +364,12 @@ const GeneratedLessonPlan = () => {
               Chapter: {chapterName}
             </Text>
 
-            {/* Topic Header */}
-            {/* <Text
-              style={{ fontSize: GetFontSize(16) }}
-              className="font-inter700 text-[#454F5B]"
-            >
-              Topic:-
-            </Text> */}
             {selectedTopics?.map((topic, index) => (
               <View
                 key={index}
                 className="flex-row items-start mx-3"
                 style={{ marginBottom: 4 }}
               >
-                {/* Bullet */}
                 <Text
                   style={{ fontSize: GetFontSize(14), lineHeight: GetFontSize(20) }}
                   className="font-inter500 text-[#212B36]"
@@ -395,7 +377,6 @@ const GeneratedLessonPlan = () => {
                   •
                 </Text>
 
-                {/* Text */}
                 <Text
                   style={{
                     fontSize: GetFontSize(14),
@@ -449,10 +430,8 @@ const GeneratedLessonPlan = () => {
                 className="bg-white justify-center items-center"
                 onPress={() => {
                   Vibration.vibrate(50);
-
                   handleLessonPlanDownload(generatedLessonPlanId)
-                }
-                }>
+                }}>
                 <View
                   className="justify-center items-center rounded-xl border border-[#E1F4FE] p-3"
                   style={{
@@ -471,16 +450,26 @@ const GeneratedLessonPlan = () => {
               </TouchableOpacity>
             </View>
 
+            {/* CHANGED: Conditional rendering for each section */}
+
             {/* Learning Objectives */}
-            <SectionHeader title="Learning Objectives" sectionKey="Learning Objectives" />
-            <BulletList items={lessonPlanDetails.learningObjectives} />
+            {shouldShowSection('Learning Objectives') && lessonPlanDetails.learningObjectives && (
+              <>
+                <SectionHeader title="Learning Objectives" sectionKey="Learning Objectives" />
+                <BulletList items={lessonPlanDetails.learningObjectives} />
+              </>
+            )}
 
             {/* Key Terms */}
-            <SectionHeader title="Key Terms" sectionKey="Key Terms" />
-            <BulletList items={lessonPlanDetails.keyTerms} />
+            {shouldShowSection('Key Terms') && lessonPlanDetails.keyTerms && (
+              <>
+                <SectionHeader title="Key Terms" sectionKey="Key Terms" />
+                <BulletList items={lessonPlanDetails.keyTerms} />
+              </>
+            )}
 
             {/* Pre-Requisites */}
-            {lessonPlanDetails.preRequisite &&
+            {shouldShowSection('Pre-Requisites') && lessonPlanDetails.preRequisite &&
               lessonPlanDetails.preRequisite.length > 0 && (
                 <>
                   <SectionHeader title="Pre-Requisites" sectionKey="Pre-Requisites" />
@@ -519,7 +508,7 @@ const GeneratedLessonPlan = () => {
               )}
 
             {/* Teaching Aids */}
-            {lessonPlanDetails.teachingAids && (
+            {shouldShowSection('Teaching Aids') && lessonPlanDetails.teachingAids && (
               <>
                 <SectionHeader title="Teaching Aids" sectionKey="Teaching Aids" />
                 <BulletList items={lessonPlanDetails.teachingAids} />
@@ -527,7 +516,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Methodology */}
-            {lessonPlanDetails.methodology && (
+            {shouldShowSection('Methodology') && lessonPlanDetails.methodology && (
               <>
                 <SectionHeader title="Methodology" sectionKey="Methodology" />
                 <BulletList items={lessonPlanDetails.methodology} />
@@ -535,7 +524,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Suggested Flow */}
-            {lessonPlanDetails.suggestedFlow && (
+            {shouldShowSection('Suggested Flow') && lessonPlanDetails.suggestedFlow && (
               <>
                 <SectionHeader title="Suggested Flow" sectionKey="Suggested Flow" />
                 {lessonPlanDetails.suggestedFlow.map((flow, index) => (
@@ -552,7 +541,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Learning Flow */}
-            {lessonPlanDetails.learningFlow && (
+            {shouldShowSection('Learning Flow') && lessonPlanDetails.learningFlow && (
               <>
                 <SectionHeader title="Learning Flow" sectionKey="Learning Flow" />
                 {Object.entries(lessonPlanDetails.learningFlow).map(
@@ -569,7 +558,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Skills Applied */}
-            {lessonPlanDetails.skillsApplied && (
+            {shouldShowSection('Skills Applied') && lessonPlanDetails.skillsApplied && (
               <>
                 <SectionHeader title="Skills Applied" sectionKey="Skills Applied" />
                 <BulletList items={lessonPlanDetails.skillsApplied} />
@@ -577,7 +566,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Activity Description */}
-            {lessonPlanDetails.activityDescription && (
+            {shouldShowSection('Activity Description') && lessonPlanDetails.activityDescription && (
               <>
                 <SectionHeader title="Activity Description" sectionKey="Activity Description" />
                 <Text style={{ fontSize: GetFontSize(14) }} className=" leading-6 text-[#637381]">
@@ -587,7 +576,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Practice Work */}
-            {lessonPlanDetails.practiceWork && (
+            {shouldShowSection('Practice Work') && lessonPlanDetails.practiceWork && (
               <>
                 <SectionHeader title="Practice Work" sectionKey="Practice Work" />
                 <Text style={{ fontSize: GetFontSize(14) }} className="leading-6 text-[#637381]">
@@ -597,7 +586,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Inquiry Questions */}
-            {lessonPlanDetails.inquiryQuestions && (
+            {shouldShowSection('Inquiry Questions') && lessonPlanDetails.inquiryQuestions && (
               <>
                 <SectionHeader title="Inquiry Questions" sectionKey="Inquiry Questions" />
                 <BulletList items={lessonPlanDetails.inquiryQuestions} />
@@ -605,16 +594,14 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Quick Assessments */}
-            {lessonPlanDetails.quickAssessments?.length > 0 && (
+            {shouldShowSection('Quick Assessments') && lessonPlanDetails.quickAssessments?.length > 0 && (
               <>
                 <SectionHeader title="Quick Assessments" sectionKey="Quick Assessments" />
-
                 {lessonPlanDetails.quickAssessments.map((assessment, index) => (
                   <View
                     key={index}
                     className="flex-row items-start rounded-xl px-3 py-2 "
                   >
-                    {/* Bullet */}
                     <Text
                       style={{ fontSize: GetFontSize(16), lineHeight: 22 }}
                       className="text-[#6B21A8] mr-2"
@@ -622,17 +609,16 @@ const GeneratedLessonPlan = () => {
                       •
                     </Text>
 
-                    {/* Text Content */}
                     <View className="flex-1">
                       <Text
-                        style={{ fontSize: GetFontSize(15)}}
+                        style={{ fontSize: GetFontSize(15) }}
                         className="text-[#212B36] font-inter500"
                       >
                         {assessment.question}
                       </Text>
 
                       <Text
-                        style={{ fontSize: GetFontSize(13)}}
+                        style={{ fontSize: GetFontSize(13) }}
                         className="text-[#6B7280] font-inter500 ml-1"
                       >
                         Cognitive Level:
@@ -646,9 +632,8 @@ const GeneratedLessonPlan = () => {
               </>
             )}
 
-
             {/* Teacher Tips */}
-            {lessonPlanDetails.teacherTips && (
+            {shouldShowSection('Teacher Tips') && lessonPlanDetails.teacherTips && (
               <>
                 <SectionHeader title="Teacher Tips" sectionKey="Teacher Tips" />
                 <BulletList items={lessonPlanDetails.teacherTips} />
@@ -656,7 +641,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Learning Outcomes */}
-            {lessonPlanDetails.learningOutcomes && (
+            {shouldShowSection('Learning Outcomes') && lessonPlanDetails.learningOutcomes && (
               <>
                 <SectionHeader title="Learning Outcomes" sectionKey="Learning Outcomes" />
                 <BulletList items={lessonPlanDetails.learningOutcomes} />
@@ -664,7 +649,7 @@ const GeneratedLessonPlan = () => {
             )}
 
             {/* Values Inculcated */}
-            {lessonPlanDetails.valuesInculcated && (
+            {shouldShowSection('Values Inculcated') && lessonPlanDetails.valuesInculcated && (
               <>
                 <SectionHeader title="Values Inculcated" sectionKey="Values Inculcated" />
                 <BulletList items={lessonPlanDetails.valuesInculcated} />
@@ -757,7 +742,7 @@ const GeneratedLessonPlan = () => {
                 onPress={toggleDropdown}
               >
                 <Text style={{ fontSize: GetFontSize(18) }} className="text-[#DC9047]  font-inter700 mr-2 flex-1 text-center">
-                  {selectedSection || 'Lesson Plan Sections'}
+                  {selectedSection}
                 </Text>
                 <Animated.View
                   style={{
@@ -788,6 +773,13 @@ const GeneratedLessonPlan = () => {
           />
         )}
       </View>
+
+      <ExitConfirmationPopup
+        visible={isExitPopupVisible}
+        onClose={() => setIsExitPopupVisible(false)}
+        modalType="completed"
+        title="Are you sure you want to exit?"
+      />
     </View>
   );
 };

@@ -27,7 +27,7 @@ const LessonPlannerCard = ({ onPress, isActive, cardWidth, cardSpacing }) => {
         }} className="rounded-3xl overflow-hidden shadow-lg"
       >
         <LinearGradient
-          colors={['#B1E3FB', '#1EAFF7']}
+          colors={['#1EAFF7', '#1EAFF7']}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           className="rounded-3xl"

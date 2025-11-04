@@ -6,7 +6,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Modal,
-  Vibration
+  Vibration,
+  ToastAndroid
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
@@ -23,6 +24,8 @@ import { Shadow } from 'react-native-shadow-2';
 import { getChapters } from '../../../Services/teacherAPIV1';
 import { AuthContext } from '../../../Context/AuthContext';
 import TopArrow from '../../../Images/LessonPlan/TopArrow';
+import CrossIcon from '../../../Images/Home/CrossIcon';
+import Toast from 'react-native-toast-message';
 
 
 const LessonPlanner = () => {
@@ -190,10 +193,10 @@ const LessonPlanner = () => {
             {/* Content Box */}
             <View className="rounded-xl mt-3">
               <View className="items-center mb-6">
-                <View className="w-16 h-16 rounded-xl justify-center items-center mb-2">
+                <View className="w-16 h-16 rounded-xl justify-center items-center">
                   <Document />
                 </View>
-                <Text
+                {/* <Text
                   style={{ fontSize: GetFontSize(16) }}
                   className="text-white font-inter600mb-2 text-center"
                 >
@@ -205,7 +208,7 @@ const LessonPlanner = () => {
                 >
                   Select a chapter for which you want to generate a lesson plan
                   or quickly view your saved plans for this class.
-                </Text>
+                </Text> */}
               </View>
             </View>
             <View className="w-full">
@@ -240,12 +243,12 @@ const LessonPlanner = () => {
                           fontWeight: '700',
                           lineHeight: GetFontSize(16) * 1.35,
                           letterSpacing: GetFontSize(16) * -0.02,
-                          flex: 1, // Takes available space
-                          flexWrap: 'wrap', // Allows text to wrap
-                          marginRight: 8, // Space between text and icon
+                          flex: 1,
+                          flexWrap: 'wrap',
+                          marginRight: 8,
                         }}
                         className="font-inter700"
-                        numberOfLines={2} // Limits to 2 lines max
+                        numberOfLines={2}
                       >
                         {selectedChapterName || "Choose a chapter to get started"}
                       </Text>
@@ -325,23 +328,27 @@ const LessonPlanner = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            disabled={!selectedChapterId}
             onPress={() => {
               Vibration.vibrate(50);
+
+              if (!selectedChapterId) {
+                Toast.show({
+                  type: 'info',
+                  text1: 'Please select a chapter first',
+                });
+                return;
+              }
+
               navigation.navigate('LessonPlanTopics', {
                 chapterId: selectedChapterId,
-              })
-            }
-            }
+              });
+            }}
             className={`flex-row gap-1 flex-1 py-3 rounded-xl justify-center items-center border-t-[1.5px] border-x-2 border-b-4 ${selectedChapterId
               ? 'bg-[#1EAFF7] border-[#0786C5]'
               : 'bg-[#1EAFF7] border-[#0786C5] opacity-60'
               }`}
           >
-            <Text
-              style={{ fontSize: GetFontSize(16) }}
-              className={'font-inter600 text-white'}
-            >
+            <Text style={{ fontSize: GetFontSize(16) }} className={'font-inter600 text-white'}>
               Continue
             </Text>
             <RightArrow color="#FFFFFF" />
@@ -367,13 +374,12 @@ const LessonPlanner = () => {
               <TouchableOpacity
                 onPress={() => {
                   Vibration.vibrate(50);
-
                   setIsModalVisible(false)
                 }
                 }
               >
-                <View className="w-6 h-6 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
-                  <Text className="text-white font-inter400">✕</Text>
+                <View className="w-7 h-7 bg-[#1EAFF7] border border-[#1A9DDD] rounded-full justify-center items-center">
+                  <CrossIcon />
                 </View>
               </TouchableOpacity>
             </View>

@@ -8,14 +8,15 @@ import GetFontSize from '../../../Commons/GetFontSize';
 import TestAnalytics from './TestAnalytics';
 import TestDetails from './TestDetails';
 import CrossIcon from '../../../Images/Home/CrossIcon';
+import FlipIcon from '../../../Images/LessonPlan/FlipIcon';
+import ExitConfirmationPopup from '../../ConfirmationPopup/ExitConfirmationPopup';
 
 const LearningDetails = () => {
     const { width, height } = Dimensions.get('window');
     const navigation = useNavigation();
     const route = useRoute();
+    const [isExitPopupVisible, setIsExitPopupVisible] = useState(false);
     const { topicname, status, assignedDate, dueDate } = route.params || {};
-
-    console.log('fggggggggggggggggggggggggggg', { topicname, status, assignedDate, dueDate });
 
     const scrollRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -104,10 +105,10 @@ const LearningDetails = () => {
                                 Test Insights
                             </Text>
                             <TouchableOpacity
-                                className="w-6 h-6 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
+                                className="w-7 h-7 bg-[#A5ED6F] rounded-full border border-[#77E425] justify-center items-center"
                                 onPress={() => {
                                     Vibration.vibrate(50);
-                                    navigation.navigate('MainTabNavigator')
+                                    setIsExitPopupVisible(true);
                                 }
                                 }
                             >
@@ -123,20 +124,20 @@ const LearningDetails = () => {
 
             {/* Topic Info */}
             {/* <View className="mt-6 mx-6  gap-4 border-b-2 border-[#E5E5E3] pb-4"> */}
-                <View className="mx-6 mt-4 border-b-2 border-[#E5E5E3] pb-2">
-                    <Text
-                        className="font-inter500 text-[#454F5B]"
-                        style={{ fontSize: GetFontSize(16), lineHeight: GetFontSize(20) }}
-                        numberOfLines={3}
-                    >
-                       Topic:- {topicname}
-                    </Text>
-                </View>
+            <View className="mx-6 mt-4 border-b-2 border-[#E5E5E3] pb-4">
+                <Text
+                    className="font-inter500 text-[#454F5B]"
+                    style={{ fontSize: GetFontSize(16), lineHeight: GetFontSize(20) }}
+                    numberOfLines={3}
+                >
+                    Topic:- {topicname}
+                </Text>
+            </View>
             {/* </View> */}
 
             <View>
                 {(status === 'pending' || status === 'completed') && (
-                    <View className="mx-6 mt-2 border-b-2 border-[#E5E5E3] pb-2">
+                    <View className="mx-6 mt-4 border-b-2 border-[#E5E5E3] pb-4">
                         <Text className="text-[#919EAB] font-inter400" style={{ fontSize: GetFontSize(13) }}>
                             Assigned on - {formatDate(assignedDate)}
                         </Text>
@@ -166,7 +167,7 @@ const LearningDetails = () => {
                 <Animated.View
                     style={{
                         width: width,
-                        height: height * 0.7,
+                        // height: height * 0.7,
                         justifyContent: 'center',
                         alignItems: 'center',
                         transform: [{ rotateY }],
@@ -226,10 +227,16 @@ const LearningDetails = () => {
                         <Text style={{ fontSize: GetFontSize(16) }} className="font-inter600 text-[#357A20]">
                             See More
                         </Text>
+                        <FlipIcon />
                     </TouchableOpacity>
                 )}
             </View>
-
+            <ExitConfirmationPopup
+                visible={isExitPopupVisible}
+                onClose={() => setIsExitPopupVisible(false)}
+                modalType="completed"
+                title="Are you sure you want to exit?"
+            />
         </View>
     );
 };

@@ -23,14 +23,14 @@ visibilitygone".(Ü„2:0"T
 *http://schemas.android.com/apk/res/android	scaleTypecenterInside".(‚„2:0"
 *http://schemas.android.com/apk/res/android
 background?attr/selectableItemBackground".(Ô„2+
-)™‡Œøattr/selectableItemBackground0"Q
+)œ‡Œøattr/selectableItemBackground0"Q
 *http://schemas.android.com/apk/res/androidlayout_width48dip".(ô„2:h`"R
 *http://schemas.android.com/apk/res/androidlayout_height48dip".(õ„2:h`"Œstyle8@style/RtlOverlay.Widget.AppCompat.Search.DropDown.Query".2E
 CØ‚Äø7style/RtlOverlay.Widget.AppCompat.Search.DropDown.Query0ÿÿ"[
 *http://schemas.android.com/apk/res/androidlayout_alignParentBottomtrue".(ƒ„2:@"X
 *http://schemas.android.com/apk/res/androidlayout_alignParentToptrue".(Œƒ„2:@"e
 *http://schemas.android.com/apk/res/androidid@+id/edit_query".(Ğ„2
-« øid/edit_query0.S*õ
+ª øid/edit_query0.S*õ
 ì	ImageView"M
 *http://schemas.android.com/apk/res/android
 visibilitygone"9(Ü„2:0"T
@@ -48,7 +48,7 @@ C×‚Äø7style/RtlOverlay.Widget.AppCompat.Search.DropDown.Icon20ÿÿ"[
 visibilitygone"H(Ü„2:0"I
 *http://schemas.android.com/apk/res/androidgravitytop"H(¯„2:80"¦
 *http://schemas.android.com/apk/res/androidtextAppearance(?attr/textAppearanceSearchResultSubtitle"H(´€„25
-3³ˆŒø'attr/textAppearanceSearchResultSubtitle0"`
+3µˆŒø'attr/textAppearanceSearchResultSubtitle0"`
 *http://schemas.android.com/apk/res/androidlayout_widthmatch_parent"H(ô„2:0ÿÿÿÿÿÿÿÿÿ"R
 *http://schemas.android.com/apk/res/androidlayout_height29dip"H(õ„2:h:"b
 *http://schemas.android.com/apk/res/androidlayout_alignWithParentIfMissingtrue"H(’ƒ„2:@"Q
@@ -61,7 +61,7 @@ singleLinetrue"H(İ‚„2:@"[style?android:attr/dropDownItemStyle"H2-
 •€ˆandroid:id/text20H+*á
 ØTextView" 
 *http://schemas.android.com/apk/res/androidtextAppearance%?attr/textAppearanceSearchResultTitle"S(´€„22
-0´ˆŒø$attr/textAppearanceSearchResultTitle0"X
+0¶ˆŒø$attr/textAppearanceSearchResultTitle0"X
 *http://schemas.android.com/apk/res/androidlayout_centerVerticaltrue"S(‘ƒ„2:@"s
 *http://schemas.android.com/apk/res/androidlayout_above@android:id/text2"S(„ƒ„2
 •€ˆandroid:id/text20"`

@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import GetFontSize from '../../../Commons/GetFontSize';
 import { AuthContext } from '../../../Context/AuthContext';
 import ExpandIcon from '../../../Images/StudentInsights/ExpandIcon';
+import ExpandedIcon from '../../../Images/StudentInsights/ExpandedIcon';
 
 const TestDetails = ({
     chapterId,
@@ -80,20 +81,31 @@ const TestDetails = ({
     };
 
     return (
-        <ScrollView className="px-4">
+        <ScrollView
+            className="px-4"
+            nestedScrollEnabled={true}
+            showsVerticalScrollIndicator={false}
+            // contentContainerStyle={{
+            //     paddingBottom: 4,
+            // }}
+        >
             {chapterData.map((item, index) => {
                 const isExpanded = expanded.includes(index);
+                const isLastItem = index === chapterData.length - 1;
                 return (
-                    <View key={item.objectiveId || index} className="mt-2">
+                    <View style={{
+                        marginBottom: isLastItem ? 40 : 0
+                    }}
+                        key={item.objectiveId || index} className="mt-2">
                         {!isExpanded ? (
                             <View className="bg-white rounded-t-2xl">
                                 <TouchableOpacity
                                     onPress={() => toggleExpand(index)}
                                     className="w-full"
                                 >
-                                    <View className="flex-row justify-between items-center px-4 py-2 border-b-2 border-[#E5E5E3]" style={{ width: '100%' }}>
+                                    <View className="flex-row justify-between items-center px-4 py-4 border-b-2 border-[#E5E5E3]" style={{ width: '100%' }}>
                                         <Text style={{ fontSize: GetFontSize(15), width: '85%' }}
-                                            className="font-inter500 text-gray-800 leading-6">
+                                            className="font-inter500 text-gray-800 leading-6 ">
                                             {item.objectiveName}
                                         </Text>
                                         <View style={{ width: '15%', alignItems: 'flex-end' }}>
@@ -123,7 +135,7 @@ const TestDetails = ({
                                                 {item.objectiveName}
                                             </Text>
                                             <View style={{ width: '15%', alignItems: 'flex-end' }}>
-                                                <ExpandIcon />
+                                                <ExpandedIcon />
                                             </View>
                                         </View>
                                         <View className="flex-row w-full px-2 pb-4 pt-2">
