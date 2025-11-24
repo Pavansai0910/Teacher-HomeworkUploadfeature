@@ -15,9 +15,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import LinearGradient from 'react-native-linear-gradient';
 import { AuthContext } from '../../Context/AuthContext';
-import StudentsInsightsCard from '../HomeScreen/Cards/StudentsInsightsCard';
-import LessonPlannerCard from '../HomeScreen/Cards/LessonPlannerCard';
-import AssignTestCard from '../HomeScreen/Cards/AssignTestCard';
+// import StudentsInsightsCard from '../HomeScreen/Cards/StudentsInsightsCard';
+// import LessonPlannerCard from '../HomeScreen/Cards/LessonPlannerCard';
+// import AssignTestCard from '../HomeScreen/Cards/AssignTestCard';
 import NotificationIcon from '../../Images/Home/NotificationIcon';
 import capitalize from '../../Utils/Capitalize';
 import GetFontSize from '../../Commons/GetFontSize';
@@ -404,7 +404,8 @@ const Home = () => {
           </View>
         </Modal>
 
-        {/* Cards */}
+        {/* Cards Section (Commented Out - Remove or Uncomment as Needed) */}
+        {/* 
         <View className="justify-center items-center mt-5">
           <ScrollView
             ref={scrollViewRef}
@@ -450,7 +451,7 @@ const Home = () => {
           </ScrollView>
 
           {/* Pagination Dots */}
-          <View className="flex-row justify-center items-center mt-10">
+          {/* <View className="flex-row justify-center items-center mt-10">
             {gradientBackgrounds.map((_, index) => {
               let dotColor = '#FFFFFF';
               if (currentIndex === index) {
@@ -471,9 +472,9 @@ const Home = () => {
                 />
               );
             })}
-          </View>
-
-        </View>
+          </View> */}
+        
+    
       </LinearGradient>
     </View>
   );

@@ -143,3 +143,17 @@ export const getTopicPerformanceBySection = async ({ chapterId, sectionId, class
     headers
   );
 };
+export const getTeacherClasses = async ({ teacherId }) => {
+    const headers = await getAuthHeader()
+    return apiConnector('GET', `/v1/teacher/get-teacher-classes/${teacherId}`, null, headers)
+}
+export const changeTeacherPassword = async ({ teacherId, newPassword }) => {
+  const headers = await getAuthHeader();
+  const requestBody = { newPassword };
+  return apiConnector(
+    "POST",
+    `/v1/auth/change-password/${teacherId}/teacher`,
+    requestBody,
+    headers
+  );
+};
