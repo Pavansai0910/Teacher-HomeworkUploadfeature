@@ -8,24 +8,14 @@ import GetStartedScreen from '../Screens/GetStartedScreen';
 import Loader from '../Commons/Loader';
 import checkAuthentication from '../Utils/logout';
 import Home from '../Screens/Home/Home';
-// import AssignTest from '../Screens/Home/AssignTest/AssignTest';
-// import LessonPlanner from '../Screens/Home/Lessonplanner/LessonPlanner';
 import MainTabNavigator from './MainTabNavigator';
-// import StudentsInsights from '../Screens/Home/StudentInsights/StudentsInsights'
 import Settings from '../Screens/Settings/Settings';
-// import LessonPlanTopics from '../Screens/Home/Lessonplanner/LessonPlanTopics';
-// import LessonPlanGeneration from '../Screens/Home/Lessonplanner/LessonPlanGeneration ';
-// import GeneratedLessonPlan from '../Screens/Home/Lessonplanner/GeneratedLessonPlan';
-// import AssignTestTopics from '../Screens/Home/AssignTest/AssignTestTopics';
-// import AssignTestDate from '../Screens/Home/AssignTest/AssignTestDate';
-// import LessonPlanHistory from '../Screens/Home/Lessonplanner/LessonPlanHistory';
-// import HistoryDetails from '../Screens/Home/Lessonplanner/HistoryDetails';
-// import LearningTopic from '../Screens/Home/StudentInsights/LearningTopic';
-// import LearningDetails from '../Screens/Home/StudentInsights/LearningDetails';
 import PersonalInformation from '../Screens/Settings/PersonalInformation';
 import ProfessionalDetails from '../Screens/Settings/ProfessionalDetails';
 import Faq from '../Screens/Settings/Faq';
 import TeacherSupport from '../Screens/Settings/TeacherSupport';
+import FileUploadScreen from '../Screens/HomeWork/FileUploadScreen';
+
 const Stack = createNativeStackNavigator();
 
 function AppNavigator() {
@@ -70,56 +60,42 @@ function AppNavigator() {
       >
         {isAuthenticated ? (
           <>
-
+            {/* Authenticated Screens */}
             <Stack.Screen
               name="MainTabNavigator"
               component={MainTabNavigator}
             />
             <Stack.Screen name="Settings" component={Settings} />
-             <Stack.Screen name="SignInScreen" component={SignInScreen} />
-             <Stack.Screen name="PersonalInformation" component={PersonalInformation} />
+            <Stack.Screen name="PersonalInformation" component={PersonalInformation} />
             <Stack.Screen name="ProfessionalDetails" component={ProfessionalDetails} />
             <Stack.Screen name="Faq" component={Faq} />
-             <Stack.Screen name="TeacherSupport" component={TeacherSupport} />
-            {/* <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="TeacherSupport" component={TeacherSupport} />
+            <Stack.Screen name="FileUploadScreen" component={FileUploadScreen}/>
+            
+            {/* Commented screens - uncomment when needed
+            <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="LessonPlanner" component={LessonPlanner} />
-            <Stack.Screen
-              name="LessonPlanTopics"
-              component={LessonPlanTopics}
-            />
+            <Stack.Screen name="LessonPlanTopics" component={LessonPlanTopics} />
             <Stack.Screen name="AssignTest" component={AssignTest} />
-            <Stack.Screen
-              name="StudentsInsights"
-              component={StudentsInsights}
-            />
-            <Stack.Screen name="Settings" component={Settings} />
-            <Stack.Screen
-              name="LessonPlanGeneration"
-              component={LessonPlanGeneration}
-            />
-            <Stack.Screen
-              name="GeneratedLessonPlan"
-              component={GeneratedLessonPlan}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="AssignTestTopics"
-              component={AssignTestTopics}
-            />
+            <Stack.Screen name="StudentsInsights" component={StudentsInsights} />
+            <Stack.Screen name="LessonPlanGeneration" component={LessonPlanGeneration} />
+            <Stack.Screen name="GeneratedLessonPlan" component={GeneratedLessonPlan} />
+            <Stack.Screen name="AssignTestTopics" component={AssignTestTopics} />
             <Stack.Screen name="AssignTestDate" component={AssignTestDate} />
             <Stack.Screen name="LessonPlanHistory" component={LessonPlanHistory} />
             <Stack.Screen name="HistoryDetails" component={HistoryDetails} />
             <Stack.Screen name="LearningTopic" component={LearningTopic} />
-            <Stack.Screen name="LearningDetails" component={LearningDetails} /> */}
+            <Stack.Screen name="LearningDetails" component={LearningDetails} />
+            */}
           </>
         ) : (
           <>
-            {/* <Stack.Screen
+            {/* Unauthenticated Screens */}
+            <Stack.Screen
               name="GetStartedScreen"
               component={GetStartedScreen}
-            /> */}
-           
-            
+            />
+            <Stack.Screen name="SignInScreen" component={SignInScreen} />
           </>
         )}
       </Stack.Navigator>
