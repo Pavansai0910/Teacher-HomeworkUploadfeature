@@ -76,7 +76,6 @@ function AppNavigator() {
               component={MainTabNavigator}
             />
             <Stack.Screen name="Settings" component={Settings} />
-             <Stack.Screen name="SignInScreen" component={SignInScreen} />
              <Stack.Screen name="PersonalInformation" component={PersonalInformation} />
             <Stack.Screen name="ProfessionalDetails" component={ProfessionalDetails} />
             <Stack.Screen name="Faq" component={Faq} />
@@ -114,10 +113,11 @@ function AppNavigator() {
           </>
         ) : (
           <>
-            {/* <Stack.Screen
+            <Stack.Screen
               name="GetStartedScreen"
               component={GetStartedScreen}
-            /> */}
+            />
+             <Stack.Screen name="SignInScreen" component={SignInScreen} />
            
             
           </>
